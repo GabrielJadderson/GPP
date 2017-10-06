@@ -1,0 +1,44 @@
+/*	$Id: network.macro,v 1.7 1999/08/18 12:25:11 dim Exp $	
+ *
+ * $RelId: DM40, subnet. Version 1.3 (#1) Sep 06 18:28:52 CEST 1999 $
+ *
+ * BESKRIVELSE: Macro definitioner til "network.c" programmet.
+ *
+ * Steffen Schmidt.
+ */
+
+#ifndef _NETWORK_M_
+#define _NETWORK_M_
+
+#define MINSTATION 2                          /* antal stationer (max og min) */
+#define MAXSTATION 8
+
+#define SETUPINFOSIZE   64                    /* Størrelse af informationsdata */
+
+#define MAXERRORFREQ    1000
+
+#define TRUE       1
+#define FALSE      0
+#define OK         1
+#define NO         0
+#define NOTOK      0
+
+#define CHUNKSIZE  4096     /* størrelse som logbufferen allokeres i bider af */
+
+#define XTIMEOUT     20     /* timeout i sek. for opstart af stationer via x-term */ 
+#define TIMEOUT       3     /* timeout i sek. for opstart UDEN x-term vinduer */
+
+#define XARGC        11     /* antal faste argumenter ved opstart med x-term */
+#define ARGC          3     /* antal faste argumenter ved opstart uden x-term */
+
+/* Definerer fonten til xterm */
+#ifndef FONT
+#define FONT "6x13"
+#endif
+
+/* Definerer xterm shell'ens størrelse til xterm */
+#ifndef GEOM
+#define GEOM "85x15"
+#endif
+
+#endif

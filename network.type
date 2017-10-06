@@ -1,0 +1,23 @@
+/*	$Id: network.type,v 1.5 1999/08/26 01:11:24 dim Exp $
+ * 
+ * $RelId: DM40, subnet. Version 1.3 (#1) Sep 06 18:28:52 CEST 1999 $
+ *
+ * BESKRIVELSE: Type definitioner til "network.c".
+ *
+ * Steffen Schmidt.
+ */
+
+#ifndef _NETWORK_T_
+#define _NETWORK_T_
+
+typedef struct SCS *SocketControl;
+
+typedef struct SCS
+{
+  struct sockaddr_un  name;	
+  int                 sock;
+  int                 active;
+  pid_t               pid;
+} SocketControlStruct;
+
+#endif

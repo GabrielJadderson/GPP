@@ -1,0 +1,63 @@
+DESCRIPTION: This file contains information on compilation and setting up
+the subnet library  libsubnet.a.
+
+Requierements
+-----
+
+A working pthreads installation and gnu-make
+
+Installing:
+-------------
+
+The files are packaged in subnet.tgz.
+
+The installation process of libsubnet.a  creates sub-dirs lib/ and include/
+
+The installation folder can be selected by setting the parameter INSTALLDIR in the
+Makefile. Initially, we use the same dir as the source code.
+
+In the same way, fontsize in the graphical windows kan be set by the FONT parameter in
+the Makefile. The size of the graphical windows can be set using the GEOM parametr, also in the Makefile
+
+Now, the subnet library can be installed by:
+
+	make
+	make install
+	make clean
+
+The test programs can be compiled with the commands:
+
+	make
+	make tests
+
+Uninstallation by:
+
+	make uninstall
+
+If the install folder also should be deleted:
+
+	make full-uninstall
+
+
+Running the test programs:
+-------------------------
+
+The Test programs (nettest, signaltest og timertest) must be run via 'network':
+
+network [option]
+
+Where the options are:
+
+   -h           Help/prints the options.
+   -v           Prints  version number.
+   -p<name>     'name' as test program-name.
+   -n<number>   Number of stations (2-8).
+   -e<number>   Error frequency (0-1000).
+   -a <arg1 ..> Delivers argument list to the test programs
+   -x           Starts simulation without using the xterm-windows for the netstations.
+
+
+Questions/problems/bugs:
+-------------------------
+
+Jacob Aae Mikkelsen <jamik@imada.sdu.dk>

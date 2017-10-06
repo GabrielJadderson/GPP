@@ -1,0 +1,209 @@
+/*	$Id: subnet.type,v 1.15 1999/09/04 12:10:32 dim Exp $	
+ *
+ * $RelId: DM40, subnet. Version 1.3 (#1) Sep 06 18:28:52 CEST 1999 $
+ *
+ * BESKRIVELSE: Denne fil indeholder type definitioner til de interne funktioner
+ * i subnetpakken.
+ *
+ * Steffen Schmidt.
+ */
+#ifdef _SUBNET_H_
+
+typedef enum { data,             /* pakketyper                                  */
+	       stop,
+	       ctrl_c,
+	       credit
+} packet_type;
+
+/*
+ * De buffere der skal bruges til at sende data frem og tilbage. Ved  socket
+ * operationerne behandles data som et char array. Ved SyncLog read/write tages
+ * der højde for omskrivning af kontroltegn; et kontroltegn bliver til fire
+ * 'normale' tegn (4x) og de 64 tager for at tage højde for systemets
+ * 'tillægs strenge' under logning.
+ */
+#define SYNCLOGSIZE (4 * BUFFERSIZE + 64)
+
+/*
+ * Udover de data brugeren sender over subnettet er der noget kontrol data
+ * der også skal være plads til: to 'char' og to 'int' (normal buffer),
+ * to 'char' og en 'int' (synclogbuffer) - dette rettes ind
+ * med fire.
+ */ 
+#define BUFCTRLSIZE ((2 * sizeof(char) + 2 * sizeof(int) + 3) & ~3) 
+#define BUFLOGCTRLSIZE ((2 * sizeof(char) + sizeof(int) + 3) & ~3) 
+
+typedef struct BSS  *BufStr;
+typedef struct BLS  *BufLog;
+typedef struct BLS  *BufCtrl;
+
+typedef struct BSS              /* til data på subnettet */
+{
+  unsigned char type;
+  unsigned char station;
+  unsigned int  seq;
+  unsigned int  size;
+  unsigned char data[BUFFERSIZE];
+} BufStrStruct;
+
+typedef struct BLS              /* data til SyncLog bufferen */
+{
+  unsigned char type;
+  unsigned char station;
+  unsigned int  size;
+  unsigned char data[SYNCLOGSIZE];
+} BufLogStruct;
+
+typedef struct BCS              /* til kontrol informationen over subnettet */        
+{
+  unsigned char type;
+  unsigned char station;
+  unsigned int  limit;
+} BufCtrlStruct;
+
+#endif   /* _SUBNET_H_ */
+
+#ifndef _NETWORK_INC_             /* Dette skal med fordi "network.c" kun skal  */
+#ifndef _SUBNET_T_                /* have de syv første typer.                  */
+#define _SUBNET_T_
+
+#include <pthread.h>
+#include <sys/un.h>
+#include <time.h>
+
+#include "fifoqueue.h"
+#include "priqueue.h"
+#include "subnetsupport.h"
+
+typedef enum { none,              /* de mulige fejltyper  */
+	       loose,
+	       delay,
+	       multiple
+} error_type;
+
+typedef struct TCS  *ThreadControl;
+typedef struct SCS  *SocketControl;
+typedef struct DDES *DelayDataElement;
+typedef struct ATCS *ActiveTimeoutControl;
+typedef struct TES  *TimeoutElement;
+typedef struct FCS  *FlowControl;
+
+typedef struct TCS               /* thread kontrolstruktur (indsættes i GC)     */
+{
+  pthread_t   th;                /* selve threaden                              */
+  void      (*process)(void);    /* brugerfunktionen som skal 'threades'        */
+  char       *name;              /* funktionen navn (til fejlrapportering)      */
+} ThreadControlStruct;
+
+typedef struct SCS               /* socket kontrolstruktur                      */
+{
+  struct sockaddr_un  name;	
+  int                 sock;
+} SocketControlStruct;
+
+typedef struct DDES              /* element til forsinket data                  */
+{
+  BufStr    data;                /* De data der skal forsinkes                  */
+  int       multiple_ok;         /* Til kontrol af lovlig 'kopiering' af pakken */
+} DelayDataElementStruct;
+
+typedef struct ATCS              /* aktivt ventende timeout signal              */
+{
+  unsigned int          id;      
+  PriQueueEntry         pqe;     /* pointer til placering i timeoutQ            */
+  ActiveTimeoutControl  prev;    /* foregående element i listen                 */
+  ActiveTimeoutControl  next;    /* næste element i listen                      */
+} ActiveTimeoutControlStruct;
+
+typedef struct TES               /* Informationer knyttet til et timeout signal */
+{
+  unsigned int          id;
+  int                   cleared; /* Er timeout signalet blevet clearet?         */
+  void                 *msg;     /* besked der skal sendes med signalet         */
+} TimeoutElementStruct;
+
+typedef struct FCS               /* Flowcontrol på en enkelt forbindelse        */
+{
+  unsigned int    next_send_seq; /* sekvensnummer til 'næste' frame (afsende)   */
+  unsigned int    upper_limit;   /* øvregrænse, afsendelse                      */
+  unsigned int    last_recv_seq; /* sidst modtaget seq nr.                      */
+  pthread_mutex_t lock;          /* lås...                                      */
+  pthread_cond_t  signal;        /* til signal om ændret upper_limit            */
+} FlowControlStruct;
+
+/*
+ * De efterfølgende strukturer findes kun i et eksemplar
+ */
+typedef struct                   /* Statistik                                   */
+{
+  unsigned int    frame_sent;    /* antal afsendte 'frames'                     */
+  unsigned int    frame_recv;    /* antal modtagede 'frames'                    */
+  unsigned int    frame_delv;    /* antal 'frames' leveret af 'FromSubnet'      */
+  unsigned int    frame_eras;    /* antal 'frames' slettet fra input-køen       */
+  unsigned int    frame_lost;    /* antal 'frames' forsvundet undervejs         */
+  unsigned int    frame_dupl;    /* antal dubletter                             */
+} StationStatStruct;
+
+typedef struct                   /* Inddata kontrolstruktur                     */
+{
+  FifoQueue       DataQ;         /* fifokø til at holde indkommende datapakker  */
+  int             size;	         /* antal datapakke i denne kø                  */
+  pthread_mutex_t lock;          /* lås til denne kø                            */
+} InDataControlStruct;
+
+typedef struct                   /* Forsinket data kontrolstruktur              */
+{
+  PriQueue        ErrorDataQ;    /* prioritetskø til forsikket data             */
+  int             errorcount;    /* tæller som forsinkelse regens relativt fra  */
+  pthread_mutex_t errorlock;     /* lås...                                      */
+  pthread_cond_t  errorsignal;   /* variabel til at signalere 'delayed' data    */
+} DelayDataControlStruct;
+
+typedef struct                     /* global kontrolstruktur                    */
+{
+  FifoQueue              FQ;       /* Alle bruger-processer er indsat her       */
+  int                    NumOfThreads; /* antallet af threads på en station     */
+  ThreadControl         *ThArr;    /* array af alle thread-controls             */
+  pthread_mutex_t        OwnSocketLock;  
+  SocketControl          SocketArr;  /* til datakommunikation (med andre stat.) */
+  SocketControl          CtrlSocket; /* til opsætning                           */
+  int                    ErrorFreq;	
+  long                   systime;
+  int                    xterm;      /* er stationen startet i et x-term vindue */
+  int                    MaxStation; /* hvor mange stationer er der i netværket */
+  int                   *active;     /* hvilke er aktive?                       */
+  InDataControlStruct    InData;
+  DelayDataControlStruct DelayData;
+  StationStatStruct      StationStat; /* lidt statistik for stationen           */
+  LogBuf                 logbuffer;   /* buffer til at føre log for systemet    */
+} GlobalControlStruct;
+
+typedef struct                   /* Kontrolstruktur til events                  */
+{
+  long int          events;      /* bitfelt der indeholder de events der er sat */
+  FifoQueue         msgQ[MAXEVENTNO + 1]; /* array af beskedskøer til events    */
+  int               timer_active;/* Flag der afgør om der skal reageres speci-  */
+  pthread_mutex_t   lock;	 /* elt, når event_type = 0x02 (=timeout)       */
+  pthread_cond_t    signal;
+} EventControlStruct;
+
+typedef struct                   /* kontrolstruktur til systemets tilstand      */
+{
+  int              ready;        /* aktuelle tilstand                           */
+  int              threads_alive; /* antal brugerprocesser i live i 'shell'     */
+  pthread_mutex_t  systemlock;
+  pthread_cond_t   systemsignal; /* til at signalere start når netværket er     */
+} StateControlStruct;            /* sat op og klar til at køre                  */
+
+typedef struct                   /* kontrolstruktur til timeout                 */
+{
+  PriQueue             timeoutQ; /* prioritets kø til timout signaler           */
+  ActiveTimeoutControl first;    /* sorteret hægtetliste med ventede timeouts   */
+  ActiveTimeoutControl last;
+  unsigned int         nextId;
+  pthread_mutex_t      lock;
+  pthread_cond_t       signal;
+} TimeoutControlStruct;
+
+#endif             /* _SUBNET_T_ */
+#endif             /* _NETWORK_INC_ */
