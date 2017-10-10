@@ -62,7 +62,7 @@ void stop_timer(seq_nr k);
 void start_ack_timer(unsigned int neighbor);
 
 /* Stop the auxiliary timer and disable the ack_timeout event. */
-void stop_ack_timer(void);
+void stop_ack_timer(unsigned int neighbor);
 
 /* Allow the network layer to cause a network_layer_ready event. */
 void enable_network_layer(void);

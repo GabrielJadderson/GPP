@@ -84,7 +84,7 @@ static void send_frame(frame_kind fk, seq_nr frame_nr, seq_nr frame_expected, pa
     {
     	start_timer(frame_nr);
     }
-    stop_ack_timer();        /* no need for separate ack frame */
+    stop_ack_timer(0);        /* no need for separate ack frame */
 }
 
 /* Fake network/upper layers for station 1
@@ -520,16 +520,19 @@ void start_ack_timer(unsigned int neighbor)
 }
 
 
-void stop_ack_timer(void)
+void stop_ack_timer(unsigned int neighbor)
 {
-	char *msg;
-
-	logLine(trace, "stop_ack_timer\n");
-    if (StopTimer(ack_timer_id, (void *)&msg)) {
-	    logLine(trace, "timer %d stoppet. msg: %s \n", ack_timer_id, msg);
-        free(msg);
-    }
-    ack_timer_id = -1;
+  char *msg;
+  
+  logLine(trace, "stop_ack_timer\n");
+  //if (StopTimer(ack_timer_id, (void *)&msg)) {
+  if(StopTimer(ack_timer_ids[neighbor], (void*)&msg)) {
+    //logLine(trace, "timer %d stoppet. msg: %s \n", ack_timer_id, msg);
+    logLine(trace, "timer %d stoppet. msg: %s \n", ack_timer_ids[neighbor], msg);
+    free(msg);
+  }
+  //ack_timer_id = -1;
+  ack_timer_ids[neighbor] = -1;
 }
 
 
