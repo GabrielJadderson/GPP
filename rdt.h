@@ -33,6 +33,12 @@ typedef struct {        /* frames are transported in this layer */
   int recvTime;
 } frame;
 
+/* This struct encapsulates a neighbour */
+typedef struct {
+    unsigned int neighbour_id;
+    frame f;
+} neighbour;
+
 /* init_frame fills in default initial values in a frame. Protocols should
  * call this function before creating a new frame. Protocols may later update
  * some of these fields. This initialization is not strictly needed, but
