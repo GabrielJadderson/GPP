@@ -20,6 +20,8 @@
 #define MAX_SEQ 127        /* should be 2^n - 1 */
 #define NR_BUFS 4
 
+#define NUM_MAX_NEIGHBORS 4
+
 /* Globale variable */
 
 char *StationName;         /* Globalvariabel til at overføre programnavn      */
@@ -37,7 +39,8 @@ mlock_t *write_lock;
 
 packet ugly_buffer; // TODO Make this a queue
 
-int ack_timer_id;
+int ack_timer_id; // [PJ] This will be nuked at some point
+int ack_timer_ids[NUM_MAX_NEIGHBORS];
 int timer_ids[NR_BUFS];
 boolean no_nak = false; /* no nak has been sent yet */
 
@@ -269,10 +272,15 @@ void selective_repeat() {
     logLine(trace, "Starting selective repeat %d\n", ThisStation);
 
     for (i = 0; i < NR_BUFS; i++) {
-    	arrived[i] = false;
-    	timer_ids[i] = -1;
+      arrived[i] = false;
+      timer_ids[i] = -1;
     }
     ack_timer_id = -1;
+    
+    // Set all the timers to be not set.
+    for (i = 0; i < NUM_MAX_NEIGHBORS; i++) {
+      ack_timer_ids[i] = -1;
+    }
 
 
     events_we_handle = frame_arrival | timeout | network_layer_ready;
@@ -315,7 +323,7 @@ void selective_repeat() {
 					if ((r.seq != frame_expected) && no_nak) {
 						send_frame(NAK, 0, frame_expected, out_buf);
 					} else {
-						start_ack_timer();
+						start_ack_timer(0);
 					}
 					if (between(frame_expected, r.seq, too_far) && (arrived[r.seq%NR_BUFS] == false)) {
 						/* Frames may be accepted in any order. */
@@ -328,7 +336,7 @@ void selective_repeat() {
 							arrived[frame_expected % NR_BUFS] = false;
 							inc(frame_expected);        /* advance lower edge of receiver's window */
 							inc(too_far);        /* advance upper edge of receiver's window */
-							start_ack_timer();        /* to see if (a separate ack is needed */
+							start_ack_timer(0);        /* to see if (a separate ack is needed */
 						}
 					}
 				}
@@ -497,16 +505,18 @@ void stop_timer(seq_nr k) {
 }
 
 
-void start_ack_timer(void)
+void start_ack_timer(unsigned int neighbor)
 {
-	if( ack_timer_id == -1 ) {
-		logLine(trace, "Starting ack-timer\n");
-		char *msg;
-		msg = (char *) malloc(100*sizeof(char));
-		strcpy(msg, "Ack-timer");
-		ack_timer_id = SetTimer( act_timer_timeout_millis, (void *)msg );
-		logLine(debug, "Ack-timer startet med id %d\n", ack_timer_id);
-	}
+  //if( ack_timer_id == -1 ) {
+  if( ack_timer_ids[neighbor] == -1 ) {
+    logLine(trace, "Starting ack-timer\n");
+    char *msg;
+    msg = (char *) malloc(100*sizeof(char));
+    strcpy(msg, "Ack-timer");
+    //ack_timer_id = SetTimer( act_timer_timeout_millis, (void *)msg );
+    ack_timer_ids[neighbor] = SetTimer( act_timer_timeout_millis, (void *)msg );
+    logLine(debug, "Ack-timer startet med id %d\n", ack_timer_id);
+  }
 }
 
 
