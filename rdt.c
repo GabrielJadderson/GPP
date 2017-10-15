@@ -39,7 +39,7 @@ mlock_t *write_lock;
 
 packet ugly_buffer; // TODO Make this a queue
 
-int ack_timer_id; // [PJ] This will be nuked at some point
+//int ack_timer_id; // [PJ] This will be nuked at some point
 int ack_timer_ids[NUM_MAX_NEIGHBORS];
 int timer_ids[NR_BUFS];
 boolean no_nak = false; /* no nak has been sent yet */
@@ -275,7 +275,7 @@ void selective_repeat() {
       arrived[i] = false;
       timer_ids[i] = -1;
     }
-    ack_timer_id = -1;
+    //ack_timer_id = -1;
     
     // Set all the timers to be not set.
     for (i = 0; i < NUM_MAX_NEIGHBORS; i++) {
@@ -356,13 +356,16 @@ void selective_repeat() {
 	        case timeout: /* Ack timeout or regular timeout*/
 	        	// Check if it is the ack_timer
 	        	timer_id = event.timer_id;
-	        	logLine(trace, "Timeout with id: %d - acktimer_id is %d\n", timer_id, ack_timer_id);
+	        	//logLine(trace, "Timeout with id: %d - acktimer_id is %d\n", timer_id, ack_timer_id);
+	        	logLine(trace, "Timeout with id: %d - acktimer_id is %d\n", timer_id, ack_timer_ids[0]);
 	        	logLine(info, "Message from timer: '%s'\n", (char *) event.msg );
 
-	        	if( timer_id == ack_timer_id ) { // Ack timer timer out
+	        	//if( timer_id == ack_timer_id ) { // Ack timer timer out
+	        	if( timer_id == ack_timer_ids[0] ) { // Ack timer timer out
 	        		logLine(debug, "This was an ack-timer timeout. Sending explicit ack.\n");
 	        		free(event.msg);
-	        		ack_timer_id = -1; // It is no longer running
+	        		//ack_timer_id = -1; // It is no longer running
+	        		ack_timer_ids[0] = -1; // It is no longer running
 	        		send_frame(ACK,0,frame_expected, out_buf);        /* ack timer expired; send ack */
 	        	} else {
 	        		int timed_out_seq_nr = atoi( (char *) event.msg );
@@ -505,7 +508,7 @@ void stop_timer(seq_nr k) {
 }
 
 
-void start_ack_timer(unsigned int neighbor)
+void start_ack_timer(neighbourid neighbor)
 {
   //if( ack_timer_id == -1 ) {
   if( ack_timer_ids[neighbor] == -1 ) {
@@ -515,12 +518,13 @@ void start_ack_timer(unsigned int neighbor)
     strcpy(msg, "Ack-timer");
     //ack_timer_id = SetTimer( act_timer_timeout_millis, (void *)msg );
     ack_timer_ids[neighbor] = SetTimer( act_timer_timeout_millis, (void *)msg );
-    logLine(debug, "Ack-timer startet med id %d\n", ack_timer_id);
+    //logLine(debug, "Ack-timer startet med id %d\n", ack_timer_id);
+    logLine(debug, "Ack-timer startet med id %d\n", ack_timer_ids[0]);
   }
 }
 
 
-void stop_ack_timer(unsigned int neighbor)
+void stop_ack_timer(neighbourid neighbor)
 {
   char *msg;
   

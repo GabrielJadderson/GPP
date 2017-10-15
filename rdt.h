@@ -34,8 +34,9 @@ typedef struct {        /* frames are transported in this layer */
 } frame;
 
 /* This struct encapsulates a neighbour */
+typedef unsigned int neighbourid;
 typedef struct {
-    unsigned int neighbour_id;
+    neighbourid neighbour_id;
     frame f;
 } neighbour;
 
