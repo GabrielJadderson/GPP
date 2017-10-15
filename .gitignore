@@ -1,6 +1,10 @@
 # Vim swap files
 *.swp
 
+# Some specific compilation files
+rdt.o
+mynetwork
+
 # Prerequisites
 *.d
 
