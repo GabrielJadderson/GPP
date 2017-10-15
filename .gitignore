@@ -5,6 +5,18 @@
 rdt.o
 mynetwork
 
+nettest
+signaltest
+timertest
+
+# log files
+*.log
+*.log.*
+
+# subnet library is compiled on-site anyway methinks? Otherwise it wouldn't change in the first place.
+libsubnet.a
+lib/libsubnet.a
+
 # Prerequisites
 *.d
 
