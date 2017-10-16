@@ -260,7 +260,14 @@ void selective_repeat() {
     Init_lock(write_lock);
     Init_lock( network_layer_lock );
 
-
+    /*
+    logLine(succes, "Log Enabled: succes\n");
+    logLine(error, "Log Enabled: error\n");
+    logLine(warn, "Log Enabled: warn\n");
+    logLine(info, "Log Enabled: info\n");
+    logLine(debug, "Log Enabled: debug\n");
+    logLine(trace, "Log Enabled: trace\n");
+    */
 
     enable_network_layer();  /* initialize */
     ack_expected = 0;        /* next ack expected on the inbound stream */
