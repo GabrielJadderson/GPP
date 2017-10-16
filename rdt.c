@@ -20,7 +20,7 @@
 #define MAX_SEQ 127        /* should be 2^n - 1 */
 #define NR_BUFS 4
 
-#define NUM_MAX_NEIGHBORS 4
+#define NUM_MAX_NEIGHBOURS 4
 
 /* Globale variable */
 
@@ -37,11 +37,11 @@ FifoQueue for_network_layer_queue;    /* Queue for data for the network layer */
 mlock_t *network_layer_lock;
 mlock_t *write_lock;
 
-packet ugly_buffer; // TODO Make this a queue
-
+neighbour neighbours[NUM_MAX_NEIGHBOURS];
 //int ack_timer_id; // [PJ] This will be nuked at some point
-int ack_timer_ids[NUM_MAX_NEIGHBORS];
-int timer_ids[NR_BUFS];
+//int ack_timer_ids[NUM_MAX_NEIGHBOURS];
+//int timer_ids[NR_BUFS];
+//int timer_ids2D[NR_BUFS];
 boolean no_nak = false; /* no nak has been sent yet */
 
 static boolean between(seq_nr a, seq_nr b, seq_nr c)
@@ -82,136 +82,12 @@ static void send_frame(frame_kind fk, seq_nr frame_nr, seq_nr frame_expected, pa
     to_physical_layer(&s);        /* transmit the frame */
     if (fk == DATA)
     {
-    	start_timer(frame_nr);
+    	start_timer(0, frame_nr); //TODO
     }
     stop_ack_timer(0);        /* no need for separate ack frame */
 }
 
-/* Fake network/upper layers for station 1
- *
- * Send 20 packets and receive 10 before we stop
- * */
-void FakeNetworkLayer1()
-{
-	char *buffer;
-	int i,j;
-    long int events_we_handle;
-    event_t event;
-	FifoQueueEntry e;
-
-    from_network_layer_queue = InitializeFQ();
-    for_network_layer_queue = InitializeFQ();
-
-    // Setup some messages
-    for( i = 0; i < 20; i++ ) {
-        buffer = (char *) malloc ( sizeof(char) * MAX_PKT);
-    	sprintf( buffer, "D: %d", i );
-  	    EnqueueFQ( NewFQE( (void *) buffer ), from_network_layer_queue );
-    }
-
-    events_we_handle = network_layer_allowed_to_send | data_for_network_layer;
-
-    // Give selective repeat a chance to start
-    sleep(2);
-
-    i = 0;
-    j = 0;
-    while( true ) {
-    	// Wait until we are allowed to transmit
-    	Wait(&event, events_we_handle);
-    	switch(event.type) {
-    		case network_layer_allowed_to_send:
-				Lock( network_layer_lock );
-    			if( i < 20 && network_layer_enabled) {
-        			// Signal element is ready
-        			logLine(info, "Sending signal for message #%d\n", i);
-        			network_layer_enabled = false;
-        			Signal(network_layer_ready, NULL);
-        			i++;
-    			}
-				Unlock( network_layer_lock );
-    			break;
-    		case data_for_network_layer:
-				Lock( network_layer_lock );
-
-				e = DequeueFQ( for_network_layer_queue );
-    			logLine(succes, "Received message: %s\n" ,( (char *) e->val) );
-
-				Unlock( network_layer_lock );
-
-    			j++;
-    			break;
-    	}
-
-		if( i >= 20 && j >= 10) {
-		    logLine(info, "Station %d done. - (\'sleep(5)\')\n", ThisStation);
-		    /* A small break, so all stations can be ready */
-		    sleep(5);
-		    Stop();
-		}
-    }
-}
-
-/* Fake network/upper layers for station 2
- *
- * Receive 20 messages, take the first 10, lowercase first letter and send to station 1.
- * With this, some acks will be piggybacked, some will be pure acks.
- *
- **/
-void FakeNetworkLayer2()
-{
-    long int events_we_handle;
-    event_t event;
-	int j;
-	FifoQueueEntry e;
-
-    from_network_layer_queue = InitializeFQ();
-    for_network_layer_queue = InitializeFQ();
-
-    events_we_handle = network_layer_allowed_to_send | data_for_network_layer;
-
-    j = 0;
-    while( true ) {
-    	// Wait until we are allowed to transmit
-    	Wait(&event, events_we_handle);
-
-    	switch(event.type) {
-    		case network_layer_allowed_to_send:
-				Lock( network_layer_lock );
-    			if( network_layer_enabled && !EmptyFQ( from_network_layer_queue )  ) {
-        			logLine(info, "Signal from network layer for message\n");
-        			network_layer_enabled = false;
-        			ClearEvent( network_layer_ready ); // Don't want to signal too many events
-        			Signal(network_layer_ready, NULL);
-    			}
-				Unlock( network_layer_lock );
-    			break;
-    		case data_for_network_layer:
-				Lock( network_layer_lock );
-
-				e = DequeueFQ( for_network_layer_queue );
-    			logLine(succes, "Received message: %s\n" ,( (char *) e->val) );
-
-    			if( j < 10) {
-   					( (char *) e->val)[0] = 'd';
-   					EnqueueFQ( e, from_network_layer_queue );
-    			}
-
-				Unlock( network_layer_lock );
-
-
-				j++;
-    			logLine(info, "j: %d\n" ,j );
-    			break;
-    	}
-		if( EmptyFQ( from_network_layer_queue ) && j >= 20) {
-			logLine(succes, "Stopping - received 20 messages and sent 10\n"  );
-		    sleep(5);
-		    Stop();
-		}
-
-    }
-}
+#include "rdt_fakeNetworkLayers.c"
 
 void log_event_received(long int event) {
 	char *event_name;
@@ -240,16 +116,16 @@ void log_event_received(long int event) {
 }
 
 void selective_repeat() {
-    seq_nr ack_expected;              /* lower edge of sender's window */
-    seq_nr next_frame_to_send;        /* upper edge of sender's window + 1 */
-    seq_nr frame_expected;            /* lower edge of receiver's window */
-    seq_nr too_far;                   /* upper edge of receiver's window + 1 */
-    int i;                            /* index into buffer pool */
-    frame r;                          /* scratch variable */
-    packet out_buf[NR_BUFS];          /* buffers for the outbound stream */
-    packet in_buf[NR_BUFS];           /* buffers for the inbound stream */
-    boolean arrived[NR_BUFS];         /* inbound bit map */
-    seq_nr nbuffered;                 /* how many output buffers currently used */
+    seq_nr ack_expected;              // lower edge of sender's window
+    seq_nr next_frame_to_send;        // upper edge of sender's window + 1
+    seq_nr frame_expected;            // lower edge of receiver's window
+    seq_nr too_far;                   // upper edge of receiver's window + 1
+    int i;                            // index into buffer pool
+    frame r;                          // scratch variable
+    packet out_buf[NR_BUFS];          // buffers for the outbound stream
+    packet in_buf[NR_BUFS];           // buffers for the inbound stream
+    boolean arrived[NR_BUFS];         // inbound bit map
+    seq_nr nbuffered;                 // how many output buffers currently used
     event_t event;
     long int events_we_handle;
     unsigned int timer_id;
@@ -280,13 +156,18 @@ void selective_repeat() {
 
     for (i = 0; i < NR_BUFS; i++) {
       arrived[i] = false;
-      timer_ids[i] = -1;
+      //timer_ids[i] = -1;
     }
     //ack_timer_id = -1;
     
     // Set all the timers to be not set.
-    for (i = 0; i < NUM_MAX_NEIGHBORS; i++) {
-      ack_timer_ids[i] = -1;
+    for (i = 0; i < NUM_MAX_NEIGHBOURS; i++) {
+      //ack_timer_ids[i] = -1;
+      neighbours[i].ack_timer_id = -1;
+      
+      for (int j = 0; j < NR_BUFS; j++) {
+        neighbours[i].timer_ids[j] = -1;
+      }
     }
 
 
@@ -355,7 +236,8 @@ void selective_repeat() {
 				while (between(ack_expected, r.ack, next_frame_to_send)) {
 					logLine(debug, "Advancing window %d\n", ack_expected);
 					nbuffered = nbuffered - 1;        		/* handle piggybacked ack */
-					stop_timer(ack_expected % NR_BUFS);     /* frame arrived intact */
+					//stop_timer(ack_expected % NR_BUFS);     /* frame arrived intact */
+					stop_timer(0, ack_expected % NR_BUFS);     /* frame arrived intact */ //TODO
 					inc(ack_expected);        				/* advance lower edge of sender's window */
 				}
 				break;
@@ -364,15 +246,18 @@ void selective_repeat() {
 	        	// Check if it is the ack_timer
 	        	timer_id = event.timer_id;
 	        	//logLine(trace, "Timeout with id: %d - acktimer_id is %d\n", timer_id, ack_timer_id);
-	        	logLine(trace, "Timeout with id: %d - acktimer_id is %d\n", timer_id, ack_timer_ids[0]);
+	        	//logLine(trace, "Timeout with id: %d - acktimer_id is %d\n", timer_id, ack_timer_ids[0]);
+	        	logLine(trace, "Timeout with id: %d - acktimer_id is %d\n", timer_id, neighbours[0].ack_timer_id);
 	        	logLine(info, "Message from timer: '%s'\n", (char *) event.msg );
 
 	        	//if( timer_id == ack_timer_id ) { // Ack timer timer out
-	        	if( timer_id == ack_timer_ids[0] ) { // Ack timer timer out
+	        	//if( timer_id == ack_timer_ids[0] ) { // Ack timer timer out
+	        	if( timer_id == neighbours[0].ack_timer_id ) { // Ack timer timer out
 	        		logLine(debug, "This was an ack-timer timeout. Sending explicit ack.\n");
 	        		free(event.msg);
 	        		//ack_timer_id = -1; // It is no longer running
-	        		ack_timer_ids[0] = -1; // It is no longer running
+	        		//ack_timer_ids[0] = -1; // It is no longer running
+	        		neighbours[0].ack_timer_id = -1; // It is no longer running
 	        		send_frame(ACK,0,frame_expected, out_buf);        /* ack timer expired; send ack */
 	        	} else {
 	        		int timed_out_seq_nr = atoi( (char *) event.msg );
@@ -487,63 +372,73 @@ void to_physical_layer(frame *s)
 }
 
 
-void start_timer(seq_nr k) {
+void start_timer(neighbourid neighbour, seq_nr k) {
 
 	char *msg;
 	msg = (char *) malloc(100*sizeof(char));
 	sprintf(msg, "%d", k); // Save seq_nr in message
 
-	timer_ids[k % NR_BUFS] = SetTimer( frame_timer_timeout_millis, (void *)msg );
-	logLine(trace, "start_timer for seq_nr=%d timer_ids=[%d, %d, %d, %d] %s\n", k, timer_ids[0], timer_ids[1], timer_ids[2], timer_ids[3], msg);
+	//timer_ids[k % NR_BUFS] = SetTimer( frame_timer_timeout_millis, (void *)msg );
+	neighbours[neighbour].timer_ids[k % NR_BUFS] = SetTimer( frame_timer_timeout_millis, (void *)msg );
+	//logLine(trace, "start_timer for seq_nr=%d timer_ids=[%d, %d, %d, %d] %s\n", k, timer_ids[0], timer_ids[1], timer_ids[2], timer_ids[3], msg);
+	logLine(trace, "start_timer for seq_nr=%d timer_ids=[%d, %d, %d, %d] %s\n", k, neighbours[neighbour].timer_ids[0], neighbours[neighbour].timer_ids[1], neighbours[neighbour].timer_ids[2], neighbours[neighbour].timer_ids[3], msg);
 
 }
 
 
-void stop_timer(seq_nr k) {
+void stop_timer(neighbourid neighbour, seq_nr k) {
 	int timer_id;
 	char *msg;
 
-	timer_id = timer_ids[k];
+	//timer_id = timer_ids[k];
+	timer_id = neighbours[neighbour].timer_ids[k];
 	logLine(trace, "stop_timer for seq_nr %d med id=%d\n", k, timer_id);
 
     if (StopTimer(timer_id, (void *)&msg)) {
     	logLine(trace, "timer %d stoppet. msg: %s \n", timer_id, msg);
         free(msg);
     } else {
-    	logLine(trace, "timer %d kunne ikke stoppes. Måske er den timet ud?timer_ids=[%d, %d, %d, %d] \n", timer_id, timer_ids[0], timer_ids[1], timer_ids[2], timer_ids[3]);
+    	//logLine(trace, "timer %d kunne ikke stoppes. Måske er den timet ud?timer_ids=[%d, %d, %d, %d] \n", timer_id, timer_ids[0], timer_ids[1], timer_ids[2], timer_ids[3]);
+    	logLine(trace, "timer %d kunne ikke stoppes. Måske er den timet ud?timer_ids=[%d, %d, %d, %d] \n", timer_id, neighbours[neighbour].timer_ids[0], neighbours[neighbour].timer_ids[1], neighbours[neighbour].timer_ids[2], neighbours[neighbour].timer_ids[3]);
     }
 }
 
 
-void start_ack_timer(neighbourid neighbor)
+void start_ack_timer(neighbourid neighbour)
 {
   //if( ack_timer_id == -1 ) {
-  if( ack_timer_ids[neighbor] == -1 ) {
+  //if( ack_timer_ids[neighbour] == -1 ) {
+  if( neighbours[neighbour].ack_timer_id == -1 ) {
     logLine(trace, "Starting ack-timer\n");
     char *msg;
     msg = (char *) malloc(100*sizeof(char));
     strcpy(msg, "Ack-timer");
     //ack_timer_id = SetTimer( act_timer_timeout_millis, (void *)msg );
-    ack_timer_ids[neighbor] = SetTimer( act_timer_timeout_millis, (void *)msg );
+    //ack_timer_ids[neighbour] = SetTimer( act_timer_timeout_millis, (void *)msg );
+    neighbours[neighbour].ack_timer_id = SetTimer( act_timer_timeout_millis, (void *)msg );
     //logLine(debug, "Ack-timer startet med id %d\n", ack_timer_id);
-    logLine(debug, "Ack-timer startet med id %d\n", ack_timer_ids[0]);
+    //logLine(debug, "Ack-timer startet med id %d\n", ack_timer_ids[0]);
+    logLine(debug, "Ack-timer startet med id %d\n", neighbours[neighbour].ack_timer_id);
   }
 }
 
 
-void stop_ack_timer(neighbourid neighbor)
+void stop_ack_timer(neighbourid neighbour)
 {
   char *msg;
   
   logLine(trace, "stop_ack_timer\n");
   //if (StopTimer(ack_timer_id, (void *)&msg)) {
-  if(StopTimer(ack_timer_ids[neighbor], (void*)&msg)) {
+  //if(StopTimer(ack_timer_ids[neighbor], (void*)&msg)) {
+  if(StopTimer(neighbours[neighbour].ack_timer_id, (void*)&msg)) {
     //logLine(trace, "timer %d stoppet. msg: %s \n", ack_timer_id, msg);
-    logLine(trace, "timer %d stoppet. msg: %s \n", ack_timer_ids[neighbor], msg);
+    //logLine(trace, "timer %d stoppet. msg: %s \n", ack_timer_ids[neighbor], msg);
+    logLine(trace, "timer %d stoppet. msg: %s \n", neighbours[neighbour].ack_timer_id, msg);
     free(msg);
   }
   //ack_timer_id = -1;
-  ack_timer_ids[neighbor] = -1;
+  //ack_timer_ids[neighbor] = -1;
+  neighbours[neighbour].ack_timer_id = -1;
 }
 
 

@@ -34,11 +34,28 @@ typedef struct {        /* frames are transported in this layer */
 } frame;
 
 /* This struct encapsulates a neighbour */
+#define NR_BUFS 4
+
 typedef unsigned int neighbourid;
-typedef struct {
-    neighbourid neighbour_id;
-    frame f;
+
+typedef struct { //The global data for a neighbour.
+    //neighbourid neighbour_id; // [PJ] Do we really need this? Neighbour id is used to select from an array of these.
+    int ack_timer_id;
+    int timer_ids[NR_BUFS];
 } neighbour;
+
+typedef struct { //The data only visible to selective repeat.
+  seq_nr ack_expected;              // lower edge of sender's window
+  seq_nr next_frame_to_send;        // upper edge of sender's window + 1
+  seq_nr frame_expected;            // lower edge of receiver's window
+  seq_nr too_far;                   // upper edge of receiver's window + 1
+  int i;                            // index into buffer pool
+  frame r;                          // scratch variable
+  packet out_buf[NR_BUFS];          // buffers for the outbound stream
+  packet in_buf[NR_BUFS];           // buffers for the inbound stream
+  boolean arrived[NR_BUFS];         // inbound bit map
+  seq_nr nbuffered;                 // how many output buffers currently used
+} neighbourStateData;
 
 /* init_frame fills in default initial values in a frame. Protocols should
  * call this function before creating a new frame. Protocols may later update
@@ -60,10 +77,10 @@ int from_physical_layer(frame *r);
 void to_physical_layer(frame *s);
 
 /* Start the clock running and enable the timeout event. */
-void start_timer(seq_nr k);
+void start_timer(neighbourid neighbour, seq_nr k);
 
 /* Stop the clock and disable the timeout event. */
-void stop_timer(seq_nr k);
+void stop_timer(neighbourid neighbour, seq_nr k);
 
 /* Start an auxiliary timer and enable the ack_timeout event. */
 void start_ack_timer(unsigned int neighbor);
