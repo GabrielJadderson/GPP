@@ -40,8 +40,10 @@ typedef unsigned int neighbourid;
 
 typedef struct { //The global data for a neighbour.
     //neighbourid neighbour_id; // [PJ] Do we really need this? Neighbour id is used to select from an array of these.
+    int stationID; //"MAC Address" in the subnet. -1 if no connection.
     int ack_timer_id;
     int timer_ids[NR_BUFS];
+    boolean no_nak; //[PJ] I assume it safe to say that this is per-connection information.
 } neighbour;
 
 typedef struct { //The data only visible to selective repeat.
@@ -49,13 +51,13 @@ typedef struct { //The data only visible to selective repeat.
   seq_nr next_frame_to_send;        // upper edge of sender's window + 1
   seq_nr frame_expected;            // lower edge of receiver's window
   seq_nr too_far;                   // upper edge of receiver's window + 1
-  int i;                            // index into buffer pool
-  frame r;                          // scratch variable
+  //int i;                            // index into buffer pool //Was never used?
+  //frame r;                          // scratch variable //Not needed to have it in here, it is used at the outermost level of SR
   packet out_buf[NR_BUFS];          // buffers for the outbound stream
   packet in_buf[NR_BUFS];           // buffers for the inbound stream
   boolean arrived[NR_BUFS];         // inbound bit map
   seq_nr nbuffered;                 // how many output buffers currently used
-} neighbourStateData;
+} neighbour_SR_Data;
 
 /* init_frame fills in default initial values in a frame. Protocols should
  * call this function before creating a new frame. Protocols may later update

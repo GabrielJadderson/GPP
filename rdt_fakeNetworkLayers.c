@@ -123,3 +123,68 @@ void FakeNetworkLayer2()
 
     }
 }
+
+
+
+void FakeNetworkLayer_Test1()
+{
+    char *buffer;
+    int i,j;
+    long int events_we_handle;
+    event_t event;
+    FifoQueueEntry e;
+
+    from_network_layer_queue = InitializeFQ();
+    for_network_layer_queue = InitializeFQ();
+
+    // Setup some messages
+    for( i = 0; i < 2; i++ ) {
+        buffer = (char *) malloc ( sizeof(char) * MAX_PKT);
+    	sprintf( buffer, "%d to %d", ThisStation, i );
+        EnqueueFQ( NewFQE( (void *) buffer ), from_network_layer_queue );
+    }
+
+    events_we_handle = network_layer_allowed_to_send | data_for_network_layer;
+
+    // Give selective repeat a chance to start
+    sleep(2);
+
+    i = 0;
+    j = 0;
+    while( true ) {
+    	// Wait until we are allowed to transmit
+    	Wait(&event, events_we_handle);
+    	switch(event.type) {
+    		case network_layer_allowed_to_send:
+				Lock( network_layer_lock );
+    			if( i < 2 && network_layer_enabled) {
+        			// Signal element is ready
+        			logLine(info, "Sending signal for message #%d\n", i);
+        			network_layer_enabled = false;
+        			Signal(network_layer_ready, NULL);
+        			i++;
+    			}
+				Unlock( network_layer_lock );
+    			break;
+    		case data_for_network_layer:
+				Lock( network_layer_lock );
+
+				e = DequeueFQ( for_network_layer_queue );
+    			logLine(succes, "Received message: %s\n" ,( (char *) e->val) );
+
+				Unlock( network_layer_lock );
+
+    			j++;
+    			break;
+    	}
+
+		if( i >= 20 && j >= 10) {
+		    logLine(info, "Station %d done. - (\'sleep(5)\')\n", ThisStation);
+		    // A small break, so all stations can be ready
+		    sleep(5);
+		    Stop();
+		}
+    }
+}
+
+

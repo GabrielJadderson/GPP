@@ -42,7 +42,7 @@ neighbour neighbours[NUM_MAX_NEIGHBOURS];
 //int ack_timer_ids[NUM_MAX_NEIGHBOURS];
 //int timer_ids[NR_BUFS];
 //int timer_ids2D[NR_BUFS];
-boolean no_nak = false; /* no nak has been sent yet */
+//boolean no_nak = false; /* no nak has been sent yet */
 
 static boolean between(seq_nr a, seq_nr b, seq_nr c)
 {
@@ -77,7 +77,7 @@ static void send_frame(frame_kind fk, seq_nr frame_nr, seq_nr frame_expected, pa
     s.ack = (frame_expected + MAX_SEQ) % (MAX_SEQ + 1);
     if (fk == NAK)
     {
-    	no_nak = false;        /* one nak per frame, please */
+    	neighbours[0].no_nak = false;        /* one nak per frame, please */
     }
     to_physical_layer(&s);        /* transmit the frame */
     if (fk == DATA)
@@ -116,16 +116,19 @@ void log_event_received(long int event) {
 }
 
 void selective_repeat() {
+    
     seq_nr ack_expected;              // lower edge of sender's window
     seq_nr next_frame_to_send;        // upper edge of sender's window + 1
     seq_nr frame_expected;            // lower edge of receiver's window
     seq_nr too_far;                   // upper edge of receiver's window + 1
-    int i;                            // index into buffer pool
+    //int i;                            // index into buffer pool
     frame r;                          // scratch variable
     packet out_buf[NR_BUFS];          // buffers for the outbound stream
     packet in_buf[NR_BUFS];           // buffers for the inbound stream
     boolean arrived[NR_BUFS];         // inbound bit map
     seq_nr nbuffered;                 // how many output buffers currently used
+    
+    //neighbour_SR_Data neighbourData[NUM_MAX_NEIGHBOURS];
     event_t event;
     long int events_we_handle;
     unsigned int timer_id;
@@ -154,14 +157,14 @@ void selective_repeat() {
 
     logLine(trace, "Starting selective repeat %d\n", ThisStation);
 
-    for (i = 0; i < NR_BUFS; i++) {
+    for (int i = 0; i < NR_BUFS; i++) {
       arrived[i] = false;
       //timer_ids[i] = -1;
     }
     //ack_timer_id = -1;
     
     // Set all the timers to be not set.
-    for (i = 0; i < NUM_MAX_NEIGHBOURS; i++) {
+    for (int i = 0; i < NUM_MAX_NEIGHBOURS; i++) {
       //ack_timer_ids[i] = -1;
       neighbours[i].ack_timer_id = -1;
       
@@ -208,7 +211,7 @@ void selective_repeat() {
 				from_physical_layer(&r);        /* fetch incoming frame from physical layer */
 				if (r.kind == DATA) {
 					/* An undamaged frame has arrived. */
-					if ((r.seq != frame_expected) && no_nak) {
+					if ((r.seq != frame_expected) && neighbours[0].no_nak) {
 						send_frame(NAK, 0, frame_expected, out_buf);
 					} else {
 						start_ack_timer(0);
@@ -220,7 +223,7 @@ void selective_repeat() {
 						while (arrived[frame_expected % NR_BUFS]) {
 							/* Pass frames and advance window. */
 							to_network_layer(&in_buf[frame_expected % NR_BUFS]);
-							no_nak = true;
+							neighbours[0].no_nak = true;
 							arrived[frame_expected % NR_BUFS] = false;
 							inc(frame_expected);        /* advance lower edge of receiver's window */
 							inc(too_far);        /* advance upper edge of receiver's window */
@@ -459,10 +462,43 @@ int main(int argc, char *argv[])
 
 
   /* processerne aktiveres */
-  ACTIVATE(1, FakeNetworkLayer1);
+  /*ACTIVATE(1, FakeNetworkLayer1);
   ACTIVATE(2, FakeNetworkLayer2);
   ACTIVATE(1, selective_repeat);
   ACTIVATE(2, selective_repeat);
+  */
+  
+  //This pre-built table setup piece would ideally be replaced with a connection request with handshake and so on.
+  switch(ThisStation) {
+    case 1:
+      neighbours[0].stationID = 2;
+      neighbours[1].stationID = 3;
+      neighbours[2].stationID = -1;
+      neighbours[3].stationID = -1;
+      break;
+    case 2:
+      neighbours[0].stationID = 1;
+      neighbours[1].stationID = 3;
+      neighbours[2].stationID = -1;
+      neighbours[3].stationID = -1;
+      break;
+    case 3:
+      neighbours[0].stationID = 1;
+      neighbours[1].stationID = 2;
+      neighbours[2].stationID = -1;
+      neighbours[3].stationID = -1;
+      break;
+  }
+  
+  ACTIVATE(1, FakeNetworkLayer_Test1);
+  ACTIVATE(1, selective_repeat);
+  
+  ACTIVATE(2, FakeNetworkLayer_Test1);
+  ACTIVATE(2, selective_repeat);
+  
+  ACTIVATE(3, FakeNetworkLayer_Test1);
+  ACTIVATE(3, selective_repeat);
+  
 
   /* simuleringen starter */
   Start();
