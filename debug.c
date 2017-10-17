@@ -14,14 +14,15 @@
 extern mlock_t *write_lock;
 extern int ThisStation;
 
-
+int global_log_level_limit;
 
 int logLine(log_level level, const char * __restrict format, ... ) {
     va_list arg;
     int rv;
     char *level_string;
 
-	int log_level_limit = succes; // INFO: Here you can set the log level you wish to output
+	//int log_level_limit = succes; // INFO: Here you can set the log level you wish to output
+        int log_level_limit = global_log_level_limit;
 
 	switch(level) {
 	case trace:

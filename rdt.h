@@ -90,6 +90,10 @@ void start_timer(neighbourid neighbour, seq_nr k);
 void stop_timer(neighbourid neighbour, seq_nr k);
 
 /* Start an auxiliary timer and enable the ack_timeout event. */
+typedef struct {
+  seq_nr k;
+  neighbourid neighbour;
+} packetTimerMessage;
 void start_ack_timer(unsigned int neighbor);
 
 /* Stop the auxiliary timer and disable the ack_timeout event. */

@@ -80,10 +80,11 @@ static void send_frame(frame_kind fk, seq_nr frame_nr, seq_nr frame_expected, pa
     {
     	neighbours[0].no_nak = false;        /* one nak per frame, please */
     }
+    //logLine(succes, "Sending frame to physical layer for recipient: %d\n", recipient);
     to_physical_layer(&s, neighbours[recipient].stationID);        /* transmit the frame */
     if (fk == DATA)
     {
-    	start_timer(neighbours[recipient].stationID, frame_nr); //TODO
+    	start_timer(recipient, frame_nr); //TODO
     }
     stop_ack_timer(0);        /* no need for separate ack frame */
 }
@@ -265,7 +266,12 @@ void selective_repeat() {
 	        	//logLine(trace, "Timeout with id: %d - acktimer_id is %d\n", timer_id, ack_timer_id);
 	        	//logLine(trace, "Timeout with id: %d - acktimer_id is %d\n", timer_id, ack_timer_ids[0]);
 	        	logLine(trace, "Timeout with id: %d - acktimer_id is %d\n", timer_id, neighbours[0].ack_timer_id);
-	        	logLine(info, "Message from timer: '%s'\n", (char *) event.msg );
+	        	//logLine(info, "Message from timer: '%s'\n", (char *) event.msg ); //[PJ] since it is no longer a char*, this won't work.
+                        
+                        //Figure out which neighbour to resend to.
+                        currentNeighbour = ((packetTimerMessage*) event.msg)->neighbour;
+                        //logLine(succes, "Timer values: %d, %d\n", ((packetTimerMessage*)event.msg)->k, currentNeighbour);
+                        //logLine(succes, "timer stuff: %s\n", (char *) event.msg);
 
 	        	//if( timer_id == ack_timer_id ) { // Ack timer timer out
 	        	//if( timer_id == ack_timer_ids[0] ) { // Ack timer timer out
@@ -278,7 +284,7 @@ void selective_repeat() {
 	        		send_frame(ACK,0,neighbourData[currentNeighbour].frame_expected, neighbourData[currentNeighbour].out_buf, currentNeighbour);        /* ack timer expired; send ack */
 	        	} else {
 	        		//int timed_out_seq_nr = atoi( (char *) event.msg );
-	        		int timed_out_seq_nr = ((char *) event.msg)[4];
+	        		int timed_out_seq_nr = ((packetTimerMessage *) event.msg)->k;
 
 	        		logLine(debug, "Timeout for frame - need to resend frame %d\n", timed_out_seq_nr);
 		        	send_frame(DATA, timed_out_seq_nr, neighbourData[currentNeighbour].frame_expected, neighbourData[currentNeighbour].out_buf, currentNeighbour);
@@ -309,6 +315,11 @@ neighbourid stationID2neighbourindex(int stationID) {
   int i = 0;
   while(neighbours[i].stationID != stationID) {
     i++;
+    
+    if(i >= NUM_MAX_NEIGHBOURS) {
+      logLine(error, "stationID2neighboutindex: unable to find neighbour for station: %d\n", stationID);
+      Stop(); //[PJ] Nope!
+    }
   }
   
   return i;
@@ -404,20 +415,30 @@ void to_physical_layer(frame *s, int target)
 	}*/
 
 	print_frame(s, "sending");
-
+        
+        //char temp[MAX_PKT+1];
+        //packet_to_string(&(s->info), temp);
 	//ToSubnet(ThisStation, send_to, (char *) s, sizeof(frame));
 	ToSubnet(ThisStation, target, (char *) s, sizeof(frame));
+        //logLine(succes, "Trying to send packet to: %d; with contents: %s\n", target, temp);
 }
 
 
 void start_timer(neighbourid neighbour, seq_nr k) {
 
-	char *msg;
+	//char *msg;
 	//msg = (char *) malloc(100*sizeof(char));
 	//sprintf(msg, "%d", k); // Save seq_nr in message
-        msg = malloc(sizeof(neighbourid)+sizeof(seq_nr));
-        msg[0] = neighbour;
-        msg[sizeof(neighbourid)] = k;
+        //msg = malloc(sizeof(neighbourid)+sizeof(seq_nr));
+        //msg[0] = neighbour;
+        //msg[sizeof(neighbourid)] = k;
+        
+        //logLine(succes, "starting timer with values: %d, %d\n", k, neighbour);
+        packetTimerMessage *msg = malloc(sizeof(packetTimerMessage));
+        msg->k = k;
+        msg->neighbour = neighbour;
+        
+        //char *msg = "Du Milde Moses!\n"; //[PJ] Just debugging
 
 	//timer_ids[k % NR_BUFS] = SetTimer( frame_timer_timeout_millis, (void *)msg );
 	neighbours[neighbour].timer_ids[k % NR_BUFS] = SetTimer( frame_timer_timeout_millis, (void *)msg );
@@ -451,9 +472,12 @@ void start_ack_timer(neighbourid neighbour)
   //if( ack_timer_ids[neighbour] == -1 ) {
   if( neighbours[neighbour].ack_timer_id == -1 ) {
     logLine(trace, "Starting ack-timer\n");
-    char *msg;
-    msg = (char *) malloc(100*sizeof(char));
-    strcpy(msg, "Ack-timer");
+    //char *msg;
+    //msg = (char *) malloc(100*sizeof(char));
+    //strcpy(msg, "Ack-timer");
+    packetTimerMessage *msg = malloc(sizeof(packetTimerMessage));
+    msg->k = -1;
+    msg->neighbour = neighbour;
     //ack_timer_id = SetTimer( act_timer_timeout_millis, (void *)msg );
     //ack_timer_ids[neighbour] = SetTimer( act_timer_timeout_millis, (void *)msg );
     neighbours[neighbour].ack_timer_id = SetTimer( act_timer_timeout_millis, (void *)msg );
@@ -483,14 +507,18 @@ void stop_ack_timer(neighbourid neighbour)
 }
 
 
-
+extern int global_log_level_limit;
 int main(int argc, char *argv[])
 {
   StationName = argv[0];
   ThisStation = atoi( argv[1] );
 
-  if (argc == 3)
+  if (argc == 3) {
     printf("Station %d: arg2 = %s\n", ThisStation, argv[2]);
+    global_log_level_limit = atoi(argv[2]);
+  } else {
+    global_log_level_limit = succes;
+  }
 
   mylog = InitializeLB("mytest");
 
@@ -539,7 +567,7 @@ int main(int argc, char *argv[])
   ACTIVATE(3, FakeNetworkLayer_Test1);
   ACTIVATE(3, selective_repeat);
   
-
+//asdasd
   /* simuleringen starter */
   Start();
   exit(0);

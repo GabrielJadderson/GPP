@@ -140,7 +140,7 @@ void FakeNetworkLayer_Test1()
     // Setup some messages
     for( i = 0; i < 2; i++ ) {
         buffer = (char *) malloc ( sizeof(char) * MAX_PKT);
-    	sprintf( buffer, "%d to %d", ThisStation, i );
+    	sprintf( buffer, "%d to %d", ThisStation, neighbours[i].stationID );
         EnqueueFQ( NewFQE( (void *) buffer ), from_network_layer_queue );
     }
 
@@ -161,7 +161,7 @@ void FakeNetworkLayer_Test1()
         			// Signal element is ready
         			logLine(info, "Sending signal for message #%d\n", i);
         			network_layer_enabled = false;
-        			Signal(network_layer_ready, 1);
+        			Signal(network_layer_ready, i);
         			i++;
     			}
 				Unlock( network_layer_lock );
@@ -178,7 +178,7 @@ void FakeNetworkLayer_Test1()
     			break;
     	}
 
-		if( i >= 20 && j >= 10) {
+		if( i >= 2 && j >= 2) {
 		    logLine(info, "Station %d done. - (\'sleep(5)\')\n", ThisStation);
 		    // A small break, so all stations can be ready
 		    sleep(5);
