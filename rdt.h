@@ -59,6 +59,11 @@ typedef struct { //The data only visible to selective repeat.
   seq_nr nbuffered;                 // how many output buffers currently used
 } neighbour_SR_Data;
 
+//Initializes the values in a neighbour_SR_Data elemet. Works on one element; iterate on arrays.
+void init_neighbour_SR_Data(neighbour_SR_Data *ND);
+
+neighbourid stationID2neighbourindex(int stationID);
+
 /* init_frame fills in default initial values in a frame. Protocols should
  * call this function before creating a new frame. Protocols may later update
  * some of these fields. This initialization is not strictly needed, but
@@ -76,7 +81,7 @@ void to_network_layer(packet *p);
 int from_physical_layer(frame *r);
 
 /* Pass the frame to the physical layer for transmission. */
-void to_physical_layer(frame *s);
+void to_physical_layer(frame *s, int target);
 
 /* Start the clock running and enable the timeout event. */
 void start_timer(neighbourid neighbour, seq_nr k);

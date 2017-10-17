@@ -161,7 +161,7 @@ void FakeNetworkLayer_Test1()
         			// Signal element is ready
         			logLine(info, "Sending signal for message #%d\n", i);
         			network_layer_enabled = false;
-        			Signal(network_layer_ready, NULL);
+        			Signal(network_layer_ready, 1);
         			i++;
     			}
 				Unlock( network_layer_lock );
