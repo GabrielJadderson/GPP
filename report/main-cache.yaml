@@ -1,0 +1,4845 @@
+version: 0.10.0
+filePath: main.tex
+options:
+  $BIBINPUTS:
+    - $ROOTDIR
+    - $ROOTDIR/$OUTDIR
+    - ''
+  $TEXINPUTS:
+    - $ROOTDIR
+    - $ROOTDIR/$OUTDIR
+    - ''
+  bibtexEngine: bibtex
+  cleanPatterns: &ref_0
+    - '**/*.aux'
+    - '**/*.aux.bak'
+    - '**/*.bbl'
+    - '**/*.bcf'
+    - '**/*.blg'
+    - '**/*.dvi'
+    - '**/*.fdb_latexmk'
+    - '**/*.fls'
+    - '**/*.idx'
+    - '**/*.idx.bak'
+    - '**/*.ilg'
+    - '**/*.ind'
+    - '**/*.lof'
+    - '**/*.log'
+    - '**/*.lol'
+    - '**/*.lot'
+    - '**/*.nav'
+    - '**/*.out'
+    - '**/*.pdf'
+    - '**/*.ps'
+    - '**/*.snm'
+    - '**/*.synctex.gz'
+    - '**/*.toc'
+    - '/**/_minted-${JOB}'
+    - '/${OUTDIR}/sage-plots-for-${JOB}.tex'
+    - /missfont.log
+    - /texput.log
+    - /texput.aux
+  dviToPdfEngine: xdvipdfmx
+  engine: pdflatex
+  epstopdfBoundingBox: default
+  epstopdfOutputPath: $DIR_0/$NAME_0.pdf
+  indexAutomaticRanges: true
+  indexEngine: makeindex
+  indexOrdering: word
+  indexSorting: default
+  knitrConcordance: true
+  knitrOutputPath: $JOB.tex
+  lhs2texStyle: poly
+  literateAgdaEngine: agda
+  literateHaskellEngine: lhs2TeX
+  loadCache: true
+  loadUserOptions: true
+  outputFormat: pdf
+  phaseCycles: 20
+  pweaveCacheDirectory: pweave-cache-for-$JOB
+  pweaveFigureDirectory: pweave-figures-for-$JOB
+  pweaveKernel: python3
+  pweaveOutputFormat: tex
+  pweaveOutputPath: $JOB.tex
+  saveCache: true
+  severity: warning
+  synctex: true
+  copyTargetsToRoot: true
+  outputDirectory: ''
+  intermediatePostScript: false
+  $PATH: >-
+    %SystemDrive%\texlive\2017\bin\win32;%SystemDrive%\texlive\2016\bin\win32;%SystemDrive%\texlive\2015\bin\win32;%ProgramFiles%\MiKTeX
+    2.9\miktex\bin\x64;%ProgramFiles(x86)%\MiKTeX 2.9\miktex\bin;$PATH
+files:
+  main.tex:
+    timeStamp: 2017-10-17T22:40:08.421Z
+    hash: A3I2yrxfnkfos8QhVgN1V13tuMeivKwSJ3xFXx8blJM=
+    jobNames: []
+    type: LaTeX
+    subType: article
+  'C:\Users\mulli\.dicy.yaml':
+    timeStamp: 2017-10-17T20:52:26.748Z
+    jobNames: []
+    type: YAML
+  'C:\Users\mulli\.dicy.yaml-ParsedYAML':
+    timeStamp: 2017-10-17T20:59:47.697Z
+    value:
+      engine: pdflatex
+      synctex: true
+      severity: warning
+      copyTargetsToRoot: true
+      outputDirectory: ''
+      outputFormat: pdf
+      cleanPatterns: *ref_0
+      intermediatePostScript: false
+      $PATH: >-
+        %SystemDrive%\texlive\2017\bin\win32;%SystemDrive%\texlive\2016\bin\win32;%SystemDrive%\texlive\2015\bin\win32;%ProgramFiles%\MiKTeX
+        2.9\miktex\bin\x64;%ProgramFiles(x86)%\MiKTeX 2.9\miktex\bin;$PATH
+    jobNames: []
+    type: ParsedYAML
+  main.tex-ParsedLaTeXMagic:
+    timeStamp: 2017-10-17T20:59:47.699Z
+    value: {}
+    jobNames: []
+    type: ParsedLaTeXMagic
+  dicy.yaml-ParsedYAML:
+    jobNames: []
+    type: ParsedYAML
+  main.yaml-ParsedYAML:
+    jobNames: []
+    type: ParsedYAML
+  dicy-instance.yaml-ParsedYAML:
+    jobNames: []
+    type: ParsedYAML
+  x.y-Nil:
+    jobNames: []
+    type: Nil
+  main.log:
+    timeStamp: 2017-10-17T22:40:11.674Z
+    hash: o6xNXVIfA2PlzQndXOGcqhmBS9Yg/nIVEj4x4ABkOqA=
+    jobNames: []
+    type: LaTeXLog
+    subType: pdfTeX
+  main.fls-ParsedFileListing:
+    timeStamp: 2017-10-17T20:59:54.968Z
+    value:
+      messages: []
+      inputs:
+        - 'c:\texlive\2017\texmf-dist\fonts\enc\dvips\cm-super\cm-super-t1.enc'
+        - 'c:\texlive\2017\texmf-dist\fonts\map\fontname\texfonts.map'
+        - 'c:\texlive\2017\texmf-dist\fonts\tfm\jknappen\ec\ecbx1200.tfm'
+        - 'c:\texlive\2017\texmf-dist\fonts\tfm\jknappen\ec\ecbx1728.tfm'
+        - 'c:\texlive\2017\texmf-dist\fonts\tfm\jknappen\ec\ecbx2488.tfm'
+        - 'c:\texlive\2017\texmf-dist\fonts\tfm\jknappen\ec\ecrm1095.tfm'
+        - 'c:\texlive\2017\texmf-dist\fonts\tfm\jknappen\ec\ecrm1200.tfm'
+        - 'c:\texlive\2017\texmf-dist\fonts\tfm\jknappen\ec\ecrm1728.tfm'
+        - 'c:\texlive\2017\texmf-dist\fonts\tfm\jknappen\ec\ecrm2488.tfm'
+        - 'c:\texlive\2017\texmf-dist\fonts\tfm\public\amsfonts\cmextra\cmex7.tfm'
+        - 'c:\texlive\2017\texmf-dist\fonts\tfm\public\amsfonts\cmextra\cmex8.tfm'
+        - >-
+          c:\texlive\2017\texmf-dist\fonts\tfm\public\amsfonts\symbols\msam10.tfm
+        - 'c:\texlive\2017\texmf-dist\fonts\tfm\public\amsfonts\symbols\msam7.tfm'
+        - >-
+          c:\texlive\2017\texmf-dist\fonts\tfm\public\amsfonts\symbols\msbm10.tfm
+        - 'c:\texlive\2017\texmf-dist\fonts\tfm\public\amsfonts\symbols\msbm7.tfm'
+        - 'c:\texlive\2017\texmf-dist\fonts\tfm\public\cm\cmex10.tfm'
+        - 'c:\texlive\2017\texmf-dist\fonts\tfm\public\cm\cmmi12.tfm'
+        - 'c:\texlive\2017\texmf-dist\fonts\tfm\public\cm\cmmi6.tfm'
+        - 'c:\texlive\2017\texmf-dist\fonts\tfm\public\cm\cmmi8.tfm'
+        - 'c:\texlive\2017\texmf-dist\fonts\tfm\public\cm\cmr10.tfm'
+        - 'c:\texlive\2017\texmf-dist\fonts\tfm\public\cm\cmr12.tfm'
+        - 'c:\texlive\2017\texmf-dist\fonts\tfm\public\cm\cmr6.tfm'
+        - 'c:\texlive\2017\texmf-dist\fonts\tfm\public\cm\cmr8.tfm'
+        - 'c:\texlive\2017\texmf-dist\fonts\tfm\public\cm\cmsy10.tfm'
+        - 'c:\texlive\2017\texmf-dist\fonts\tfm\public\cm\cmsy6.tfm'
+        - 'c:\texlive\2017\texmf-dist\fonts\tfm\public\cm\cmsy8.tfm'
+        - 'c:\texlive\2017\texmf-dist\fonts\type1\public\cm-super\sfbx1200.pfb'
+        - 'c:\texlive\2017\texmf-dist\fonts\type1\public\cm-super\sfbx1728.pfb'
+        - 'c:\texlive\2017\texmf-dist\fonts\type1\public\cm-super\sfbx2488.pfb'
+        - 'c:\texlive\2017\texmf-dist\fonts\type1\public\cm-super\sfrm1095.pfb'
+        - 'c:\texlive\2017\texmf-dist\fonts\type1\public\cm-super\sfrm1200.pfb'
+        - 'c:\texlive\2017\texmf-dist\tex\context\base\mkii\supp-pdf.mkii'
+        - 'c:\texlive\2017\texmf-dist\tex\generic\ifxetex\ifxetex.sty'
+        - 'c:\texlive\2017\texmf-dist\tex\generic\oberdiek\gettitlestring.sty'
+        - 'c:\texlive\2017\texmf-dist\tex\generic\oberdiek\hobsub-generic.sty'
+        - 'c:\texlive\2017\texmf-dist\tex\generic\oberdiek\hobsub-hyperref.sty'
+        - 'c:\texlive\2017\texmf-dist\tex\generic\oberdiek\ifpdf.sty'
+        - 'c:\texlive\2017\texmf-dist\tex\generic\oberdiek\ifvtex.sty'
+        - 'c:\texlive\2017\texmf-dist\tex\generic\unicode-data\CaseFolding.txt'
+        - 'c:\texlive\2017\texmf-dist\tex\generic\unicode-data\SpecialCasing.txt'
+        - 'c:\texlive\2017\texmf-dist\tex\generic\unicode-data\UnicodeData.txt'
+        - 'c:\texlive\2017\texmf-dist\tex\generic\xstring\xstring.sty'
+        - 'c:\texlive\2017\texmf-dist\tex\generic\xstring\xstring.tex'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\amsfonts\amsfonts.sty'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\amsfonts\amssymb.sty'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\amsfonts\umsa.fd'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\amsfonts\umsb.fd'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\amsmath\amsbsy.sty'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\amsmath\amsgen.sty'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\amsmath\amsmath.sty'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\amsmath\amsopn.sty'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\amsmath\amstext.sty'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\base\article.cls'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\base\fixltx2e.sty'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\base\fontenc.sty'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\base\ifthen.sty'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\base\inputenc.sty'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\base\omsenc.dfu'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\base\ot1enc.dfu'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\base\size12.clo'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\base\t1enc.def'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\base\t1enc.dfu'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\base\utf8.def'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\biblatex\bbx\numeric.bbx'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\biblatex\bbx\standard.bbx'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\biblatex\biblatex.cfg'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\biblatex\biblatex.def'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\biblatex\biblatex.sty'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\biblatex\blx-compat.def'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\biblatex\blx-dm.def'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\biblatex\cbx\numeric.cbx'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\biblatex\lbx\english.lbx'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\booktabs\booktabs.sty'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\comment\comment.sty'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\etoolbox\etoolbox.sty'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\fancyvrb\fancyvrb.sty'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\float\float.sty'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\geometry\geometry.sty'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\graphics-cfg\color.cfg'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\graphics-cfg\graphics.cfg'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\graphics-def\pdftex.def'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\graphics\color.sty'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\graphics\graphics.sty'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\graphics\graphicx.sty'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\graphics\keyval.sty'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\graphics\trig.sty'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\hyperref\hpdftex.def'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\hyperref\hyperref.sty'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\hyperref\nameref.sty'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\hyperref\pd1enc.def'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\import\import.sty'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\l3kernel\expl3-code.tex'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\l3kernel\expl3.sty'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\l3kernel\l3pdfmode.def'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\l3packages\xparse\xparse.sty'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\latexconfig\epstopdf-sys.cfg'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\latexconfig\hyperref.cfg'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\listings\listings.cfg'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\listings\listings.sty'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\listings\lstmisc.sty'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\logreq\logreq.def'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\logreq\logreq.sty'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\mdframed\md-frame-0.mdf'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\mdframed\mdframed.sty'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\UKenglish.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\USenglish.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\acadian.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\acadien.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\afrikaan.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\afrikaans.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\albanian.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\american.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\arab.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\arab2.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\arabi.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\arabic.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\armenian.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\australian.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\austrian.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\bahasa.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\bahasai.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\bahasam.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\bangla.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\basque.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\bengali.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\bicig.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\bicig2.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\bicig3.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\bithe.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\brazil.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\brazilian.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\breton.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\british.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\bulgarian.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\bulgarianb.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\buryat.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\buryat2.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\canadian.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\canadien.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\castillan.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\castillian.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\catalan.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\chinese1.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\chinese1.mlo'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\chinese2.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\chinese2.mlo'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\croatian.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\czech.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\danish.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\devanagari.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\dutch.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\english.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\english1.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\english2.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\esperant.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\esperanto.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\estonian.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\ethiopia.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\ethiopian.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\ethiopian2.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\farsi1.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\farsi1.mlo'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\farsi2.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\farsi2.mlo'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\farsi3.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\finnish.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\finnish2.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\francais.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\french.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\french1.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\french2.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\frenchb.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\frenchle.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\frenchpro.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\galician.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\german.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\germanb.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\germanb2.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\greek-mono.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\greek-polydemo.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\greek-polykatha.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\greek.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\guarani.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\hangul-u8.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\hangul-u8.mlo'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\hangul1.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\hangul1.mlo'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\hangul2.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\hangul2.mlo'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\hangul3.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\hangul3.mlo'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\hangul4.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\hangul4.mlo'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\hanja-u8.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\hanja-u8.mlo'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\hanja1.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\hanja1.mlo'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\hanja2.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\hanja2.mlo'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\hebrew.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\hebrew2.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\hindi-modern.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\hindi.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\hungarian.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\icelandic.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\indon.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\indonesian.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\interlingua.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\irish.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\italian.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\italian2.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\japanese.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\japanese.mlo'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\japanese2.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\japanese2.mlo'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\japanese3.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\japanese3.mlo'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\japanese4.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\japanese4.mlo'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\japanese5.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\japanese5.mlo'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\japanese6.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\japanese6.mlo'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\kannada.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\khalkha.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\latin.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\latin2.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\latinc.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\latinc2.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\latvian.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\latvian2.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\letton.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\letton2.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\lithuanian.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\lithuanian2.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\lowersorbian.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\lsorbian.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\magyar.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\magyar2.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\magyar3.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\malay.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\malayalam-b.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\malayalam-keli.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\malayalam-keli2.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\malayalam-mr.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\malayalam-omega.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\malayalam-omega.mlo'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\malayalam-rachana.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\malayalam-rachana2.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\malayalam-rachana3.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\manju.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\mexican.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\meyalu.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\minitoc.sty'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\mongol.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\mongolb.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\mongolian.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\mtcmess.sty'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\naustrian.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\newzealand.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\ngerman.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\ngermanb.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\ngermanb2.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\norsk.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\norsk2.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\nynorsk.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\nynorsk2.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\occitan.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\occitan2.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\polish.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\polish2.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\polski.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\portuges.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\portuguese.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\romanian.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\romanian2.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\romanian3.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\russian-cca.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\russian-cca.mlo'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\russian-cca1.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\russian-cca1.mlo'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\russian-lh.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\russian-lh.mlo'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\russian-lhcyralt.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\russian-lhcyralt.mlo'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\russian-lhcyrkoi.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\russian-lhcyrkoi.mlo'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\russian-lhcyrwin.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\russian-lhcyrwin.mlo'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\russian.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\russian2m.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\russian2o.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\russianb.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\russianc.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\samin.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\scottish.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\serbian.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\serbianc.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\slovak.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\slovene.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\spanish.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\spanish2.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\spanish3.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\spanish4.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\swahili.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\swedish.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\swedish2.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\thai.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\thai.mlo'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\turkish.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\uighur.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\uighur2.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\uighur3.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\ukraineb.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\ukrainian.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\uppersorbian.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\usorbian.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\vietnam.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\vietnamese.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\welsh.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\xalx.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\xalx2.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\xalx3.mld'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\needspace\needspace.sty'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\oberdiek\auxhook.sty'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\oberdiek\epstopdf-base.sty'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\oberdiek\grfext.sty'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\oberdiek\kvoptions.sty'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\oberdiek\rerunfilecheck.sty'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\oberdiek\zref-abspage.sty'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\oberdiek\zref-base.sty'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\titlesec\titletoc.sty'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\tocbibind\tocbibind.sty'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\tools\array.sty'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\url\url.sty'
+        - 'c:\texlive\2017\texmf-dist\tex\latex\wrapfig\wrapfig.sty'
+        - 'c:\texlive\2017\texmf-dist\web2c\texmf.cnf'
+        - 'c:\texlive\2017\texmf-var\fonts\map\pdftex\updmap\pdftex.map'
+        - 'c:\texlive\2017\texmf-var\web2c\pdftex\pdflatex.fmt'
+        - 'c:\texlive\2017\texmf.cnf'
+        - figs\SDUlogo.png
+        - figs\multi_host_illustration.png
+        - figs\single_host_illustration.png
+        - main.aux
+        - main.bbl
+        - main.lof
+        - main.mtc
+        - main.mtc0
+        - main.out
+        - main.run.xml
+        - main.tex
+        - main.toc
+        - modules\introduction.tex
+        - modules\title.tex
+      outputs:
+        - main.aux
+        - main.bcf
+        - main.lof
+        - main.log
+        - main.maf
+        - main.mtc
+        - main.mtc0
+        - main.out
+        - main.pdf
+        - main.run.xml
+        - main.toc
+      calls: []
+    jobNames: []
+    type: ParsedFileListing
+  main.log-ParsedLaTeXLog:
+    timeStamp: 2017-10-17T22:40:11.895Z
+    value:
+      messages:
+        - name: pdfTeX
+          severity: info
+          text: geometry 2010/09/12 v5.6 Page Geometry
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 27
+              end: 27
+        - name: pdfTeX
+          severity: info
+          text: keyval 2014/10/28 v1.15 key=value parser (DPC)
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 29
+              end: 29
+        - name: pdfTeX
+          severity: info
+          text: ifpdf 2017/03/15 v3.2 Provides the ifpdf switch
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 32
+              end: 32
+        - name: pdfTeX
+          severity: info
+          text: ifvtex 2016/05/16 v1.6 Detect VTeX and its facilities (HO)
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 34
+              end: 34
+        - severity: info
+          name: pdfTeX
+          category: Package ifvtex
+          text: VTeX not detected.
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 35
+              end: 35
+        - name: pdfTeX
+          severity: info
+          text: ifxetex 2010/09/12 v0.6 Provides ifxetex conditional
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 37
+              end: 37
+        - name: pdfTeX
+          severity: info
+          text: float 2001/11/08 v1.3d Float enhancements (AL)
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 52
+              end: 52
+        - name: pdfTeX
+          severity: info
+          text: fancyvrb 2008/02/07
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 59
+              end: 59
+        - name: pdfTeX
+          severity: info
+          text: amsmath 2017/09/02 v2.17a AMS math features
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 70
+              end: 70
+        - name: pdfTeX
+          severity: info
+          text: amstext 2000/06/29 v2.01 AMS text
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 74
+              end: 74
+        - name: pdfTeX
+          severity: info
+          text: amsbsy 1999/11/29 v1.2d Bold Symbols
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 80
+              end: 80
+        - name: pdfTeX
+          severity: info
+          text: amsopn 2016/03/08 v2.02 operator names
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 83
+              end: 83
+        - severity: info
+          name: pdfTeX
+          category: LaTeX
+          text: Redefining \frac
+          source:
+            file: main.tex
+            range:
+              start: 213
+              end: 213
+          log:
+            file: main.log
+            range:
+              start: 86
+              end: 86
+        - severity: info
+          name: pdfTeX
+          category: LaTeX
+          text: Redefining \overline
+          source:
+            file: main.tex
+            range:
+              start: 375
+              end: 375
+          log:
+            file: main.log
+            range:
+              start: 89
+              end: 89
+        - severity: info
+          name: pdfTeX
+          category: LaTeX
+          text: Redefining \ldots
+          source:
+            file: main.tex
+            range:
+              start: 472
+              end: 472
+          log:
+            file: main.log
+            range:
+              start: 92
+              end: 92
+        - severity: info
+          name: pdfTeX
+          category: LaTeX
+          text: Redefining \dots
+          source:
+            file: main.tex
+            range:
+              start: 475
+              end: 475
+          log:
+            file: main.log
+            range:
+              start: 93
+              end: 93
+        - severity: info
+          name: pdfTeX
+          category: LaTeX
+          text: Redefining \cdots
+          source:
+            file: main.tex
+            range:
+              start: 596
+              end: 596
+          log:
+            file: main.log
+            range:
+              start: 94
+              end: 94
+        - severity: info
+          name: pdfTeX
+          category: LaTeX Font
+          text: Redeclaring font encoding OML
+          source:
+            file: main.tex
+            range:
+              start: 712
+              end: 712
+          log:
+            file: main.log
+            range:
+              start: 98
+              end: 98
+        - severity: info
+          name: pdfTeX
+          category: LaTeX Font
+          text: Redeclaring font encoding OMS
+          source:
+            file: main.tex
+            range:
+              start: 713
+              end: 713
+          log:
+            file: main.log
+            range:
+              start: 99
+              end: 99
+        - severity: info
+          name: pdfTeX
+          category: LaTeX
+          text: 'Redefining \['
+          source:
+            file: main.tex
+            range:
+              start: 2817
+              end: 2817
+          log:
+            file: main.log
+            range:
+              start: 120
+              end: 120
+        - severity: info
+          name: pdfTeX
+          category: LaTeX
+          text: 'Redefining \]'
+          source:
+            file: main.tex
+            range:
+              start: 2818
+              end: 2818
+          log:
+            file: main.log
+            range:
+              start: 121
+              end: 121
+        - name: pdfTeX
+          severity: info
+          text: amssymb 2013/01/14 v3.01 AMS font symbols
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 123
+              end: 123
+        - name: pdfTeX
+          severity: info
+          text: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 125
+              end: 125
+        - severity: info
+          name: pdfTeX
+          category: LaTeX Font
+          text: >-
+            Overwriting math alphabet `\mathfrak' in version `bold' U/euf/m/n
+            --> U/euf/b/n.
+          source:
+            file: main.tex
+            range:
+              start: 106
+              end: 106
+          log:
+            file: main.log
+            range:
+              start: 128
+              end: 129
+        - name: pdfTeX
+          severity: info
+          text: hyperref 2017/03/14 v6.85a Hypertext links for LaTeX
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 134
+              end: 134
+        - name: pdfTeX
+          severity: info
+          text: >-
+            hobsub-hyperref 2016/05/16 v1.14 Bundle oberdiek, subset hyperref
+            (HO)
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 136
+              end: 137
+        - name: pdfTeX
+          severity: info
+          text: 'hobsub-generic 2016/05/16 v1.14 Bundle oberdiek, subset generic (HO)'
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 139
+              end: 139
+        - name: pdfTeX
+          severity: info
+          text: hobsub 2016/05/16 v1.14 Construct package bundles (HO)
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 140
+              end: 140
+        - name: pdfTeX
+          severity: info
+          text: infwarerr 2016/05/16 v1.4 Providing info/warning/error messages (HO)
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 141
+              end: 141
+        - name: pdfTeX
+          severity: info
+          text: ltxcmds 2016/05/16 v1.23 LaTeX kernel commands for general use (HO)
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 142
+              end: 142
+        - name: pdfTeX
+          severity: info
+          text: ifluatex 2016/05/16 v1.4 Provides the ifluatex switch (HO)
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 143
+              end: 143
+        - severity: info
+          name: pdfTeX
+          category: Package ifluatex
+          text: LuaTeX not detected.
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 144
+              end: 144
+        - severity: info
+          name: pdfTeX
+          category: Package hobsub
+          text: Skipping package `ifvtex' (already loaded).
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 145
+              end: 145
+        - name: pdfTeX
+          severity: info
+          text: intcalc 2016/05/16 v1.2 Expandable calculations with integers (HO)
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 146
+              end: 146
+        - severity: info
+          name: pdfTeX
+          category: Package hobsub
+          text: Skipping package `ifpdf' (already loaded).
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 147
+              end: 147
+        - name: pdfTeX
+          severity: info
+          text: etexcmds 2016/05/16 v1.6 Avoid name clashes with e-TeX commands (HO)
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 148
+              end: 148
+        - severity: info
+          name: pdfTeX
+          category: Package etexcmds
+          text: >-
+            Could not find \expanded. That can mean that you are not using
+            pdfTeX 1.50 or that some package has redefined \expanded. In the
+            latter case, load this package earlier.
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 149
+              end: 152
+        - name: pdfTeX
+          severity: info
+          text: kvsetkeys 2016/05/16 v1.17 Key value parser (HO)
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 153
+              end: 153
+        - name: pdfTeX
+          severity: info
+          text: kvdefinekeys 2016/05/16 v1.4 Define keys (HO)
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 154
+              end: 154
+        - name: pdfTeX
+          severity: info
+          text: >-
+            pdftexcmds 2017/03/19 v0.25 Utility functions of pdfTeX for LuaTeX
+            (HO)
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 155
+              end: 156
+        - severity: info
+          name: pdfTeX
+          category: Package pdftexcmds
+          text: LuaTeX not detected.
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 157
+              end: 157
+        - severity: info
+          name: pdfTeX
+          category: Package pdftexcmds
+          text: \pdf@primitive is available.
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 158
+              end: 158
+        - severity: info
+          name: pdfTeX
+          category: Package pdftexcmds
+          text: \pdf@ifprimitive is available.
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 159
+              end: 159
+        - severity: info
+          name: pdfTeX
+          category: Package pdftexcmds
+          text: \pdfdraftmode found.
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 160
+              end: 160
+        - name: pdfTeX
+          severity: info
+          text: pdfescape 2016/05/16 v1.14 Implements pdfTeX's escape features (HO)
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 161
+              end: 161
+        - name: pdfTeX
+          severity: info
+          text: >-
+            bigintcalc 2016/05/16 v1.4 Expandable calculations on big integers
+            (HO)
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 162
+              end: 163
+        - name: pdfTeX
+          severity: info
+          text: bitset 2016/05/16 v1.2 Handle bit-vector datatype (HO)
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 164
+              end: 164
+        - name: pdfTeX
+          severity: info
+          text: uniquecounter 2016/05/16 v1.3 Provide unlimited unique counter (HO)
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 165
+              end: 165
+        - severity: info
+          name: pdfTeX
+          category: Package hobsub
+          text: Skipping package `hobsub' (already loaded).
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 167
+              end: 167
+        - name: pdfTeX
+          severity: info
+          text: letltxmacro 2016/05/16 v1.5 Let assignment for LaTeX macros (HO)
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 168
+              end: 168
+        - name: pdfTeX
+          severity: info
+          text: hopatch 2016/05/16 v1.3 Wrapper for package hooks (HO)
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 169
+              end: 169
+        - name: pdfTeX
+          severity: info
+          text: xcolor-patch 2016/05/16 xcolor patch
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 170
+              end: 170
+        - name: pdfTeX
+          severity: info
+          text: atveryend 2016/05/16 v1.9 Hooks at the very end of document (HO)
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 171
+              end: 171
+        - severity: info
+          name: pdfTeX
+          category: Package atveryend
+          text: \enddocument detected (standard20110627).
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 172
+              end: 172
+        - name: pdfTeX
+          severity: info
+          text: atbegshi 2016/06/09 v1.18 At begin shipout hook (HO)
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 173
+              end: 173
+        - name: pdfTeX
+          severity: info
+          text: refcount 2016/05/16 v3.5 Data extraction from label references (HO)
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 174
+              end: 174
+        - name: pdfTeX
+          severity: info
+          text: hycolor 2016/05/16 v1.8 Color options for hyperref/bookmark (HO)
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 175
+              end: 175
+        - name: pdfTeX
+          severity: info
+          text: auxhook 2016/05/16 v1.4 Hooks for auxiliary files (HO)
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 177
+              end: 177
+        - name: pdfTeX
+          severity: info
+          text: kvoptions 2016/05/16 v3.12 Key value format for package options (HO)
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 179
+              end: 179
+        - severity: info
+          name: pdfTeX
+          category: Package hyperref
+          text: Hyper figures OFF
+          source:
+            file: main.tex
+            range:
+              start: 4498
+              end: 4498
+          log:
+            file: main.log
+            range:
+              start: 191
+              end: 191
+        - severity: info
+          name: pdfTeX
+          category: Package hyperref
+          text: Link nesting OFF
+          source:
+            file: main.tex
+            range:
+              start: 4503
+              end: 4503
+          log:
+            file: main.log
+            range:
+              start: 192
+              end: 192
+        - severity: info
+          name: pdfTeX
+          category: Package hyperref
+          text: Hyper index ON
+          source:
+            file: main.tex
+            range:
+              start: 4506
+              end: 4506
+          log:
+            file: main.log
+            range:
+              start: 193
+              end: 193
+        - severity: info
+          name: pdfTeX
+          category: Package hyperref
+          text: Plain pages OFF
+          source:
+            file: main.tex
+            range:
+              start: 4513
+              end: 4513
+          log:
+            file: main.log
+            range:
+              start: 194
+              end: 194
+        - severity: info
+          name: pdfTeX
+          category: Package hyperref
+          text: Backreferencing OFF
+          source:
+            file: main.tex
+            range:
+              start: 4518
+              end: 4518
+          log:
+            file: main.log
+            range:
+              start: 195
+              end: 195
+        - severity: info
+          name: pdfTeX
+          category: Package hyperref
+          text: Implicit mode ON; LaTeX internals redefined.
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 196
+              end: 196
+        - severity: info
+          name: pdfTeX
+          category: Package hyperref
+          text: Bookmarks ON
+          source:
+            file: main.tex
+            range:
+              start: 4751
+              end: 4751
+          log:
+            file: main.log
+            range:
+              start: 197
+              end: 197
+        - name: pdfTeX
+          severity: info
+          text: 'url 2013/09/16 ver 3.4 Verb mode for urls, etc.'
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 201
+              end: 201
+        - severity: info
+          name: pdfTeX
+          category: LaTeX
+          text: Redefining \url
+          source:
+            file: main.tex
+            range:
+              start: 5104
+              end: 5104
+          log:
+            file: main.log
+            range:
+              start: 203
+              end: 203
+        - severity: info
+          name: pdfTeX
+          category: Package hyperref
+          text: Hyper figures OFF
+          source:
+            file: main.tex
+            range:
+              start: 6358
+              end: 6358
+          log:
+            file: main.log
+            range:
+              start: 208
+              end: 208
+        - severity: info
+          name: pdfTeX
+          category: Package hyperref
+          text: Link nesting OFF
+          source:
+            file: main.tex
+            range:
+              start: 6363
+              end: 6363
+          log:
+            file: main.log
+            range:
+              start: 209
+              end: 209
+        - severity: info
+          name: pdfTeX
+          category: Package hyperref
+          text: Hyper index ON
+          source:
+            file: main.tex
+            range:
+              start: 6366
+              end: 6366
+          log:
+            file: main.log
+            range:
+              start: 210
+              end: 210
+        - severity: info
+          name: pdfTeX
+          category: Package hyperref
+          text: backreferencing OFF
+          source:
+            file: main.tex
+            range:
+              start: 6373
+              end: 6373
+          log:
+            file: main.log
+            range:
+              start: 211
+              end: 211
+        - severity: info
+          name: pdfTeX
+          category: Package hyperref
+          text: Link coloring OFF
+          source:
+            file: main.tex
+            range:
+              start: 6378
+              end: 6378
+          log:
+            file: main.log
+            range:
+              start: 212
+              end: 212
+        - severity: info
+          name: pdfTeX
+          category: Package hyperref
+          text: Link coloring with OCG OFF
+          source:
+            file: main.tex
+            range:
+              start: 6383
+              end: 6383
+          log:
+            file: main.log
+            range:
+              start: 213
+              end: 213
+        - severity: info
+          name: pdfTeX
+          category: Package hyperref
+          text: PDF/A mode OFF
+          source:
+            file: main.tex
+            range:
+              start: 6388
+              end: 6388
+          log:
+            file: main.log
+            range:
+              start: 214
+              end: 214
+        - severity: info
+          name: pdfTeX
+          category: LaTeX
+          text: Redefining \ref
+          source:
+            file: main.tex
+            range:
+              start: 6428
+              end: 6428
+          log:
+            file: main.log
+            range:
+              start: 215
+              end: 215
+        - severity: info
+          name: pdfTeX
+          category: LaTeX
+          text: Redefining \pageref
+          source:
+            file: main.tex
+            range:
+              start: 6432
+              end: 6432
+          log:
+            file: main.log
+            range:
+              start: 216
+              end: 216
+        - name: pdfTeX
+          severity: info
+          text: rerunfilecheck 2016/05/16 v1.8 Rerun checks for auxiliary files (HO)
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 229
+              end: 229
+        - severity: info
+          name: pdfTeX
+          category: Package uniquecounter
+          text: New unique counter `rerunfilecheck'
+          source:
+            file: main.tex
+            range:
+              start: 282
+              end: 282
+          log:
+            file: main.log
+            range:
+              start: 230
+              end: 231
+        - name: pdfTeX
+          severity: info
+          text: tocbibind 2010/10/13 v1.5k extra ToC listings
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 235
+              end: 235
+        - severity: info
+          name: pdfTeX
+          category: Package tocbibind
+          text: The document has section divisions
+          source:
+            file: main.tex
+            range:
+              start: 50
+              end: 50
+          log:
+            file: main.log
+            range:
+              start: 236
+              end: 236
+        - name: pdfTeX
+          severity: info
+          text: inputenc 2015/03/17 v1.2c Input encoding file
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 241
+              end: 241
+        - name: pdfTeX
+          severity: info
+          text: fontenc 2017/04/05 v2.0i Standard LaTeX package
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 556
+              end: 556
+        - severity: info
+          name: pdfTeX
+          category: LaTeX Font
+          text: Redeclaring font encoding T1
+          source:
+            file: main.tex
+            range:
+              start: 48
+              end: 48
+          log:
+            file: main.log
+            range:
+              start: 559
+              end: 559
+        - name: pdfTeX
+          severity: info
+          text: color 2016/07/10 v1.1e Standard LaTeX Color (DPC)
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 561
+              end: 561
+        - severity: info
+          name: pdfTeX
+          category: Package color
+          text: 'Driver file: pdftex.def'
+          source:
+            file: main.tex
+            range:
+              start: 147
+              end: 147
+          log:
+            file: main.log
+            range:
+              start: 565
+              end: 565
+        - name: pdfTeX
+          severity: info
+          text: listings 2015/06/04 1.6 (Carsten Heinz)
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 589
+              end: 589
+        - name: pdfTeX
+          severity: info
+          text: biblatex 2016/12/05 v3.7 programmable bibliographies (PK/JW/AB)
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 591
+              end: 591
+        - name: pdfTeX
+          severity: info
+          text: etoolbox 2017/01/02 v2.4 e-TeX tools for LaTeX (JAW)
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 593
+              end: 593
+        - name: pdfTeX
+          severity: info
+          text: logreq 2010/08/04 v1.0 xml request logger
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 596
+              end: 596
+        - name: pdfTeX
+          severity: info
+          text: ifthen 2014/09/29 v1.1c Standard LaTeX ifthen package (DPC)
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 601
+              end: 601
+        - name: pdfTeX
+          severity: info
+          text: xstring 2013/10/13 v1.7c String manipulations (C Tellechea)
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 608
+              end: 608
+        - severity: info
+          name: pdfTeX
+          category: Package biblatex
+          text: Trying to load biblatex default data model...
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 661
+              end: 661
+        - severity: info
+          name: pdfTeX
+          category: Package biblatex
+          text: ... file 'blx-dm.def' found.
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 662
+              end: 662
+        - severity: info
+          name: pdfTeX
+          category: Package biblatex
+          text: Trying to load biblatex custom data model...
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 664
+              end: 664
+        - severity: info
+          name: pdfTeX
+          category: Package biblatex
+          text: ... file 'biblatex-dm.cfg' not found.
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 665
+              end: 665
+        - severity: info
+          name: pdfTeX
+          category: Package biblatex
+          text: Trying to load compatibility code...
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 738
+              end: 738
+        - severity: info
+          name: pdfTeX
+          category: Package biblatex
+          text: ... file 'blx-compat.def' found.
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 739
+              end: 739
+        - severity: info
+          name: pdfTeX
+          category: Package biblatex
+          text: Trying to load generic definitions...
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 743
+              end: 743
+        - severity: info
+          name: pdfTeX
+          category: Package biblatex
+          text: ... file 'biblatex.def' found.
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 744
+              end: 744
+        - severity: info
+          name: pdfTeX
+          category: Package biblatex
+          text: Trying to load bibliography style 'numeric'...
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 755
+              end: 755
+        - severity: info
+          name: pdfTeX
+          category: Package biblatex
+          text: ... file 'numeric.bbx' found.
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 756
+              end: 756
+        - severity: info
+          name: pdfTeX
+          category: Package biblatex
+          text: Trying to load bibliography style 'standard'...
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 759
+              end: 759
+        - severity: info
+          name: pdfTeX
+          category: Package biblatex
+          text: ... file 'standard.bbx' found.
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 760
+              end: 760
+        - severity: info
+          name: pdfTeX
+          category: Package biblatex
+          text: Trying to load citation style 'numeric'...
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 766
+              end: 766
+        - severity: info
+          name: pdfTeX
+          category: Package biblatex
+          text: ... file 'numeric.cbx' found.
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 767
+              end: 767
+        - severity: info
+          name: pdfTeX
+          category: Package biblatex
+          text: Redefining '\cite'.
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 770
+              end: 770
+        - severity: info
+          name: pdfTeX
+          category: Package biblatex
+          text: Redefining '\parencite'.
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 771
+              end: 771
+        - severity: info
+          name: pdfTeX
+          category: Package biblatex
+          text: Redefining '\footcite'.
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 772
+              end: 772
+        - severity: info
+          name: pdfTeX
+          category: Package biblatex
+          text: Redefining '\footcitetext'.
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 773
+              end: 773
+        - severity: info
+          name: pdfTeX
+          category: Package biblatex
+          text: Redefining '\smartcite'.
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 774
+              end: 774
+        - severity: info
+          name: pdfTeX
+          category: Package biblatex
+          text: Redefining '\supercite'.
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 775
+              end: 775
+        - severity: info
+          name: pdfTeX
+          category: Package biblatex
+          text: Redefining '\textcite'.
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 776
+              end: 776
+        - severity: info
+          name: pdfTeX
+          category: Package biblatex
+          text: Redefining '\textcites'.
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 777
+              end: 777
+        - severity: info
+          name: pdfTeX
+          category: Package biblatex
+          text: Redefining '\cites'.
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 778
+              end: 778
+        - severity: info
+          name: pdfTeX
+          category: Package biblatex
+          text: Redefining '\parencites'.
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 779
+              end: 779
+        - severity: info
+          name: pdfTeX
+          category: Package biblatex
+          text: Redefining '\smartcites'.
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 780
+              end: 780
+        - severity: info
+          name: pdfTeX
+          category: Package biblatex
+          text: Trying to load configuration file...
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 782
+              end: 782
+        - severity: info
+          name: pdfTeX
+          category: Package biblatex
+          text: ... file 'biblatex.cfg' found.
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 783
+              end: 783
+        - name: pdfTeX
+          severity: info
+          text: booktabs 2016/04/27 v1.618033 publication quality tables
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 787
+              end: 787
+        - name: pdfTeX
+          severity: info
+          text: 'mdframed 2013/07/01 1.9b: mdframed'
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 806
+              end: 806
+        - name: pdfTeX
+          severity: info
+          text: expl3 2017/09/18 L3 programming layer (loader)
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 809
+              end: 809
+        - name: pdfTeX
+          severity: info
+          text: expl3 2017/09/18 L3 programming layer (code)
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 811
+              end: 811
+        - name: pdfTeX
+          severity: info
+          text: xparse 2017/09/18 L3 Experimental document command parser
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 958
+              end: 958
+        - name: pdfTeX
+          severity: info
+          text: zref-abspage 2016/05/21 v2.26 Module abspage for zref (HO)
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 965
+              end: 965
+        - name: pdfTeX
+          severity: info
+          text: zref-base 2016/05/21 v2.26 Module base for zref (HO)
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 967
+              end: 967
+        - severity: info
+          name: pdfTeX
+          category: Package zref
+          text: 'New property list: main'
+          source:
+            file: main.tex
+            range:
+              start: 759
+              end: 759
+          log:
+            file: main.log
+            range:
+              start: 968
+              end: 968
+        - severity: info
+          name: pdfTeX
+          category: Package zref
+          text: 'New property: default'
+          source:
+            file: main.tex
+            range:
+              start: 760
+              end: 760
+          log:
+            file: main.log
+            range:
+              start: 969
+              end: 969
+        - severity: info
+          name: pdfTeX
+          category: Package zref
+          text: 'New property: page'
+          source:
+            file: main.tex
+            range:
+              start: 761
+              end: 761
+          log:
+            file: main.log
+            range:
+              start: 970
+              end: 970
+        - severity: info
+          name: pdfTeX
+          category: Package zref
+          text: 'New property: abspage'
+          source:
+            file: main.tex
+            range:
+              start: 62
+              end: 62
+          log:
+            file: main.log
+            range:
+              start: 973
+              end: 973
+        - name: pdfTeX
+          severity: info
+          text: needspace 2010/09/12 v1.3d reserve vertical space
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 975
+              end: 975
+        - severity: info
+          name: pdfTeX
+          category: LaTeX
+          source:
+            file: main.tex
+            range:
+              start: 601
+              end: 601
+          text: |-
+            "xparse/define-command"
+            Defining command \newmdtheoremenv with sig. 'O{} m o m o '.
+          log:
+            file: main.log
+            range:
+              start: 1059
+              end: 1063
+        - severity: info
+          name: pdfTeX
+          category: LaTeX
+          source:
+            file: main.tex
+            range:
+              start: 701
+              end: 701
+          text: |-
+            "xparse/define-command"
+            Defining command \mdtheorem with sig. ' O{} m o m o '.
+          log:
+            file: main.log
+            range:
+              start: 1064
+              end: 1068
+        - severity: info
+          name: pdfTeX
+          category: Package zref
+          text: 'New property: mdf@pagevalue'
+          source:
+            file: main.tex
+            range:
+              start: 895
+              end: 895
+          log:
+            file: main.log
+            range:
+              start: 1073
+              end: 1073
+        - name: pdfTeX
+          severity: info
+          text: fixltx2e 2016/12/29 v2.1a fixes to LaTeX (obsolete)
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 1075
+              end: 1075
+        - severity: warning
+          name: pdfTeX
+          category: Package fixltx2e
+          text: >-
+            fixltx2e is not required with releases after 2015 All fixes are now
+            in the LaTeX kernel. See the latexrelease package for details.
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 1078
+              end: 1080
+        - name: pdfTeX
+          severity: info
+          text: 'graphicx 2017/06/01 v1.1a Enhanced LaTeX Graphics (DPC,SPQR)'
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 1084
+              end: 1084
+        - name: pdfTeX
+          severity: info
+          text: 'graphics 2017/06/25 v1.2c Standard LaTeX Graphics (DPC,SPQR)'
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 1086
+              end: 1086
+        - name: pdfTeX
+          severity: info
+          text: trig 2016/01/03 v1.10 sin cos tan (DPC)
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 1088
+              end: 1088
+        - severity: info
+          name: pdfTeX
+          category: Package graphics
+          text: 'Driver file: pdftex.def'
+          source:
+            file: main.tex
+            range:
+              start: 99
+              end: 99
+          log:
+            file: main.log
+            range:
+              start: 1092
+              end: 1092
+        - name: pdfTeX
+          severity: info
+          text: import 2009/03/23 v 5.1
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 1097
+              end: 1097
+        - name: pdfTeX
+          severity: info
+          text: titletoc 2011/12/15 v1.6 TOC entries
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 1099
+              end: 1099
+        - name: pdfTeX
+          severity: info
+          text: minitoc 2015/07/13 v61 Package minitoc
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 1102
+              end: 1102
+        - name: pdfTeX
+          severity: info
+          text: mtcmess 2006/03/14
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 1104
+              end: 1104
+        - severity: info
+          name: pdfTeX
+          category: Package minitoc
+          text: 'I0001 *** minitoc package, version 61 ***.'
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 1106
+              end: 1107
+        - severity: info
+          name: pdfTeX
+          category: Package minitoc
+          text: I0005 compatible with hyperref.
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 1111
+              end: 1112
+        - severity: info
+          name: pdfTeX
+          category: Package minitoc
+          text: I0023 part level macros available.
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 1113
+              end: 1114
+        - severity: info
+          name: pdfTeX
+          category: Package minitoc
+          text: I0004 chapter level macros NOT available.
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 1115
+              end: 1116
+        - severity: info
+          name: pdfTeX
+          category: Package minitoc
+          text: I0028 section level macros available.
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 1117
+              end: 1118
+        - severity: info
+          name: pdfTeX
+          category: Package minitoc
+          text: I0002 Autoconfiguration of extensions.
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 1122
+              end: 1123
+        - severity: info
+          name: pdfTeX
+          category: Package minitoc
+          text: I0012 Long extensions (Unix-like) will be used.
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 1129
+              end: 1130
+        - severity: info
+          name: pdfTeX
+          category: Package minitoc
+          text: >-
+            I0031 ==> this version is configured for UNIX-like (long extensions)
+            file names.
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 1131
+              end: 1133
+        - severity: info
+          name: pdfTeX
+          category: Package minitoc
+          text: I0010 The english language is selected. on input line 4909.
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 1144
+              end: 1146
+        - name: pdfTeX
+          severity: info
+          text: wrapfig 2003/01/31 v 3.6
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 1157
+              end: 1157
+        - name: pdfTeX
+          severity: info
+          text: array 2016/10/06 v2.4d Tabular extension package (FMi)
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 1159
+              end: 1159
+        - severity: info
+          name: pdfTeX
+          category: Package biblatex
+          text: Trying to load language 'english'...
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 1166
+              end: 1166
+        - severity: info
+          name: pdfTeX
+          category: Package biblatex
+          text: ... file 'english.lbx' found.
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 1167
+              end: 1167
+        - severity: info
+          name: pdfTeX
+          category: LaTeX Font
+          text: Checking defaults for OML/cmm/m/it
+          source:
+            file: main.tex
+            range:
+              start: 46
+              end: 46
+          log:
+            file: main.log
+            range:
+              start: 1176
+              end: 1176
+        - severity: info
+          name: pdfTeX
+          category: LaTeX Font
+          text: ... okay
+          source:
+            file: main.tex
+            range:
+              start: 46
+              end: 46
+          log:
+            file: main.log
+            range:
+              start: 1177
+              end: 1177
+        - severity: info
+          name: pdfTeX
+          category: LaTeX Font
+          text: Checking defaults for T1/cmr/m/n
+          source:
+            file: main.tex
+            range:
+              start: 46
+              end: 46
+          log:
+            file: main.log
+            range:
+              start: 1178
+              end: 1178
+        - severity: info
+          name: pdfTeX
+          category: LaTeX Font
+          text: ... okay
+          source:
+            file: main.tex
+            range:
+              start: 46
+              end: 46
+          log:
+            file: main.log
+            range:
+              start: 1179
+              end: 1179
+        - severity: info
+          name: pdfTeX
+          category: LaTeX Font
+          text: Checking defaults for OT1/cmr/m/n
+          source:
+            file: main.tex
+            range:
+              start: 46
+              end: 46
+          log:
+            file: main.log
+            range:
+              start: 1180
+              end: 1180
+        - severity: info
+          name: pdfTeX
+          category: LaTeX Font
+          text: ... okay
+          source:
+            file: main.tex
+            range:
+              start: 46
+              end: 46
+          log:
+            file: main.log
+            range:
+              start: 1181
+              end: 1181
+        - severity: info
+          name: pdfTeX
+          category: LaTeX Font
+          text: Checking defaults for OMS/cmsy/m/n
+          source:
+            file: main.tex
+            range:
+              start: 46
+              end: 46
+          log:
+            file: main.log
+            range:
+              start: 1182
+              end: 1182
+        - severity: info
+          name: pdfTeX
+          category: LaTeX Font
+          text: ... okay
+          source:
+            file: main.tex
+            range:
+              start: 46
+              end: 46
+          log:
+            file: main.log
+            range:
+              start: 1183
+              end: 1183
+        - severity: info
+          name: pdfTeX
+          category: LaTeX Font
+          text: Checking defaults for OMX/cmex/m/n
+          source:
+            file: main.tex
+            range:
+              start: 46
+              end: 46
+          log:
+            file: main.log
+            range:
+              start: 1184
+              end: 1184
+        - severity: info
+          name: pdfTeX
+          category: LaTeX Font
+          text: ... okay
+          source:
+            file: main.tex
+            range:
+              start: 46
+              end: 46
+          log:
+            file: main.log
+            range:
+              start: 1185
+              end: 1185
+        - severity: info
+          name: pdfTeX
+          category: LaTeX Font
+          text: Checking defaults for U/cmr/m/n
+          source:
+            file: main.tex
+            range:
+              start: 46
+              end: 46
+          log:
+            file: main.log
+            range:
+              start: 1186
+              end: 1186
+        - severity: info
+          name: pdfTeX
+          category: LaTeX Font
+          text: ... okay
+          source:
+            file: main.tex
+            range:
+              start: 46
+              end: 46
+          log:
+            file: main.log
+            range:
+              start: 1187
+              end: 1187
+        - severity: info
+          name: pdfTeX
+          category: LaTeX Font
+          text: Checking defaults for PD1/pdf/m/n
+          source:
+            file: main.tex
+            range:
+              start: 46
+              end: 46
+          log:
+            file: main.log
+            range:
+              start: 1188
+              end: 1188
+        - severity: info
+          name: pdfTeX
+          category: LaTeX Font
+          text: >-
+            ... okay driver: pdftex paper: a4paper layout: <same size as paper>
+            layoutoffset:(h,v)=(0.0pt,0.0pt) modes: h-part:(L,W,R)=(89.62709pt,
+            418.25368pt, 89.6271pt) v-part:(T,H,B)=(101.40665pt, 591.5302pt,
+            152.11pt) \paperwidth=597.50787pt \paperheight=845.04684pt
+            \textwidth=418.25368pt \textheight=591.5302pt
+            \oddsidemargin=17.3571pt \evensidemargin=17.3571pt
+            \topmargin=-7.86334pt \headheight=12.0pt \headsep=25.0pt
+            \topskip=12.0pt \footskip=30.0pt \marginparwidth=35.0pt
+            \marginparsep=10.0pt \columnsep=10.0pt \skip\footins=10.8pt plus
+            4.0pt minus 2.0pt \hoffset=0.0pt \voffset=0.0pt \mag=1000
+            \@twocolumnfalse \@twosidefalse \@mparswitchfalse
+            \@reversemarginfalse (1in=72.27pt=25.4mm, 1cm=28.453pt)
+          source:
+            file: main.tex
+            range:
+              start: 46
+              end: 46
+          log:
+            file: main.log
+            range:
+              start: 1189
+              end: 1222
+        - severity: info
+          name: pdfTeX
+          category: Package hyperref
+          text: Link coloring OFF
+          source:
+            file: main.tex
+            range:
+              start: 46
+              end: 46
+          log:
+            file: main.log
+            range:
+              start: 1225
+              end: 1225
+        - name: pdfTeX
+          severity: info
+          text: nameref 2016/05/21 v2.44 Cross-referencing by name of section
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 1227
+              end: 1227
+        - name: pdfTeX
+          severity: info
+          text: gettitlestring 2016/05/16 v1.5 Cleanup title references (HO)
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 1229
+              end: 1229
+        - severity: info
+          name: pdfTeX
+          category: LaTeX
+          text: Redefining \ref
+          source:
+            file: main.tex
+            range:
+              start: 46
+              end: 46
+          log:
+            file: main.log
+            range:
+              start: 1233
+              end: 1233
+        - severity: info
+          name: pdfTeX
+          category: LaTeX
+          text: Redefining \pageref
+          source:
+            file: main.tex
+            range:
+              start: 46
+              end: 46
+          log:
+            file: main.log
+            range:
+              start: 1234
+              end: 1234
+        - severity: info
+          name: pdfTeX
+          category: LaTeX
+          text: Redefining \nameref
+          source:
+            file: main.tex
+            range:
+              start: 46
+              end: 46
+          log:
+            file: main.log
+            range:
+              start: 1235
+              end: 1235
+        - name: pdfTeX
+          severity: info
+          text: epstopdf-base 2016/05/15 v2.6 Base part for package epstopdf
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 1255
+              end: 1255
+        - name: pdfTeX
+          severity: info
+          text: grfext 2016/05/16 v1.2 Manage graphics extensions (HO)
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 1257
+              end: 1257
+        - severity: info
+          name: pdfTeX
+          category: Package epstopdf-base
+          text: Redefining graphics rule for `.eps'
+          source:
+            file: main.tex
+            range:
+              start: 438
+              end: 438
+          log:
+            file: main.log
+            range:
+              start: 1259
+              end: 1260
+        - severity: info
+          name: pdfTeX
+          category: Package grfext
+          text: >-
+            Graphics extension search list: [.png,.eps]
+            \AppendGraphicsExtensions.
+          source:
+            file: main.tex
+            range:
+              start: 456
+              end: 456
+          log:
+            file: main.log
+            range:
+              start: 1261
+              end: 1263
+        - severity: info
+          name: pdfTeX
+          category: Package biblatex
+          text: Input encoding 'utf8' detected.
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 1269
+              end: 1269
+        - severity: info
+          name: pdfTeX
+          category: Package biblatex
+          text: Automatic encoding selection. Assuming data encoding 'utf8'.
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 1270
+              end: 1271
+        - severity: info
+          name: pdfTeX
+          category: Package biblatex
+          text: Trying to load bibliographic data...
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 1274
+              end: 1274
+        - severity: info
+          name: pdfTeX
+          category: Package biblatex
+          text: ... file 'main.bbl' found.
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 1275
+              end: 1275
+        - severity: info
+          name: pdfTeX
+          category: Package biblatex
+          text: Reference section=0
+          source:
+            file: main.tex
+            range:
+              start: 46
+              end: 46
+          log:
+            file: main.log
+            range:
+              start: 1277
+              end: 1277
+        - severity: info
+          name: pdfTeX
+          category: Package biblatex
+          text: Reference segment=0
+          source:
+            file: main.tex
+            range:
+              start: 46
+              end: 46
+          log:
+            file: main.log
+            range:
+              start: 1278
+              end: 1278
+        - severity: info
+          name: pdfTeX
+          category: Package minitoc(hints)
+          text: I0049
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 1279
+              end: 1279
+        - severity: info
+          name: pdfTeX
+          category: Package minitoc(hints)
+          text: I0046
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 1282
+              end: 1282
+        - severity: warning
+          name: pdfTeX
+          category: Package minitoc(hints)
+          text: W0040
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 1287
+              end: 1287
+        - severity: warning
+          name: pdfTeX
+          category: Package minitoc(hints)
+          text: W0030
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 1293
+              end: 1293
+        - severity: warning
+          name: pdfTeX
+          category: Package minitoc(hints)
+          text: W0023
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 1298
+              end: 1298
+        - severity: warning
+          name: pdfTeX
+          category: Package minitoc(hints)
+          text: W0039
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 1303
+              end: 1303
+        - severity: warning
+          name: pdfTeX
+          category: Package minitoc(hints)
+          text: W0023
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 1308
+              end: 1308
+        - severity: info
+          name: pdfTeX
+          category: Package pdftex.def
+          text: ./figs/SDUlogo.png used on input line 3.
+          source:
+            file: main.tex
+            range:
+              start: 3
+              end: 3
+          log:
+            file: main.log
+            range:
+              start: 1316
+              end: 1317
+        - severity: info
+          name: pdfTeX
+          category: Package pdftex.def
+          text: 'Requested size: 209.12683pt x 83.9415pt'
+          source:
+            file: main.tex
+            range:
+              start: 3
+              end: 3
+          log:
+            file: main.log
+            range:
+              start: 1318
+              end: 1319
+        - severity: info
+          name: pdfTeX
+          category: LaTeX Font
+          text: Try loading font information for U+msa
+          source:
+            file: main.tex
+            range:
+              start: 5
+              end: 5
+          log:
+            file: main.log
+            range:
+              start: 1328
+              end: 1328
+        - severity: info
+          name: pdfTeX
+          category: LaTeX Font
+          text: Try loading font information for U+msb
+          source:
+            file: main.tex
+            range:
+              start: 5
+              end: 5
+          log:
+            file: main.log
+            range:
+              start: 1332
+              end: 1332
+        - severity: info
+          name: pdfTeX
+          category: Package pdftex.def
+          text: ./figs/single_host_illustration.png used on input line 7.
+          source:
+            file: main.tex
+            range:
+              start: 7
+              end: 7
+          log:
+            file: main.log
+            range:
+              start: 1348
+              end: 1349
+        - severity: info
+          name: pdfTeX
+          category: Package pdftex.def
+          text: 'Requested size: 54.80516pt x 26.19807pt'
+          source:
+            file: main.tex
+            range:
+              start: 7
+              end: 7
+          log:
+            file: main.log
+            range:
+              start: 1350
+              end: 1351
+        - severity: info
+          name: pdfTeX
+          category: Package pdftex.def
+          text: ./figs/multi_host_illustration.png used on input line 15.
+          source:
+            file: main.tex
+            range:
+              start: 15
+              end: 15
+          log:
+            file: main.log
+            range:
+              start: 1355
+              end: 1356
+        - severity: info
+          name: pdfTeX
+          category: Package pdftex.def
+          text: 'Requested size: 91.24158pt x 26.19807pt'
+          source:
+            file: main.tex
+            range:
+              start: 15
+              end: 15
+          log:
+            file: main.log
+            range:
+              start: 1357
+              end: 1358
+        - severity: info
+          name: pdfTeX
+          category: Package minitoc
+          text: I0009 Listing minitoc auxiliary files. Creating the main.maf file.
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 1360
+              end: 1362
+        - severity: info
+          name: pdfTeX
+          category: Package minitoc(hints)
+          text: I0053
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 1365
+              end: 1365
+        - severity: warning
+          name: pdfTeX
+          category: Package minitoc(hints)
+          text: W0024
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 1371
+              end: 1371
+        - severity: info
+          name: pdfTeX
+          category: Package atveryend
+          text: Empty hook `BeforeClearDocument'
+          source:
+            file: main.tex
+            range:
+              start: 75
+              end: 75
+          log:
+            file: main.log
+            range:
+              start: 1375
+              end: 1375
+        - severity: info
+          name: pdfTeX
+          category: Package atveryend
+          text: Empty hook `AfterLastShipout'
+          source:
+            file: main.tex
+            range:
+              start: 75
+              end: 75
+          log:
+            file: main.log
+            range:
+              start: 1383
+              end: 1383
+        - severity: info
+          name: pdfTeX
+          category: Package atveryend
+          text: Executing hook `AtVeryEndDocument'
+          source:
+            file: main.tex
+            range:
+              start: 75
+              end: 75
+          log:
+            file: main.log
+            range:
+              start: 1385
+              end: 1385
+        - severity: info
+          name: pdfTeX
+          category: Package atveryend
+          text: Executing hook `AtEndAfterFileList'
+          source:
+            file: main.tex
+            range:
+              start: 75
+              end: 75
+          log:
+            file: main.log
+            range:
+              start: 1386
+              end: 1386
+        - severity: info
+          name: pdfTeX
+          category: Package rerunfilecheck
+          text: >-
+            File `main.out' has not changed. Checksum:
+            7713C234CD432009FB338FA9996488BA;98.
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 1387
+              end: 1388
+        - severity: info
+          name: pdfTeX
+          category: Package logreq
+          text: Writing requests to 'main.run.xml'.
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 1389
+              end: 1389
+        - severity: info
+          name: pdfTeX
+          category: Package atveryend
+          text: Empty hook `AtVeryVeryEnd'
+          source:
+            file: main.tex
+            range:
+              start: 75
+              end: 75
+          log:
+            file: main.log
+            range:
+              start: 1392
+              end: 1392
+      inputs: []
+      outputs:
+        - main.pdf
+      calls: []
+    jobNames: []
+    type: ParsedLaTeXLog
+  main.pdf:
+    timeStamp: 2017-10-17T22:40:11.672Z
+    hash: 6MSVpbqSGrgLRdHBtju6C3aM5WRZhu3/6kmZAEN9fHI=
+    jobNames: []
+    type: PortableDocumentFormat
+  main.aux:
+    timeStamp: 2017-10-17T22:40:11.622Z
+    hash: CyPelRpOi/Rnim4rToQuLjnfB/cXbUIfKgW7QyR8DEU=
+    jobNames: []
+    type: LaTeXAuxilary
+  main.fls:
+    timeStamp: 2017-10-17T22:40:11.677Z
+    hash: xacVIJmZyiJMiwKdPSv7PWr0uJU8IdVhorh5dJ0M9e4=
+    jobNames: []
+    type: FileListing
+  main.synctex.gz:
+    timeStamp: 2017-10-17T22:40:11.673Z
+    hash: UkHCTKk1z6pmkaSZZ0v9E+bTUv/gfXM0FvACvPIQ9VY=
+    jobNames: []
+    type: SyncTeX
+  main.aux-ParsedLaTeXAuxilary:
+    timeStamp: 2017-10-17T20:59:49.843Z
+    value:
+      commands:
+        - relax
+        - providecommand
+        - providecommand
+        - providecommand
+        - HyperFirstAtBeginDocument
+        - global
+        - gdef
+        - global
+        - gdef
+        - gdef
+        - AtEndDocument
+        - let
+        - let
+        - fi
+        - fi
+        - global
+        - gdef
+        - providecommand
+        - providecommand
+        - abx@aux@sortscheme
+        - abx@aux@refcontext
+        - '@writefile'
+        - '@writefile'
+        - '@writefile'
+        - '@writefile'
+        - global
+        - '@writefile'
+        - '@writefile'
+        - '@writefile'
+        - '@writefile'
+        - newlabel
+        - '@writefile'
+        - newlabel
+        - ttl@finishall
+    jobNames: []
+    type: ParsedLaTeXAuxilary
+  'c:\texlive\2017\texmf-dist\fonts\enc\dvips\cm-super\cm-super-t1.enc':
+    timeStamp: 2017-10-17T18:30:00.070Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\fonts\map\fontname\texfonts.map':
+    timeStamp: 2017-10-17T18:32:37.372Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\fonts\tfm\jknappen\ec\ecbx1200.tfm':
+    timeStamp: 2017-10-17T18:31:40.871Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\fonts\tfm\jknappen\ec\ecbx1728.tfm':
+    timeStamp: 2017-10-17T18:31:40.871Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\fonts\tfm\jknappen\ec\ecbx2488.tfm':
+    timeStamp: 2017-10-17T18:31:40.872Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\fonts\tfm\jknappen\ec\ecrm1095.tfm':
+    timeStamp: 2017-10-17T18:31:40.891Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\fonts\tfm\jknappen\ec\ecrm1200.tfm':
+    timeStamp: 2017-10-17T18:31:40.892Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\fonts\tfm\jknappen\ec\ecrm1728.tfm':
+    timeStamp: 2017-10-17T18:31:40.892Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\fonts\tfm\jknappen\ec\ecrm2488.tfm':
+    timeStamp: 2017-10-17T18:31:40.892Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\fonts\tfm\public\amsfonts\cmextra\cmex7.tfm':
+    timeStamp: 2017-10-17T18:28:08.015Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\fonts\tfm\public\amsfonts\cmextra\cmex8.tfm':
+    timeStamp: 2017-10-17T18:28:08.016Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\fonts\tfm\public\amsfonts\symbols\msam10.tfm':
+    timeStamp: 2017-10-17T18:28:08.028Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\fonts\tfm\public\amsfonts\symbols\msam7.tfm':
+    timeStamp: 2017-10-17T18:28:08.029Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\fonts\tfm\public\amsfonts\symbols\msbm10.tfm':
+    timeStamp: 2017-10-17T18:28:08.029Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\fonts\tfm\public\amsfonts\symbols\msbm7.tfm':
+    timeStamp: 2017-10-17T18:28:08.030Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\fonts\tfm\public\cm\cmex10.tfm':
+    timeStamp: 2017-10-17T18:29:51.572Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\fonts\tfm\public\cm\cmmi12.tfm':
+    timeStamp: 2017-10-17T18:29:51.573Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\fonts\tfm\public\cm\cmmi6.tfm':
+    timeStamp: 2017-10-17T18:29:51.573Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\fonts\tfm\public\cm\cmmi8.tfm':
+    timeStamp: 2017-10-17T18:29:51.574Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\fonts\tfm\public\cm\cmr10.tfm':
+    timeStamp: 2017-10-17T18:29:51.574Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\fonts\tfm\public\cm\cmr12.tfm':
+    timeStamp: 2017-10-17T18:29:51.575Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\fonts\tfm\public\cm\cmr6.tfm':
+    timeStamp: 2017-10-17T18:29:51.575Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\fonts\tfm\public\cm\cmr8.tfm':
+    timeStamp: 2017-10-17T18:29:51.576Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\fonts\tfm\public\cm\cmsy10.tfm':
+    timeStamp: 2017-10-17T18:29:51.580Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\fonts\tfm\public\cm\cmsy6.tfm':
+    timeStamp: 2017-10-17T18:29:51.581Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\fonts\tfm\public\cm\cmsy8.tfm':
+    timeStamp: 2017-10-17T18:29:51.581Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\fonts\type1\public\cm-super\sfbx1200.pfb':
+    timeStamp: 2017-10-17T18:30:00.643Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\fonts\type1\public\cm-super\sfbx1728.pfb':
+    timeStamp: 2017-10-17T18:30:00.645Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\fonts\type1\public\cm-super\sfbx2488.pfb':
+    timeStamp: 2017-10-17T18:30:00.646Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\fonts\type1\public\cm-super\sfrm1095.pfb':
+    timeStamp: 2017-10-17T18:30:01.039Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\fonts\type1\public\cm-super\sfrm1200.pfb':
+    timeStamp: 2017-10-17T18:30:01.039Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\context\base\mkii\supp-pdf.mkii':
+    timeStamp: 2017-10-17T18:36:12.755Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\generic\ifxetex\ifxetex.sty':
+    timeStamp: 2017-10-17T18:33:39.915Z
+    jobNames: []
+    type: LaTeXStyle
+  'c:\texlive\2017\texmf-dist\tex\generic\oberdiek\gettitlestring.sty':
+    timeStamp: 2017-10-17T18:36:48.616Z
+    jobNames: []
+    type: LaTeXStyle
+  'c:\texlive\2017\texmf-dist\tex\generic\oberdiek\hobsub-generic.sty':
+    timeStamp: 2017-10-17T18:36:48.617Z
+    jobNames: []
+    type: LaTeXStyle
+  'c:\texlive\2017\texmf-dist\tex\generic\oberdiek\hobsub-hyperref.sty':
+    timeStamp: 2017-10-17T18:36:48.617Z
+    jobNames: []
+    type: LaTeXStyle
+  'c:\texlive\2017\texmf-dist\tex\generic\oberdiek\ifpdf.sty':
+    timeStamp: 2017-10-17T18:36:48.619Z
+    jobNames: []
+    type: LaTeXStyle
+  'c:\texlive\2017\texmf-dist\tex\generic\oberdiek\ifvtex.sty':
+    timeStamp: 2017-10-17T18:36:48.619Z
+    jobNames: []
+    type: LaTeXStyle
+  'c:\texlive\2017\texmf-dist\tex\generic\unicode-data\CaseFolding.txt':
+    timeStamp: 2017-10-17T18:41:52.913Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\generic\unicode-data\SpecialCasing.txt':
+    timeStamp: 2017-10-17T18:41:52.915Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\generic\unicode-data\UnicodeData.txt':
+    timeStamp: 2017-10-17T18:41:52.917Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\generic\xstring\xstring.sty':
+    timeStamp: 2017-10-17T18:42:46.994Z
+    jobNames: []
+    type: LaTeXStyle
+  'c:\texlive\2017\texmf-dist\tex\generic\xstring\xstring.tex':
+    timeStamp: 2017-10-17T18:42:46.994Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\amsfonts\amsfonts.sty':
+    timeStamp: 2017-10-17T18:28:08.090Z
+    jobNames: []
+    type: LaTeXStyle
+  'c:\texlive\2017\texmf-dist\tex\latex\amsfonts\amssymb.sty':
+    timeStamp: 2017-10-17T18:28:08.091Z
+    jobNames: []
+    type: LaTeXStyle
+  'c:\texlive\2017\texmf-dist\tex\latex\amsfonts\umsa.fd':
+    timeStamp: 2017-10-17T18:28:08.092Z
+    jobNames: []
+    type: FontDescription
+  'c:\texlive\2017\texmf-dist\tex\latex\amsfonts\umsb.fd':
+    timeStamp: 2017-10-17T18:28:08.093Z
+    jobNames: []
+    type: FontDescription
+  'c:\texlive\2017\texmf-dist\tex\latex\amsmath\amsbsy.sty':
+    timeStamp: 2017-10-17T18:28:08.839Z
+    jobNames: []
+    type: LaTeXStyle
+  'c:\texlive\2017\texmf-dist\tex\latex\amsmath\amsgen.sty':
+    timeStamp: 2017-10-17T18:28:08.839Z
+    jobNames: []
+    type: LaTeXStyle
+  'c:\texlive\2017\texmf-dist\tex\latex\amsmath\amsmath.sty':
+    timeStamp: 2017-10-17T18:28:08.840Z
+    jobNames: []
+    type: LaTeXStyle
+  'c:\texlive\2017\texmf-dist\tex\latex\amsmath\amsopn.sty':
+    timeStamp: 2017-10-17T18:28:08.840Z
+    jobNames: []
+    type: LaTeXStyle
+  'c:\texlive\2017\texmf-dist\tex\latex\amsmath\amstext.sty':
+    timeStamp: 2017-10-17T18:28:08.841Z
+    jobNames: []
+    type: LaTeXStyle
+  'c:\texlive\2017\texmf-dist\tex\latex\base\article.cls':
+    timeStamp: 2017-10-17T18:34:31.733Z
+    jobNames: []
+    type: LaTeXClass
+  'c:\texlive\2017\texmf-dist\tex\latex\base\fixltx2e.sty':
+    timeStamp: 2017-10-17T18:34:31.739Z
+    jobNames: []
+    type: LaTeXStyle
+  'c:\texlive\2017\texmf-dist\tex\latex\base\fontenc.sty':
+    timeStamp: 2017-10-17T18:34:31.741Z
+    jobNames: []
+    type: LaTeXStyle
+  'c:\texlive\2017\texmf-dist\tex\latex\base\ifthen.sty':
+    timeStamp: 2017-10-17T18:34:31.742Z
+    jobNames: []
+    type: LaTeXStyle
+  'c:\texlive\2017\texmf-dist\tex\latex\base\inputenc.sty':
+    timeStamp: 2017-10-17T18:34:31.743Z
+    jobNames: []
+    type: LaTeXStyle
+  'c:\texlive\2017\texmf-dist\tex\latex\base\omsenc.dfu':
+    timeStamp: 2017-10-17T18:34:31.753Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\base\ot1enc.dfu':
+    timeStamp: 2017-10-17T18:34:31.756Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\base\size12.clo':
+    timeStamp: 2017-10-17T18:34:31.759Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\base\t1enc.def':
+    timeStamp: 2017-10-17T18:34:31.762Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\base\t1enc.dfu':
+    timeStamp: 2017-10-17T18:34:31.762Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\base\utf8.def':
+    timeStamp: 2017-10-17T18:34:31.769Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\biblatex\bbx\numeric.bbx':
+    timeStamp: 2017-10-17T18:28:54.301Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\biblatex\bbx\standard.bbx':
+    timeStamp: 2017-10-17T18:28:54.301Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\biblatex\biblatex.cfg':
+    timeStamp: 2017-10-17T18:28:54.303Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\biblatex\biblatex.def':
+    timeStamp: 2017-10-17T18:28:54.303Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\biblatex\biblatex.sty':
+    timeStamp: 2017-10-17T18:28:54.304Z
+    jobNames: []
+    type: LaTeXStyle
+  'c:\texlive\2017\texmf-dist\tex\latex\biblatex\blx-compat.def':
+    timeStamp: 2017-10-17T18:28:54.305Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\biblatex\blx-dm.def':
+    timeStamp: 2017-10-17T18:28:54.305Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\biblatex\cbx\numeric.cbx':
+    timeStamp: 2017-10-17T18:28:54.309Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\biblatex\lbx\english.lbx':
+    timeStamp: 2017-10-17T18:28:54.315Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\booktabs\booktabs.sty':
+    timeStamp: 2017-10-17T18:29:11.616Z
+    jobNames: []
+    type: LaTeXStyle
+  'c:\texlive\2017\texmf-dist\tex\latex\comment\comment.sty':
+    timeStamp: 2017-10-17T18:30:17.414Z
+    jobNames: []
+    type: LaTeXStyle
+  'c:\texlive\2017\texmf-dist\tex\latex\etoolbox\etoolbox.sty':
+    timeStamp: 2017-10-17T18:32:02.740Z
+    jobNames: []
+    type: LaTeXStyle
+  'c:\texlive\2017\texmf-dist\tex\latex\fancyvrb\fancyvrb.sty':
+    timeStamp: 2017-10-17T18:32:11.614Z
+    jobNames: []
+    type: LaTeXStyle
+  'c:\texlive\2017\texmf-dist\tex\latex\float\float.sty':
+    timeStamp: 2017-10-17T18:32:31.368Z
+    jobNames: []
+    type: LaTeXStyle
+  'c:\texlive\2017\texmf-dist\tex\latex\geometry\geometry.sty':
+    timeStamp: 2017-10-17T18:32:53.671Z
+    jobNames: []
+    type: LaTeXStyle
+  'c:\texlive\2017\texmf-dist\tex\latex\graphics-cfg\color.cfg':
+    timeStamp: 2017-10-17T18:33:10.230Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\graphics-cfg\graphics.cfg':
+    timeStamp: 2017-10-17T18:33:10.230Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\graphics-def\pdftex.def':
+    timeStamp: 2017-10-17T18:33:10.355Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\graphics\color.sty':
+    timeStamp: 2017-10-17T18:33:09.872Z
+    jobNames: []
+    type: LaTeXStyle
+  'c:\texlive\2017\texmf-dist\tex\latex\graphics\graphics.sty':
+    timeStamp: 2017-10-17T18:33:09.874Z
+    jobNames: []
+    type: LaTeXStyle
+  'c:\texlive\2017\texmf-dist\tex\latex\graphics\graphicx.sty':
+    timeStamp: 2017-10-17T18:33:09.874Z
+    jobNames: []
+    type: LaTeXStyle
+  'c:\texlive\2017\texmf-dist\tex\latex\graphics\keyval.sty':
+    timeStamp: 2017-10-17T18:33:09.874Z
+    jobNames: []
+    type: LaTeXStyle
+  'c:\texlive\2017\texmf-dist\tex\latex\graphics\trig.sty':
+    timeStamp: 2017-10-17T18:33:09.876Z
+    jobNames: []
+    type: LaTeXStyle
+  'c:\texlive\2017\texmf-dist\tex\latex\hyperref\hpdftex.def':
+    timeStamp: 2017-10-17T18:33:28.055Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\hyperref\hyperref.sty':
+    timeStamp: 2017-10-17T18:33:28.057Z
+    jobNames: []
+    type: LaTeXStyle
+  'c:\texlive\2017\texmf-dist\tex\latex\hyperref\nameref.sty':
+    timeStamp: 2017-10-17T18:33:28.058Z
+    jobNames: []
+    type: LaTeXStyle
+  'c:\texlive\2017\texmf-dist\tex\latex\hyperref\pd1enc.def':
+    timeStamp: 2017-10-17T18:33:28.059Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\import\import.sty':
+    timeStamp: 2017-10-17T18:33:43.143Z
+    jobNames: []
+    type: LaTeXStyle
+  'c:\texlive\2017\texmf-dist\tex\latex\l3kernel\expl3-code.tex':
+    timeStamp: 2017-10-17T18:34:27.343Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\l3kernel\expl3.sty':
+    timeStamp: 2017-10-17T18:34:27.344Z
+    jobNames: []
+    type: LaTeXStyle
+  'c:\texlive\2017\texmf-dist\tex\latex\l3kernel\l3pdfmode.def':
+    timeStamp: 2017-10-17T18:34:27.349Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\l3packages\xparse\xparse.sty':
+    timeStamp: 2017-10-17T18:34:28.431Z
+    jobNames: []
+    type: LaTeXStyle
+  'c:\texlive\2017\texmf-dist\tex\latex\latexconfig\epstopdf-sys.cfg':
+    timeStamp: 2017-10-17T18:34:42.137Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\latexconfig\hyperref.cfg':
+    timeStamp: 2017-10-17T18:34:42.137Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\listings\listings.cfg':
+    timeStamp: 2017-10-17T18:34:59.707Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\listings\listings.sty':
+    timeStamp: 2017-10-17T18:34:59.707Z
+    jobNames: []
+    type: LaTeXStyle
+  'c:\texlive\2017\texmf-dist\tex\latex\listings\lstmisc.sty':
+    timeStamp: 2017-10-17T18:34:59.709Z
+    jobNames: []
+    type: LaTeXStyle
+  'c:\texlive\2017\texmf-dist\tex\latex\logreq\logreq.def':
+    timeStamp: 2017-10-17T18:35:06.767Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\logreq\logreq.sty':
+    timeStamp: 2017-10-17T18:35:06.768Z
+    jobNames: []
+    type: LaTeXStyle
+  'c:\texlive\2017\texmf-dist\tex\latex\mdframed\md-frame-0.mdf':
+    timeStamp: 2017-10-17T18:35:42.441Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\mdframed\mdframed.sty':
+    timeStamp: 2017-10-17T18:35:42.443Z
+    jobNames: []
+    type: LaTeXStyle
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\UKenglish.mld':
+    timeStamp: 2017-10-17T18:35:57.428Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\USenglish.mld':
+    timeStamp: 2017-10-17T18:35:57.428Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\acadian.mld':
+    timeStamp: 2017-10-17T18:35:57.429Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\acadien.mld':
+    timeStamp: 2017-10-17T18:35:57.429Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\afrikaan.mld':
+    timeStamp: 2017-10-17T18:35:57.429Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\afrikaans.mld':
+    timeStamp: 2017-10-17T18:35:57.429Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\albanian.mld':
+    timeStamp: 2017-10-17T18:35:57.429Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\american.mld':
+    timeStamp: 2017-10-17T18:35:57.430Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\arab.mld':
+    timeStamp: 2017-10-17T18:35:57.430Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\arab2.mld':
+    timeStamp: 2017-10-17T18:35:57.430Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\arabi.mld':
+    timeStamp: 2017-10-17T18:35:57.430Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\arabic.mld':
+    timeStamp: 2017-10-17T18:35:57.431Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\armenian.mld':
+    timeStamp: 2017-10-17T18:35:57.431Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\australian.mld':
+    timeStamp: 2017-10-17T18:35:57.431Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\austrian.mld':
+    timeStamp: 2017-10-17T18:35:57.431Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\bahasa.mld':
+    timeStamp: 2017-10-17T18:35:57.431Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\bahasai.mld':
+    timeStamp: 2017-10-17T18:35:57.432Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\bahasam.mld':
+    timeStamp: 2017-10-17T18:35:57.432Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\bangla.mld':
+    timeStamp: 2017-10-17T18:35:57.432Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\basque.mld':
+    timeStamp: 2017-10-17T18:35:57.432Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\bengali.mld':
+    timeStamp: 2017-10-17T18:35:57.432Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\bicig.mld':
+    timeStamp: 2017-10-17T18:35:57.433Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\bicig2.mld':
+    timeStamp: 2017-10-17T18:35:57.433Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\bicig3.mld':
+    timeStamp: 2017-10-17T18:35:57.433Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\bithe.mld':
+    timeStamp: 2017-10-17T18:35:57.433Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\brazil.mld':
+    timeStamp: 2017-10-17T18:35:57.433Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\brazilian.mld':
+    timeStamp: 2017-10-17T18:35:57.434Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\breton.mld':
+    timeStamp: 2017-10-17T18:35:57.434Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\british.mld':
+    timeStamp: 2017-10-17T18:35:57.434Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\bulgarian.mld':
+    timeStamp: 2017-10-17T18:35:57.434Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\bulgarianb.mld':
+    timeStamp: 2017-10-17T18:35:57.435Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\buryat.mld':
+    timeStamp: 2017-10-17T18:35:57.435Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\buryat2.mld':
+    timeStamp: 2017-10-17T18:35:57.435Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\canadian.mld':
+    timeStamp: 2017-10-17T18:35:57.435Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\canadien.mld':
+    timeStamp: 2017-10-17T18:35:57.435Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\castillan.mld':
+    timeStamp: 2017-10-17T18:35:57.436Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\castillian.mld':
+    timeStamp: 2017-10-17T18:35:57.436Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\catalan.mld':
+    timeStamp: 2017-10-17T18:35:57.436Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\chinese1.mld':
+    timeStamp: 2017-10-17T18:35:57.436Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\chinese1.mlo':
+    timeStamp: 2017-10-17T18:35:57.436Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\chinese2.mld':
+    timeStamp: 2017-10-17T18:35:57.437Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\chinese2.mlo':
+    timeStamp: 2017-10-17T18:35:57.437Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\croatian.mld':
+    timeStamp: 2017-10-17T18:35:57.437Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\czech.mld':
+    timeStamp: 2017-10-17T18:35:57.437Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\danish.mld':
+    timeStamp: 2017-10-17T18:35:57.437Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\devanagari.mld':
+    timeStamp: 2017-10-17T18:35:57.438Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\dutch.mld':
+    timeStamp: 2017-10-17T18:35:57.438Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\english.mld':
+    timeStamp: 2017-10-17T18:35:57.438Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\english1.mld':
+    timeStamp: 2017-10-17T18:35:57.438Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\english2.mld':
+    timeStamp: 2017-10-17T18:35:57.439Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\esperant.mld':
+    timeStamp: 2017-10-17T18:35:57.439Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\esperanto.mld':
+    timeStamp: 2017-10-17T18:35:57.439Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\estonian.mld':
+    timeStamp: 2017-10-17T18:35:57.439Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\ethiopia.mld':
+    timeStamp: 2017-10-17T18:35:57.439Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\ethiopian.mld':
+    timeStamp: 2017-10-17T18:35:57.440Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\ethiopian2.mld':
+    timeStamp: 2017-10-17T18:35:57.440Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\farsi1.mld':
+    timeStamp: 2017-10-17T18:35:57.440Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\farsi1.mlo':
+    timeStamp: 2017-10-17T18:35:57.440Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\farsi2.mld':
+    timeStamp: 2017-10-17T18:35:57.440Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\farsi2.mlo':
+    timeStamp: 2017-10-17T18:35:57.441Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\farsi3.mld':
+    timeStamp: 2017-10-17T18:35:57.441Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\finnish.mld':
+    timeStamp: 2017-10-17T18:35:57.441Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\finnish2.mld':
+    timeStamp: 2017-10-17T18:35:57.441Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\francais.mld':
+    timeStamp: 2017-10-17T18:35:57.442Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\french.mld':
+    timeStamp: 2017-10-17T18:35:57.442Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\french1.mld':
+    timeStamp: 2017-10-17T18:35:57.442Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\french2.mld':
+    timeStamp: 2017-10-17T18:35:57.442Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\frenchb.mld':
+    timeStamp: 2017-10-17T18:35:57.442Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\frenchle.mld':
+    timeStamp: 2017-10-17T18:35:57.443Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\frenchpro.mld':
+    timeStamp: 2017-10-17T18:35:57.443Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\galician.mld':
+    timeStamp: 2017-10-17T18:35:57.443Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\german.mld':
+    timeStamp: 2017-10-17T18:35:57.443Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\germanb.mld':
+    timeStamp: 2017-10-17T18:35:57.444Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\germanb2.mld':
+    timeStamp: 2017-10-17T18:35:57.444Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\greek-mono.mld':
+    timeStamp: 2017-10-17T18:35:57.444Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\greek-polydemo.mld':
+    timeStamp: 2017-10-17T18:35:57.444Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\greek-polykatha.mld':
+    timeStamp: 2017-10-17T18:35:57.445Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\greek.mld':
+    timeStamp: 2017-10-17T18:35:57.445Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\guarani.mld':
+    timeStamp: 2017-10-17T18:35:57.445Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\hangul-u8.mld':
+    timeStamp: 2017-10-17T18:35:57.445Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\hangul-u8.mlo':
+    timeStamp: 2017-10-17T18:35:57.446Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\hangul1.mld':
+    timeStamp: 2017-10-17T18:35:57.446Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\hangul1.mlo':
+    timeStamp: 2017-10-17T18:35:57.446Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\hangul2.mld':
+    timeStamp: 2017-10-17T18:35:57.446Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\hangul2.mlo':
+    timeStamp: 2017-10-17T18:35:57.446Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\hangul3.mld':
+    timeStamp: 2017-10-17T18:35:57.447Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\hangul3.mlo':
+    timeStamp: 2017-10-17T18:35:57.447Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\hangul4.mld':
+    timeStamp: 2017-10-17T18:35:57.447Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\hangul4.mlo':
+    timeStamp: 2017-10-17T18:35:57.447Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\hanja-u8.mld':
+    timeStamp: 2017-10-17T18:35:57.447Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\hanja-u8.mlo':
+    timeStamp: 2017-10-17T18:35:57.447Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\hanja1.mld':
+    timeStamp: 2017-10-17T18:35:57.448Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\hanja1.mlo':
+    timeStamp: 2017-10-17T18:35:57.448Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\hanja2.mld':
+    timeStamp: 2017-10-17T18:35:57.448Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\hanja2.mlo':
+    timeStamp: 2017-10-17T18:35:57.448Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\hebrew.mld':
+    timeStamp: 2017-10-17T18:35:57.449Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\hebrew2.mld':
+    timeStamp: 2017-10-17T18:35:57.449Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\hindi-modern.mld':
+    timeStamp: 2017-10-17T18:35:57.449Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\hindi.mld':
+    timeStamp: 2017-10-17T18:35:57.449Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\hungarian.mld':
+    timeStamp: 2017-10-17T18:35:57.450Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\icelandic.mld':
+    timeStamp: 2017-10-17T18:35:57.450Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\indon.mld':
+    timeStamp: 2017-10-17T18:35:57.450Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\indonesian.mld':
+    timeStamp: 2017-10-17T18:35:57.450Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\interlingua.mld':
+    timeStamp: 2017-10-17T18:35:57.450Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\irish.mld':
+    timeStamp: 2017-10-17T18:35:57.451Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\italian.mld':
+    timeStamp: 2017-10-17T18:35:57.451Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\italian2.mld':
+    timeStamp: 2017-10-17T18:35:57.451Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\japanese.mld':
+    timeStamp: 2017-10-17T18:35:57.451Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\japanese.mlo':
+    timeStamp: 2017-10-17T18:35:57.451Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\japanese2.mld':
+    timeStamp: 2017-10-17T18:35:57.452Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\japanese2.mlo':
+    timeStamp: 2017-10-17T18:35:57.452Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\japanese3.mld':
+    timeStamp: 2017-10-17T18:35:57.452Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\japanese3.mlo':
+    timeStamp: 2017-10-17T18:35:57.452Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\japanese4.mld':
+    timeStamp: 2017-10-17T18:35:57.452Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\japanese4.mlo':
+    timeStamp: 2017-10-17T18:35:57.452Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\japanese5.mld':
+    timeStamp: 2017-10-17T18:35:57.453Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\japanese5.mlo':
+    timeStamp: 2017-10-17T18:35:57.453Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\japanese6.mld':
+    timeStamp: 2017-10-17T18:35:57.453Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\japanese6.mlo':
+    timeStamp: 2017-10-17T18:35:57.453Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\kannada.mld':
+    timeStamp: 2017-10-17T18:35:57.454Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\khalkha.mld':
+    timeStamp: 2017-10-17T18:35:57.454Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\latin.mld':
+    timeStamp: 2017-10-17T18:35:57.454Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\latin2.mld':
+    timeStamp: 2017-10-17T18:35:57.454Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\latinc.mld':
+    timeStamp: 2017-10-17T18:35:57.454Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\latinc2.mld':
+    timeStamp: 2017-10-17T18:35:57.455Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\latvian.mld':
+    timeStamp: 2017-10-17T18:35:57.455Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\latvian2.mld':
+    timeStamp: 2017-10-17T18:35:57.455Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\letton.mld':
+    timeStamp: 2017-10-17T18:35:57.455Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\letton2.mld':
+    timeStamp: 2017-10-17T18:35:57.455Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\lithuanian.mld':
+    timeStamp: 2017-10-17T18:35:57.456Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\lithuanian2.mld':
+    timeStamp: 2017-10-17T18:35:57.456Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\lowersorbian.mld':
+    timeStamp: 2017-10-17T18:35:57.456Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\lsorbian.mld':
+    timeStamp: 2017-10-17T18:35:57.456Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\magyar.mld':
+    timeStamp: 2017-10-17T18:35:57.457Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\magyar2.mld':
+    timeStamp: 2017-10-17T18:35:57.457Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\magyar3.mld':
+    timeStamp: 2017-10-17T18:35:57.457Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\malay.mld':
+    timeStamp: 2017-10-17T18:35:57.457Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\malayalam-b.mld':
+    timeStamp: 2017-10-17T18:35:57.457Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\malayalam-keli.mld':
+    timeStamp: 2017-10-17T18:35:57.458Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\malayalam-keli2.mld':
+    timeStamp: 2017-10-17T18:35:57.458Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\malayalam-mr.mld':
+    timeStamp: 2017-10-17T18:35:57.458Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\malayalam-omega.mld':
+    timeStamp: 2017-10-17T18:35:57.458Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\malayalam-omega.mlo':
+    timeStamp: 2017-10-17T18:35:57.459Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\malayalam-rachana.mld':
+    timeStamp: 2017-10-17T18:35:57.459Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\malayalam-rachana2.mld':
+    timeStamp: 2017-10-17T18:35:57.459Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\malayalam-rachana3.mld':
+    timeStamp: 2017-10-17T18:35:57.460Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\manju.mld':
+    timeStamp: 2017-10-17T18:35:57.460Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\mexican.mld':
+    timeStamp: 2017-10-17T18:35:57.460Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\meyalu.mld':
+    timeStamp: 2017-10-17T18:35:57.460Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\minitoc.sty':
+    timeStamp: 2017-10-17T18:35:57.461Z
+    jobNames: []
+    type: LaTeXStyle
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\mongol.mld':
+    timeStamp: 2017-10-17T18:35:57.461Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\mongolb.mld':
+    timeStamp: 2017-10-17T18:35:57.461Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\mongolian.mld':
+    timeStamp: 2017-10-17T18:35:57.461Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\mtcmess.sty':
+    timeStamp: 2017-10-17T18:35:57.462Z
+    jobNames: []
+    type: LaTeXStyle
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\naustrian.mld':
+    timeStamp: 2017-10-17T18:35:57.462Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\newzealand.mld':
+    timeStamp: 2017-10-17T18:35:57.462Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\ngerman.mld':
+    timeStamp: 2017-10-17T18:35:57.463Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\ngermanb.mld':
+    timeStamp: 2017-10-17T18:35:57.463Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\ngermanb2.mld':
+    timeStamp: 2017-10-17T18:35:57.463Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\norsk.mld':
+    timeStamp: 2017-10-17T18:35:57.463Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\norsk2.mld':
+    timeStamp: 2017-10-17T18:35:57.464Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\nynorsk.mld':
+    timeStamp: 2017-10-17T18:35:57.464Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\nynorsk2.mld':
+    timeStamp: 2017-10-17T18:35:57.464Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\occitan.mld':
+    timeStamp: 2017-10-17T18:35:57.464Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\occitan2.mld':
+    timeStamp: 2017-10-17T18:35:57.464Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\polish.mld':
+    timeStamp: 2017-10-17T18:35:57.465Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\polish2.mld':
+    timeStamp: 2017-10-17T18:35:57.465Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\polski.mld':
+    timeStamp: 2017-10-17T18:35:57.465Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\portuges.mld':
+    timeStamp: 2017-10-17T18:35:57.465Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\portuguese.mld':
+    timeStamp: 2017-10-17T18:35:57.465Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\romanian.mld':
+    timeStamp: 2017-10-17T18:35:57.466Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\romanian2.mld':
+    timeStamp: 2017-10-17T18:35:57.466Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\romanian3.mld':
+    timeStamp: 2017-10-17T18:35:57.466Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\russian-cca.mld':
+    timeStamp: 2017-10-17T18:35:57.466Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\russian-cca.mlo':
+    timeStamp: 2017-10-17T18:35:57.467Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\russian-cca1.mld':
+    timeStamp: 2017-10-17T18:35:57.467Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\russian-cca1.mlo':
+    timeStamp: 2017-10-17T18:35:57.467Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\russian-lh.mld':
+    timeStamp: 2017-10-17T18:35:57.467Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\russian-lh.mlo':
+    timeStamp: 2017-10-17T18:35:57.467Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\russian-lhcyralt.mld':
+    timeStamp: 2017-10-17T18:35:57.468Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\russian-lhcyralt.mlo':
+    timeStamp: 2017-10-17T18:35:57.468Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\russian-lhcyrkoi.mld':
+    timeStamp: 2017-10-17T18:35:57.468Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\russian-lhcyrkoi.mlo':
+    timeStamp: 2017-10-17T18:35:57.468Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\russian-lhcyrwin.mld':
+    timeStamp: 2017-10-17T18:35:57.469Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\russian-lhcyrwin.mlo':
+    timeStamp: 2017-10-17T18:35:57.469Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\russian.mld':
+    timeStamp: 2017-10-17T18:35:57.469Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\russian2m.mld':
+    timeStamp: 2017-10-17T18:35:57.469Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\russian2o.mld':
+    timeStamp: 2017-10-17T18:35:57.470Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\russianb.mld':
+    timeStamp: 2017-10-17T18:35:57.470Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\russianc.mld':
+    timeStamp: 2017-10-17T18:35:57.470Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\samin.mld':
+    timeStamp: 2017-10-17T18:35:57.470Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\scottish.mld':
+    timeStamp: 2017-10-17T18:35:57.470Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\serbian.mld':
+    timeStamp: 2017-10-17T18:35:57.471Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\serbianc.mld':
+    timeStamp: 2017-10-17T18:35:57.471Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\slovak.mld':
+    timeStamp: 2017-10-17T18:35:57.471Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\slovene.mld':
+    timeStamp: 2017-10-17T18:35:57.471Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\spanish.mld':
+    timeStamp: 2017-10-17T18:35:57.471Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\spanish2.mld':
+    timeStamp: 2017-10-17T18:35:57.472Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\spanish3.mld':
+    timeStamp: 2017-10-17T18:35:57.472Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\spanish4.mld':
+    timeStamp: 2017-10-17T18:35:57.472Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\swahili.mld':
+    timeStamp: 2017-10-17T18:35:57.472Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\swedish.mld':
+    timeStamp: 2017-10-17T18:35:57.472Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\swedish2.mld':
+    timeStamp: 2017-10-17T18:35:57.473Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\thai.mld':
+    timeStamp: 2017-10-17T18:35:57.473Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\thai.mlo':
+    timeStamp: 2017-10-17T18:35:57.473Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\turkish.mld':
+    timeStamp: 2017-10-17T18:35:57.473Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\uighur.mld':
+    timeStamp: 2017-10-17T18:35:57.473Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\uighur2.mld':
+    timeStamp: 2017-10-17T18:35:57.474Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\uighur3.mld':
+    timeStamp: 2017-10-17T18:35:57.474Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\ukraineb.mld':
+    timeStamp: 2017-10-17T18:35:57.474Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\ukrainian.mld':
+    timeStamp: 2017-10-17T18:35:57.474Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\uppersorbian.mld':
+    timeStamp: 2017-10-17T18:35:57.475Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\usorbian.mld':
+    timeStamp: 2017-10-17T18:35:57.475Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\vietnam.mld':
+    timeStamp: 2017-10-17T18:35:57.475Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\vietnamese.mld':
+    timeStamp: 2017-10-17T18:35:57.475Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\welsh.mld':
+    timeStamp: 2017-10-17T18:35:57.476Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\xalx.mld':
+    timeStamp: 2017-10-17T18:35:57.476Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\xalx2.mld':
+    timeStamp: 2017-10-17T18:35:57.476Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\minitoc\xalx3.mld':
+    timeStamp: 2017-10-17T18:35:57.476Z
+    jobNames: []
+  'c:\texlive\2017\texmf-dist\tex\latex\needspace\needspace.sty':
+    timeStamp: 2017-10-17T18:36:31.111Z
+    jobNames: []
+    type: LaTeXStyle
+  'c:\texlive\2017\texmf-dist\tex\latex\oberdiek\auxhook.sty':
+    timeStamp: 2017-10-17T18:36:48.639Z
+    jobNames: []
+    type: LaTeXStyle
+  'c:\texlive\2017\texmf-dist\tex\latex\oberdiek\epstopdf-base.sty':
+    timeStamp: 2017-10-17T18:36:48.644Z
+    jobNames: []
+    type: LaTeXStyle
+  'c:\texlive\2017\texmf-dist\tex\latex\oberdiek\grfext.sty':
+    timeStamp: 2017-10-17T18:36:48.645Z
+    jobNames: []
+    type: LaTeXStyle
+  'c:\texlive\2017\texmf-dist\tex\latex\oberdiek\kvoptions.sty':
+    timeStamp: 2017-10-17T18:36:48.650Z
+    jobNames: []
+    type: LaTeXStyle
+  'c:\texlive\2017\texmf-dist\tex\latex\oberdiek\rerunfilecheck.sty':
+    timeStamp: 2017-10-17T18:36:48.655Z
+    jobNames: []
+    type: LaTeXStyle
+  'c:\texlive\2017\texmf-dist\tex\latex\oberdiek\zref-abspage.sty':
+    timeStamp: 2017-10-17T18:36:48.667Z
+    jobNames: []
+    type: LaTeXStyle
+  'c:\texlive\2017\texmf-dist\tex\latex\oberdiek\zref-base.sty':
+    timeStamp: 2017-10-17T18:36:48.668Z
+    jobNames: []
+    type: LaTeXStyle
+  'c:\texlive\2017\texmf-dist\tex\latex\titlesec\titletoc.sty':
+    timeStamp: 2017-10-17T18:41:07.879Z
+    jobNames: []
+    type: LaTeXStyle
+  'c:\texlive\2017\texmf-dist\tex\latex\tocbibind\tocbibind.sty':
+    timeStamp: 2017-10-17T18:41:17.097Z
+    jobNames: []
+    type: LaTeXStyle
+  'c:\texlive\2017\texmf-dist\tex\latex\tools\array.sty':
+    timeStamp: 2017-10-17T18:41:19.196Z
+    jobNames: []
+    type: LaTeXStyle
+  'c:\texlive\2017\texmf-dist\tex\latex\url\url.sty':
+    timeStamp: 2017-10-17T18:42:00.273Z
+    jobNames: []
+    type: LaTeXStyle
+  'c:\texlive\2017\texmf-dist\tex\latex\wrapfig\wrapfig.sty':
+    timeStamp: 2017-10-17T18:42:25.304Z
+    jobNames: []
+    type: LaTeXStyle
+  'c:\texlive\2017\texmf-dist\web2c\texmf.cnf':
+    timeStamp: 2017-10-17T18:34:15.241Z
+    jobNames: []
+  'c:\texlive\2017\texmf-var\fonts\map\pdftex\updmap\pdftex.map':
+    timeStamp: 2017-10-17T18:43:15.000Z
+    jobNames: []
+  'c:\texlive\2017\texmf-var\web2c\pdftex\pdflatex.fmt':
+    timeStamp: 2017-10-17T18:44:08.007Z
+    jobNames: []
+  'c:\texlive\2017\texmf.cnf':
+    timeStamp: 2017-10-17T18:43:00.674Z
+    jobNames: []
+  figs\SDUlogo.png:
+    timeStamp: 2017-10-17T20:10:27.601Z
+    hash: qNIgnargSMi52LE1wVSfaP7n/NzHAKgzH70ujC3AuTQ=
+    jobNames: []
+  figs\multi_host_illustration.png:
+    timeStamp: 2017-10-17T20:48:30.881Z
+    hash: kIHyfgiYI4QrYG2OQK4HzclUghjEpQ1HXq6LuLCrhzI=
+    jobNames: []
+  figs\single_host_illustration.png:
+    timeStamp: 2017-10-17T20:47:29.938Z
+    hash: pYbm/y00aAolkJzV89mTAGKi6Orq7JcEifwf2d4eDRk=
+    jobNames: []
+  main.lof:
+    timeStamp: 2017-10-17T22:40:11.631Z
+    hash: /+kWZ08m5qtXDAUClI2YJ9LjQnafwjc/9xBHvwuXBhg=
+    jobNames: []
+    type: ListOfFigures
+  main.mtc:
+    timeStamp: 2017-10-17T22:40:11.168Z
+    hash: 47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=
+    jobNames: []
+  main.mtc0:
+    timeStamp: 2017-10-17T22:40:11.168Z
+    hash: 47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=
+    jobNames: []
+  main.out:
+    timeStamp: 2017-10-17T22:40:11.624Z
+    hash: QncYdeztXQkN9yDbdnV17ro19hiDV3BXq4rWv9ZfGJA=
+    jobNames: []
+    type: OUT
+  main.run.xml:
+    timeStamp: 2017-10-17T22:40:11.630Z
+    hash: hNtJsOOoMNkOSTl11/UMBRDnhCOXbQHLRCuX9fHORUw=
+    jobNames: []
+    type: XML
+  main.toc:
+    timeStamp: 2017-10-17T22:40:11.631Z
+    hash: +LRVjQhk6AtJKNhTFTbBKJR2SX2h2jSpjzl4OyknfCM=
+    jobNames: []
+    type: TableOfContents
+  modules\introduction.tex:
+    timeStamp: 2017-10-17T21:20:32.397Z
+    hash: rbpezC8ftDyrROxBVvaXDiS/cb72uzxpYKHVvV7S6sk=
+    jobNames: []
+  modules\title.tex:
+    timeStamp: 2017-10-17T20:30:20.221Z
+    hash: rGHJxI5mlCjhQ0teoxLYc1gxx9aUnjJIs6hVWbIKSKk=
+    jobNames: []
+  main.bcf:
+    timeStamp: 2017-10-17T22:40:11.627Z
+    hash: NK76bJL2FVbz19fewQFrfQXTpkopU/9nGrnQbKTfuP0=
+    jobNames: []
+    type: BiberControlFile
+  main.maf:
+    timeStamp: 2017-10-17T22:40:11.605Z
+    hash: bbXCjUeK+P2vRBXlBH/TKjpGPI5AVdjwUwZUv3OPxiQ=
+    jobNames: []
+  main.blg-ParsedBiberLog:
+    timeStamp: 2017-10-17T20:59:52.847Z
+    value:
+      messages:
+        - severity: info
+          name: Biber
+          text: This is Biber 2.7
+          log:
+            file: main.blg
+            range:
+              start: 1
+              end: 1
+        - severity: info
+          name: Biber
+          text: Logfile is 'main.blg'
+          log:
+            file: main.blg
+            range:
+              start: 2
+              end: 2
+        - severity: info
+          name: Biber
+          text: '=== '
+          log:
+            file: main.blg
+            range:
+              start: 3
+              end: 3
+        - severity: info
+          name: Biber
+          text: Reading 'main.bcf'
+          log:
+            file: main.blg
+            range:
+              start: 4
+              end: 4
+        - severity: info
+          name: Biber
+          text: Found 0 citekeys in bib section 0
+          log:
+            file: main.blg
+            range:
+              start: 5
+              end: 5
+        - severity: warning
+          name: Biber
+          text: The file 'main.bcf' does not contain any citations!
+          log:
+            file: main.blg
+            range:
+              start: 6
+              end: 6
+        - severity: info
+          name: Biber
+          text: Writing 'main.bbl' with encoding 'UTF-8'
+          log:
+            file: main.blg
+            range:
+              start: 7
+              end: 7
+        - severity: info
+          name: Biber
+          text: Output to main.bbl
+          log:
+            file: main.blg
+            range:
+              start: 8
+              end: 8
+        - severity: info
+          name: Biber
+          text: 'WARNINGS: 1'
+          log:
+            file: main.blg
+            range:
+              start: 9
+              end: 9
+      inputs:
+        - main.bcf
+      outputs:
+        - main.blg
+        - main.bbl
+      calls: []
+    jobNames: []
+    type: ParsedBiberLog
+  main.bbl:
+    timeStamp: 2017-10-17T21:20:40.413Z
+    hash: e5tRDxW5ymkFGgbyWTT26RVOgmRcWLSVM12SAfyuZ9k=
+    jobNames: []
+  main.blg:
+    timeStamp: 2017-10-17T21:20:40.415Z
+    hash: +CKug7rUsRZRuzNJdFRaQgjCiL78RT1lK9qkGqHMq5s=
+    jobNames: []
+    type: BiberLog
+rules:
+  - name: ApplyOptions
+    command: load
+    phase: initialize
+    parameters: []
+    inputs:
+      - dicy.yaml-ParsedYAML
+      - main.yaml-ParsedYAML
+      - main.tex-ParsedLaTeXMagic
+      - dicy-instance.yaml-ParsedYAML
+      - 'C:\Users\mulli\.dicy.yaml-ParsedYAML'
+    outputs: []
+  - name: LoadAndValidateCache
+    command: load
+    phase: initialize
+    parameters: []
+    inputs: []
+    outputs: []
+  - name: ApplyOptions
+    command: load
+    phase: execute
+    parameters: []
+    inputs:
+      - dicy.yaml-ParsedYAML
+      - main.yaml-ParsedYAML
+      - main.tex-ParsedLaTeXMagic
+      - dicy-instance.yaml-ParsedYAML
+      - 'C:\Users\mulli\.dicy.yaml-ParsedYAML'
+    outputs: []
+  - name: ParseOptionsFile
+    command: load
+    phase: execute
+    parameters: []
+    inputs:
+      - 'C:\Users\mulli\.dicy.yaml'
+    outputs:
+      - 'C:\Users\mulli\.dicy.yaml-ParsedYAML'
+  - name: ParseLaTeXMagic
+    command: load
+    phase: execute
+    parameters:
+      - main.tex
+    inputs:
+      - main.tex
+    outputs:
+      - main.tex-ParsedLaTeXMagic
+  - name: AssignJobNames
+    command: load
+    phase: finalize
+    parameters: []
+    inputs: []
+    outputs: []
+  - name: FindLogFiles
+    command: build
+    phase: initialize
+    parameters: []
+    inputs: []
+    outputs: []
+  - name: LaTeX
+    command: build
+    phase: execute
+    parameters:
+      - main.tex
+    inputs:
+      - main.tex
+      - main.fls-ParsedFileListing
+      - main.log-ParsedLaTeXLog
+      - main.aux
+      - 'c:\texlive\2017\texmf-dist\fonts\enc\dvips\cm-super\cm-super-t1.enc'
+      - 'c:\texlive\2017\texmf-dist\fonts\map\fontname\texfonts.map'
+      - 'c:\texlive\2017\texmf-dist\fonts\tfm\jknappen\ec\ecbx1200.tfm'
+      - 'c:\texlive\2017\texmf-dist\fonts\tfm\jknappen\ec\ecbx1728.tfm'
+      - 'c:\texlive\2017\texmf-dist\fonts\tfm\jknappen\ec\ecbx2488.tfm'
+      - 'c:\texlive\2017\texmf-dist\fonts\tfm\jknappen\ec\ecrm1095.tfm'
+      - 'c:\texlive\2017\texmf-dist\fonts\tfm\jknappen\ec\ecrm1200.tfm'
+      - 'c:\texlive\2017\texmf-dist\fonts\tfm\jknappen\ec\ecrm1728.tfm'
+      - 'c:\texlive\2017\texmf-dist\fonts\tfm\jknappen\ec\ecrm2488.tfm'
+      - 'c:\texlive\2017\texmf-dist\fonts\tfm\public\amsfonts\cmextra\cmex7.tfm'
+      - 'c:\texlive\2017\texmf-dist\fonts\tfm\public\amsfonts\cmextra\cmex8.tfm'
+      - 'c:\texlive\2017\texmf-dist\fonts\tfm\public\amsfonts\symbols\msam10.tfm'
+      - 'c:\texlive\2017\texmf-dist\fonts\tfm\public\amsfonts\symbols\msam7.tfm'
+      - 'c:\texlive\2017\texmf-dist\fonts\tfm\public\amsfonts\symbols\msbm10.tfm'
+      - 'c:\texlive\2017\texmf-dist\fonts\tfm\public\amsfonts\symbols\msbm7.tfm'
+      - 'c:\texlive\2017\texmf-dist\fonts\tfm\public\cm\cmex10.tfm'
+      - 'c:\texlive\2017\texmf-dist\fonts\tfm\public\cm\cmmi12.tfm'
+      - 'c:\texlive\2017\texmf-dist\fonts\tfm\public\cm\cmmi6.tfm'
+      - 'c:\texlive\2017\texmf-dist\fonts\tfm\public\cm\cmmi8.tfm'
+      - 'c:\texlive\2017\texmf-dist\fonts\tfm\public\cm\cmr10.tfm'
+      - 'c:\texlive\2017\texmf-dist\fonts\tfm\public\cm\cmr12.tfm'
+      - 'c:\texlive\2017\texmf-dist\fonts\tfm\public\cm\cmr6.tfm'
+      - 'c:\texlive\2017\texmf-dist\fonts\tfm\public\cm\cmr8.tfm'
+      - 'c:\texlive\2017\texmf-dist\fonts\tfm\public\cm\cmsy10.tfm'
+      - 'c:\texlive\2017\texmf-dist\fonts\tfm\public\cm\cmsy6.tfm'
+      - 'c:\texlive\2017\texmf-dist\fonts\tfm\public\cm\cmsy8.tfm'
+      - 'c:\texlive\2017\texmf-dist\fonts\type1\public\cm-super\sfbx1200.pfb'
+      - 'c:\texlive\2017\texmf-dist\fonts\type1\public\cm-super\sfbx1728.pfb'
+      - 'c:\texlive\2017\texmf-dist\fonts\type1\public\cm-super\sfbx2488.pfb'
+      - 'c:\texlive\2017\texmf-dist\fonts\type1\public\cm-super\sfrm1095.pfb'
+      - 'c:\texlive\2017\texmf-dist\fonts\type1\public\cm-super\sfrm1200.pfb'
+      - 'c:\texlive\2017\texmf-dist\tex\context\base\mkii\supp-pdf.mkii'
+      - 'c:\texlive\2017\texmf-dist\tex\generic\ifxetex\ifxetex.sty'
+      - 'c:\texlive\2017\texmf-dist\tex\generic\oberdiek\gettitlestring.sty'
+      - 'c:\texlive\2017\texmf-dist\tex\generic\oberdiek\hobsub-generic.sty'
+      - 'c:\texlive\2017\texmf-dist\tex\generic\oberdiek\hobsub-hyperref.sty'
+      - 'c:\texlive\2017\texmf-dist\tex\generic\oberdiek\ifpdf.sty'
+      - 'c:\texlive\2017\texmf-dist\tex\generic\oberdiek\ifvtex.sty'
+      - 'c:\texlive\2017\texmf-dist\tex\generic\unicode-data\CaseFolding.txt'
+      - 'c:\texlive\2017\texmf-dist\tex\generic\unicode-data\SpecialCasing.txt'
+      - 'c:\texlive\2017\texmf-dist\tex\generic\unicode-data\UnicodeData.txt'
+      - 'c:\texlive\2017\texmf-dist\tex\generic\xstring\xstring.sty'
+      - 'c:\texlive\2017\texmf-dist\tex\generic\xstring\xstring.tex'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\amsfonts\amsfonts.sty'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\amsfonts\amssymb.sty'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\amsfonts\umsa.fd'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\amsfonts\umsb.fd'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\amsmath\amsbsy.sty'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\amsmath\amsgen.sty'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\amsmath\amsmath.sty'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\amsmath\amsopn.sty'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\amsmath\amstext.sty'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\base\article.cls'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\base\fixltx2e.sty'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\base\fontenc.sty'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\base\ifthen.sty'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\base\inputenc.sty'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\base\omsenc.dfu'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\base\ot1enc.dfu'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\base\size12.clo'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\base\t1enc.def'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\base\t1enc.dfu'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\base\utf8.def'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\biblatex\bbx\numeric.bbx'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\biblatex\bbx\standard.bbx'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\biblatex\biblatex.cfg'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\biblatex\biblatex.def'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\biblatex\biblatex.sty'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\biblatex\blx-compat.def'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\biblatex\blx-dm.def'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\biblatex\cbx\numeric.cbx'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\biblatex\lbx\english.lbx'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\booktabs\booktabs.sty'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\comment\comment.sty'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\etoolbox\etoolbox.sty'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\fancyvrb\fancyvrb.sty'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\float\float.sty'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\geometry\geometry.sty'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\graphics-cfg\color.cfg'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\graphics-cfg\graphics.cfg'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\graphics-def\pdftex.def'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\graphics\color.sty'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\graphics\graphics.sty'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\graphics\graphicx.sty'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\graphics\keyval.sty'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\graphics\trig.sty'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\hyperref\hpdftex.def'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\hyperref\hyperref.sty'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\hyperref\nameref.sty'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\hyperref\pd1enc.def'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\import\import.sty'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\l3kernel\expl3-code.tex'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\l3kernel\expl3.sty'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\l3kernel\l3pdfmode.def'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\l3packages\xparse\xparse.sty'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\latexconfig\epstopdf-sys.cfg'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\latexconfig\hyperref.cfg'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\listings\listings.cfg'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\listings\listings.sty'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\listings\lstmisc.sty'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\logreq\logreq.def'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\logreq\logreq.sty'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\mdframed\md-frame-0.mdf'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\mdframed\mdframed.sty'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\UKenglish.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\USenglish.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\acadian.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\acadien.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\afrikaan.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\afrikaans.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\albanian.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\american.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\arab.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\arab2.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\arabi.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\arabic.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\armenian.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\australian.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\austrian.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\bahasa.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\bahasai.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\bahasam.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\bangla.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\basque.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\bengali.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\bicig.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\bicig2.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\bicig3.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\bithe.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\brazil.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\brazilian.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\breton.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\british.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\bulgarian.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\bulgarianb.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\buryat.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\buryat2.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\canadian.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\canadien.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\castillan.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\castillian.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\catalan.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\chinese1.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\chinese1.mlo'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\chinese2.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\chinese2.mlo'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\croatian.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\czech.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\danish.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\devanagari.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\dutch.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\english.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\english1.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\english2.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\esperant.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\esperanto.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\estonian.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\ethiopia.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\ethiopian.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\ethiopian2.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\farsi1.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\farsi1.mlo'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\farsi2.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\farsi2.mlo'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\farsi3.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\finnish.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\finnish2.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\francais.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\french.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\french1.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\french2.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\frenchb.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\frenchle.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\frenchpro.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\galician.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\german.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\germanb.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\germanb2.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\greek-mono.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\greek-polydemo.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\greek-polykatha.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\greek.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\guarani.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\hangul-u8.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\hangul-u8.mlo'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\hangul1.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\hangul1.mlo'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\hangul2.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\hangul2.mlo'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\hangul3.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\hangul3.mlo'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\hangul4.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\hangul4.mlo'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\hanja-u8.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\hanja-u8.mlo'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\hanja1.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\hanja1.mlo'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\hanja2.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\hanja2.mlo'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\hebrew.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\hebrew2.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\hindi-modern.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\hindi.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\hungarian.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\icelandic.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\indon.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\indonesian.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\interlingua.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\irish.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\italian.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\italian2.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\japanese.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\japanese.mlo'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\japanese2.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\japanese2.mlo'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\japanese3.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\japanese3.mlo'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\japanese4.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\japanese4.mlo'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\japanese5.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\japanese5.mlo'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\japanese6.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\japanese6.mlo'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\kannada.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\khalkha.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\latin.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\latin2.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\latinc.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\latinc2.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\latvian.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\latvian2.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\letton.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\letton2.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\lithuanian.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\lithuanian2.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\lowersorbian.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\lsorbian.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\magyar.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\magyar2.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\magyar3.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\malay.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\malayalam-b.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\malayalam-keli.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\malayalam-keli2.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\malayalam-mr.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\malayalam-omega.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\malayalam-omega.mlo'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\malayalam-rachana.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\malayalam-rachana2.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\malayalam-rachana3.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\manju.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\mexican.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\meyalu.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\minitoc.sty'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\mongol.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\mongolb.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\mongolian.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\mtcmess.sty'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\naustrian.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\newzealand.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\ngerman.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\ngermanb.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\ngermanb2.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\norsk.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\norsk2.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\nynorsk.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\nynorsk2.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\occitan.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\occitan2.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\polish.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\polish2.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\polski.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\portuges.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\portuguese.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\romanian.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\romanian2.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\romanian3.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\russian-cca.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\russian-cca.mlo'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\russian-cca1.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\russian-cca1.mlo'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\russian-lh.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\russian-lh.mlo'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\russian-lhcyralt.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\russian-lhcyralt.mlo'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\russian-lhcyrkoi.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\russian-lhcyrkoi.mlo'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\russian-lhcyrwin.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\russian-lhcyrwin.mlo'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\russian.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\russian2m.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\russian2o.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\russianb.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\russianc.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\samin.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\scottish.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\serbian.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\serbianc.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\slovak.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\slovene.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\spanish.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\spanish2.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\spanish3.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\spanish4.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\swahili.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\swedish.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\swedish2.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\thai.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\thai.mlo'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\turkish.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\uighur.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\uighur2.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\uighur3.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\ukraineb.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\ukrainian.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\uppersorbian.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\usorbian.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\vietnam.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\vietnamese.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\welsh.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\xalx.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\xalx2.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\minitoc\xalx3.mld'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\needspace\needspace.sty'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\oberdiek\auxhook.sty'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\oberdiek\epstopdf-base.sty'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\oberdiek\grfext.sty'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\oberdiek\kvoptions.sty'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\oberdiek\rerunfilecheck.sty'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\oberdiek\zref-abspage.sty'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\oberdiek\zref-base.sty'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\titlesec\titletoc.sty'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\tocbibind\tocbibind.sty'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\tools\array.sty'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\url\url.sty'
+      - 'c:\texlive\2017\texmf-dist\tex\latex\wrapfig\wrapfig.sty'
+      - 'c:\texlive\2017\texmf-dist\web2c\texmf.cnf'
+      - 'c:\texlive\2017\texmf-var\fonts\map\pdftex\updmap\pdftex.map'
+      - 'c:\texlive\2017\texmf-var\web2c\pdftex\pdflatex.fmt'
+      - 'c:\texlive\2017\texmf.cnf'
+      - figs\SDUlogo.png
+      - figs\multi_host_illustration.png
+      - figs\single_host_illustration.png
+      - main.lof
+      - main.mtc
+      - main.mtc0
+      - main.out
+      - main.run.xml
+      - main.toc
+      - modules\introduction.tex
+      - modules\title.tex
+      - main.bbl
+    outputs:
+      - main.pdf
+      - main.aux
+      - main.fls
+      - main.log
+      - main.synctex.gz
+      - main.bcf
+      - main.lof
+      - main.maf
+      - main.mtc
+      - main.mtc0
+      - main.out
+      - main.run.xml
+      - main.toc
+  - name: ParseLaTeXLog
+    command: build
+    phase: execute
+    parameters:
+      - main.log
+    inputs:
+      - main.log
+    outputs:
+      - main.log-ParsedLaTeXLog
+  - name: ParseLaTeXAuxilary
+    command: build
+    phase: execute
+    parameters:
+      - main.aux
+    inputs:
+      - main.aux
+    outputs:
+      - main.aux-ParsedLaTeXAuxilary
+  - name: ParseFileListing
+    command: build
+    phase: execute
+    parameters:
+      - main.fls
+    inputs:
+      - main.fls
+    outputs:
+      - main.fls-ParsedFileListing
+  - name: Biber
+    command: build
+    phase: execute
+    parameters:
+      - main.bcf
+    inputs:
+      - main.bcf
+      - main.log-ParsedLaTeXLog
+      - main.blg-ParsedBiberLog
+    outputs:
+      - main.bbl
+      - main.blg
+  - name: ParseBiberLog
+    command: build
+    phase: execute
+    parameters:
+      - main.blg
+    inputs:
+      - main.blg
+    outputs:
+      - main.blg-ParsedBiberLog
+  - name: CheckForMissingBuildRule
+    command: build
+    phase: finalize
+    parameters:
+      - main.tex
+    inputs:
+      - main.tex
+    outputs: []
+  - name: FindLogFiles
+    command: log
+    phase: initialize
+    parameters: []
+    inputs: []
+    outputs: []
+  - name: ParseLaTeXLog
+    command: log
+    phase: execute
+    parameters:
+      - main.log
+    inputs:
+      - main.log
+    outputs:
+      - main.log-ParsedLaTeXLog
+  - name: ReportLogMessages
+    command: log
+    phase: execute
+    parameters:
+      - main.log-ParsedLaTeXLog
+    inputs:
+      - main.log-ParsedLaTeXLog
+    outputs: []
+  - name: ReportLogMessages
+    command: log
+    phase: execute
+    parameters:
+      - main.blg-ParsedBiberLog
+    inputs:
+      - main.blg-ParsedBiberLog
+    outputs: []
+  - name: ParseBiberLog
+    command: log
+    phase: execute
+    parameters:
+      - main.blg
+    inputs:
+      - main.blg
+    outputs:
+      - main.blg-ParsedBiberLog
+  - name: SaveCache
+    command: save
+    phase: execute
+    parameters: []
+    inputs: []
+    outputs: []
