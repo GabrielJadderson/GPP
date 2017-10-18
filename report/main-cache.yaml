@@ -99,7 +99,7 @@ files:
     jobNames: []
     type: ParsedYAML
   main.tex:
-    timeStamp: 2017-10-18T12:27:21.552Z
+    timeStamp: 2017-10-18T12:39:33.055Z
     hash: 0oswDLcmGLLZkPJbfbLv8rKC6Mh5vvmUVCw/1TTq0FQ=
     jobNames: []
     type: LaTeX
@@ -112,8 +112,8 @@ files:
     jobNames: []
     type: Nil
   main.log:
-    timeStamp: 2017-10-18T12:27:24.680Z
-    hash: wwOTdfMeInN9YQW7TN8ExytzdNBWEx/e5LgMyIAldAs=
+    timeStamp: 2017-10-18T12:39:36.183Z
+    hash: Ga6eEBL6aASkX1gdd3+T66KXuhYeDeAu3oe/Qvy5rz8=
     jobNames: []
     type: LaTeXLog
     subType: pdfTeX
@@ -489,7 +489,7 @@ files:
     jobNames: []
     type: ParsedFileListing
   main.log-ParsedLaTeXLog:
-    timeStamp: 2017-10-18T12:27:24.824Z
+    timeStamp: 2017-10-18T12:39:36.362Z
     value:
       messages:
         - name: pdfTeX
@@ -2410,6 +2410,19 @@ files:
             range:
               start: 1104
               end: 1106
+        - severity: error
+          name: pdfTeX
+          text: Undefined control sequence
+          log:
+            file: main.log
+            range:
+              start: 1108
+              end: 1108
+          source:
+            file: modules/design.tex
+            range:
+              start: 3
+              end: 3
         - severity: info
           name: pdfTeX
           category: Package minitoc
@@ -2419,8 +2432,8 @@ files:
           log:
             file: main.log
             range:
-              start: 1109
-              end: 1111
+              start: 1119
+              end: 1121
         - severity: info
           name: pdfTeX
           category: Package minitoc(hints)
@@ -2430,8 +2443,8 @@ files:
           log:
             file: main.log
             range:
-              start: 1114
-              end: 1114
+              start: 1124
+              end: 1124
         - severity: warning
           name: pdfTeX
           category: Package minitoc(hints)
@@ -2441,40 +2454,12 @@ files:
           log:
             file: main.log
             range:
-              start: 1120
-              end: 1120
+              start: 1130
+              end: 1130
         - severity: info
           name: pdfTeX
           category: Package atveryend
           text: Empty hook `BeforeClearDocument'
-          source:
-            file: main.tex
-            range:
-              start: 77
-              end: 77
-          log:
-            file: main.log
-            range:
-              start: 1124
-              end: 1124
-        - severity: info
-          name: pdfTeX
-          category: Package atveryend
-          text: Empty hook `AfterLastShipout'
-          source:
-            file: main.tex
-            range:
-              start: 77
-              end: 77
-          log:
-            file: main.log
-            range:
-              start: 1132
-              end: 1132
-        - severity: info
-          name: pdfTeX
-          category: Package atveryend
-          text: Executing hook `AtVeryEndDocument'
           source:
             file: main.tex
             range:
@@ -2488,6 +2473,34 @@ files:
         - severity: info
           name: pdfTeX
           category: Package atveryend
+          text: Empty hook `AfterLastShipout'
+          source:
+            file: main.tex
+            range:
+              start: 77
+              end: 77
+          log:
+            file: main.log
+            range:
+              start: 1142
+              end: 1142
+        - severity: info
+          name: pdfTeX
+          category: Package atveryend
+          text: Executing hook `AtVeryEndDocument'
+          source:
+            file: main.tex
+            range:
+              start: 77
+              end: 77
+          log:
+            file: main.log
+            range:
+              start: 1144
+              end: 1144
+        - severity: info
+          name: pdfTeX
+          category: Package atveryend
           text: Executing hook `AtEndAfterFileList'
           source:
             file: main.tex
@@ -2497,8 +2510,8 @@ files:
           log:
             file: main.log
             range:
-              start: 1135
-              end: 1135
+              start: 1145
+              end: 1145
         - severity: info
           name: pdfTeX
           category: Package rerunfilecheck
@@ -2510,8 +2523,8 @@ files:
           log:
             file: main.log
             range:
-              start: 1136
-              end: 1137
+              start: 1146
+              end: 1147
         - severity: info
           name: pdfTeX
           category: Package atveryend
@@ -2524,8 +2537,8 @@ files:
           log:
             file: main.log
             range:
-              start: 1138
-              end: 1138
+              start: 1148
+              end: 1148
       inputs: []
       outputs:
         - main.pdf
@@ -2533,23 +2546,23 @@ files:
     jobNames: []
     type: ParsedLaTeXLog
   main.pdf:
-    timeStamp: 2017-10-18T12:27:24.680Z
-    hash: gNVh4y8r7bvEj9PfCiRicLtBtEFZ8uXpipIYcM+lESE=
+    timeStamp: 2017-10-18T12:39:36.183Z
+    hash: 627zhgcFsLQUwFShRwEV+sMTrOVUAImBdQ+YRPPRfIM=
     jobNames: []
     type: PortableDocumentFormat
   main.aux:
-    timeStamp: 2017-10-18T12:27:24.660Z
+    timeStamp: 2017-10-18T12:39:36.167Z
     hash: ZvubzczLeyfCZ3pFNqsJ3TjIRt7tPhkEt/SeKqWXi0g=
     jobNames: []
     type: LaTeXAuxilary
   main.fls:
-    timeStamp: 2017-10-18T12:27:24.672Z
+    timeStamp: 2017-10-18T12:39:36.179Z
     hash: L91nUpiDaxhS2459L5dgJXBh6Bwc8khg0JCcuVT3Hg8=
     jobNames: []
     type: FileListing
   main.synctex.gz:
-    timeStamp: 2017-10-18T12:27:24.680Z
-    hash: G/VfjFyt9Szppnz66He19F0/O8XcTBovbjq5YO8JvVU=
+    timeStamp: 2017-10-18T12:39:36.183Z
+    hash: Vr3fRwIEfGM+OJHdiXaSYRG9QLBwQJRwIDgBFEFFSlU=
     jobNames: []
     type: SyncTeX
   main.aux-ParsedLaTeXAuxilary:
@@ -3640,25 +3653,25 @@ files:
     hash: pYbm/y00aAolkJzV89mTAGKi6Orq7JcEifwf2d4eDRk=
     jobNames: []
   main.lof:
-    timeStamp: 2017-10-18T12:27:24.664Z
+    timeStamp: 2017-10-18T12:39:36.167Z
     hash: SaHUolcz1Kw3re+qUMbiaKZlAZbE0ucBhB/ow+8W7iY=
     jobNames: []
     type: ListOfFigures
   main.mtc:
-    timeStamp: 2017-10-18T12:27:24.560Z
+    timeStamp: 2017-10-18T12:39:36.071Z
     hash: 47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=
     jobNames: []
   main.mtc0:
-    timeStamp: 2017-10-18T12:27:24.560Z
+    timeStamp: 2017-10-18T12:39:36.071Z
     hash: 47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=
     jobNames: []
   main.out:
-    timeStamp: 2017-10-18T12:27:24.664Z
+    timeStamp: 2017-10-18T12:39:36.167Z
     hash: JNCGRMnCnx+g/tQIpUxzhdTPcbqvpK7VZOzoitjwXyQ=
     jobNames: []
     type: OUT
   main.toc:
-    timeStamp: 2017-10-18T12:27:24.664Z
+    timeStamp: 2017-10-18T12:39:36.167Z
     hash: TJcdt280vhBElhituoT1PIVl/StOsBuD1ES7ST/VdCs=
     jobNames: []
     type: TableOfContents
@@ -3671,12 +3684,12 @@ files:
     hash: rGHJxI5mlCjhQ0teoxLYc1gxx9aUnjJIs6hVWbIKSKk=
     jobNames: []
   main.maf:
-    timeStamp: 2017-10-18T12:27:24.640Z
+    timeStamp: 2017-10-18T12:39:36.147Z
     hash: bbXCjUeK+P2vRBXlBH/TKjpGPI5AVdjwUwZUv3OPxiQ=
     jobNames: []
   modules/design.tex:
-    timeStamp: 2017-10-18T12:13:06.206Z
-    hash: /bhjy2uGLz4VrJ/k9Y+s0O+cLA8SD0s7JTr3LgzAH3M=
+    timeStamp: 2017-10-18T12:39:21.968Z
+    hash: ztm+kXSs8PcsItxmsyXSOYAVv/npgDfqW9WMTM6B4tY=
     jobNames: []
   modules/implementation.tex:
     timeStamp: 2017-10-18T11:59:07.529Z
