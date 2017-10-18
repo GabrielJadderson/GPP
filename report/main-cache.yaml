@@ -99,8 +99,8 @@ files:
     jobNames: []
     type: ParsedYAML
   main.tex:
-    timeStamp: 2017-10-18T11:59:25.912Z
-    hash: sm7h53SSsJN/ZDNg6XxbNHJsMGxdQZ4WWBNOc7+GSNA=
+    timeStamp: 2017-10-18T12:27:21.552Z
+    hash: 0oswDLcmGLLZkPJbfbLv8rKC6Mh5vvmUVCw/1TTq0FQ=
     jobNames: []
     type: LaTeX
     subType: article
@@ -112,13 +112,13 @@ files:
     jobNames: []
     type: Nil
   main.log:
-    timeStamp: 2017-10-18T11:59:28.560Z
-    hash: GPctA0bGhEqwgbj/5E7hGWMvbiSYJn9QQ2b6xZETDlQ=
+    timeStamp: 2017-10-18T12:27:24.680Z
+    hash: wwOTdfMeInN9YQW7TN8ExytzdNBWEx/e5LgMyIAldAs=
     jobNames: []
     type: LaTeXLog
     subType: pdfTeX
   main.fls-ParsedFileListing:
-    timeStamp: 2017-10-18T11:58:13.731Z
+    timeStamp: 2017-10-18T12:26:00.140Z
     value:
       messages: []
       inputs:
@@ -469,9 +469,11 @@ files:
         - main.out
         - main.tex
         - main.toc
+        - modules/conclusion.tex
         - modules/design.tex
         - modules/implementation.tex
         - modules/introduction.tex
+        - modules/testing.tex
         - modules/title.tex
       outputs:
         - main.aux
@@ -487,7 +489,7 @@ files:
     jobNames: []
     type: ParsedFileListing
   main.log-ParsedLaTeXLog:
-    timeStamp: 2017-10-18T11:59:28.733Z
+    timeStamp: 2017-10-18T12:27:24.824Z
     value:
       messages:
         - name: pdfTeX
@@ -573,27 +575,49 @@ files:
               end: 59
         - name: pdfTeX
           severity: info
-          text: amsmath 2016/11/05 v2.16a AMS math features
+          text: hyperref 2016/06/24 v6.83q Hypertext links for LaTeX
           source:
             file: main.tex
           log:
             file: main.log
             range:
-              start: 70
-              end: 70
+              start: 73
+              end: 73
         - name: pdfTeX
           severity: info
-          text: amstext 2000/06/29 v2.01 AMS text
+          text: >-
+            hobsub-hyperref 2016/05/16 v1.14 Bundle oberdiek, subset hyperref
+            (HO)
           source:
             file: main.tex
           log:
             file: main.log
             range:
-              start: 74
-              end: 74
+              start: 75
+              end: 76
         - name: pdfTeX
           severity: info
-          text: amsbsy 1999/11/29 v1.2d Bold Symbols
+          text: 'hobsub-generic 2016/05/16 v1.14 Bundle oberdiek, subset generic (HO)'
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 78
+              end: 78
+        - name: pdfTeX
+          severity: info
+          text: hobsub 2016/05/16 v1.14 Construct package bundles (HO)
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 79
+              end: 79
+        - name: pdfTeX
+          severity: info
+          text: infwarerr 2016/05/16 v1.4 Providing info/warning/error messages (HO)
           source:
             file: main.tex
           log:
@@ -603,7 +627,28 @@ files:
               end: 80
         - name: pdfTeX
           severity: info
-          text: amsopn 2016/03/08 v2.02 operator names
+          text: ltxcmds 2016/05/16 v1.23 LaTeX kernel commands for general use (HO)
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 81
+              end: 81
+        - name: pdfTeX
+          severity: info
+          text: ifluatex 2016/05/16 v1.4 Provides the ifluatex switch (HO)
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 82
+              end: 82
+        - severity: info
+          name: pdfTeX
+          category: Package ifluatex
+          text: LuaTeX not detected.
           source:
             file: main.tex
           log:
@@ -613,83 +658,120 @@ files:
               end: 83
         - severity: info
           name: pdfTeX
-          category: LaTeX
-          text: Redefining \frac
+          category: Package hobsub
+          text: Skipping package `ifvtex' (already loaded).
           source:
             file: main.tex
+          log:
+            file: main.log
             range:
-              start: 213
-              end: 213
+              start: 84
+              end: 84
+        - name: pdfTeX
+          severity: info
+          text: intcalc 2016/05/16 v1.2 Expandable calculations with integers (HO)
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 85
+              end: 85
+        - severity: info
+          name: pdfTeX
+          category: Package hobsub
+          text: Skipping package `ifpdf' (already loaded).
+          source:
+            file: main.tex
           log:
             file: main.log
             range:
               start: 86
               end: 86
-        - severity: info
-          name: pdfTeX
-          category: LaTeX
-          text: Redefining \overline
+        - name: pdfTeX
+          severity: info
+          text: etexcmds 2016/05/16 v1.6 Avoid name clashes with e-TeX commands (HO)
           source:
             file: main.tex
-            range:
-              start: 375
-              end: 375
           log:
             file: main.log
             range:
-              start: 89
-              end: 89
+              start: 87
+              end: 87
         - severity: info
           name: pdfTeX
-          category: LaTeX
-          text: Redefining \ldots
+          category: Package etexcmds
+          text: >-
+            Could not find \expanded. That can mean that you are not using
+            pdfTeX 1.50 or that some package has redefined \expanded. In the
+            latter case, load this package earlier.
           source:
             file: main.tex
+          log:
+            file: main.log
             range:
-              start: 472
-              end: 472
+              start: 88
+              end: 91
+        - name: pdfTeX
+          severity: info
+          text: kvsetkeys 2016/05/16 v1.17 Key value parser (HO)
+          source:
+            file: main.tex
           log:
             file: main.log
             range:
               start: 92
               end: 92
-        - severity: info
-          name: pdfTeX
-          category: LaTeX
-          text: Redefining \dots
+        - name: pdfTeX
+          severity: info
+          text: kvdefinekeys 2016/05/16 v1.4 Define keys (HO)
           source:
             file: main.tex
-            range:
-              start: 475
-              end: 475
           log:
             file: main.log
             range:
               start: 93
               end: 93
-        - severity: info
-          name: pdfTeX
-          category: LaTeX
-          text: Redefining \cdots
+        - name: pdfTeX
+          severity: info
+          text: >-
+            pdftexcmds 2016/05/21 v0.22 Utility functions of pdfTeX for LuaTeX
+            (HO)
           source:
             file: main.tex
-            range:
-              start: 596
-              end: 596
           log:
             file: main.log
             range:
               start: 94
-              end: 94
+              end: 95
         - severity: info
           name: pdfTeX
-          category: LaTeX Font
-          text: Redeclaring font encoding OML
+          category: Package pdftexcmds
+          text: LuaTeX not detected.
           source:
             file: main.tex
+          log:
+            file: main.log
             range:
-              start: 712
-              end: 712
+              start: 96
+              end: 96
+        - severity: info
+          name: pdfTeX
+          category: Package pdftexcmds
+          text: \pdf@primitive is available.
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 97
+              end: 97
+        - severity: info
+          name: pdfTeX
+          category: Package pdftexcmds
+          text: \pdf@ifprimitive is available.
+          source:
+            file: main.tex
           log:
             file: main.log
             range:
@@ -697,46 +779,520 @@ files:
               end: 98
         - severity: info
           name: pdfTeX
-          category: LaTeX Font
-          text: Redeclaring font encoding OMS
+          category: Package pdftexcmds
+          text: \pdfdraftmode found.
           source:
             file: main.tex
-            range:
-              start: 713
-              end: 713
           log:
             file: main.log
             range:
               start: 99
               end: 99
-        - severity: info
-          name: pdfTeX
-          category: LaTeX
-          text: 'Redefining \['
+        - name: pdfTeX
+          severity: info
+          text: pdfescape 2016/05/16 v1.14 Implements pdfTeX's escape features (HO)
           source:
             file: main.tex
-            range:
-              start: 2817
-              end: 2817
           log:
             file: main.log
             range:
-              start: 120
-              end: 120
-        - severity: info
-          name: pdfTeX
-          category: LaTeX
-          text: 'Redefining \]'
+              start: 100
+              end: 100
+        - name: pdfTeX
+          severity: info
+          text: >-
+            bigintcalc 2016/05/16 v1.4 Expandable calculations on big integers
+            (HO)
           source:
             file: main.tex
-            range:
-              start: 2818
-              end: 2818
           log:
             file: main.log
             range:
-              start: 121
-              end: 121
+              start: 101
+              end: 102
+        - name: pdfTeX
+          severity: info
+          text: bitset 2016/05/16 v1.2 Handle bit-vector datatype (HO)
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 103
+              end: 103
+        - name: pdfTeX
+          severity: info
+          text: uniquecounter 2016/05/16 v1.3 Provide unlimited unique counter (HO)
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 104
+              end: 104
+        - severity: info
+          name: pdfTeX
+          category: Package hobsub
+          text: Skipping package `hobsub' (already loaded).
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 106
+              end: 106
+        - name: pdfTeX
+          severity: info
+          text: letltxmacro 2016/05/16 v1.5 Let assignment for LaTeX macros (HO)
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 107
+              end: 107
+        - name: pdfTeX
+          severity: info
+          text: hopatch 2016/05/16 v1.3 Wrapper for package hooks (HO)
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 108
+              end: 108
+        - name: pdfTeX
+          severity: info
+          text: xcolor-patch 2016/05/16 xcolor patch
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 109
+              end: 109
+        - name: pdfTeX
+          severity: info
+          text: atveryend 2016/05/16 v1.9 Hooks at the very end of document (HO)
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 110
+              end: 110
+        - severity: info
+          name: pdfTeX
+          category: Package atveryend
+          text: \enddocument detected (standard20110627).
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 111
+              end: 111
+        - name: pdfTeX
+          severity: info
+          text: atbegshi 2016/06/09 v1.18 At begin shipout hook (HO)
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 112
+              end: 112
+        - name: pdfTeX
+          severity: info
+          text: refcount 2016/05/16 v3.5 Data extraction from label references (HO)
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 113
+              end: 113
+        - name: pdfTeX
+          severity: info
+          text: hycolor 2016/05/16 v1.8 Color options for hyperref/bookmark (HO)
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 114
+              end: 114
+        - name: pdfTeX
+          severity: info
+          text: auxhook 2016/05/16 v1.4 Hooks for auxiliary files (HO)
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 116
+              end: 116
+        - name: pdfTeX
+          severity: info
+          text: kvoptions 2016/05/16 v3.12 Key value format for package options (HO)
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 118
+              end: 118
+        - severity: info
+          name: pdfTeX
+          category: Package hyperref
+          text: Hyper figures OFF
+          source:
+            file: main.tex
+            range:
+              start: 4486
+              end: 4486
+          log:
+            file: main.log
+            range:
+              start: 130
+              end: 130
+        - severity: info
+          name: pdfTeX
+          category: Package hyperref
+          text: Link nesting OFF
+          source:
+            file: main.tex
+            range:
+              start: 4491
+              end: 4491
+          log:
+            file: main.log
+            range:
+              start: 131
+              end: 131
+        - severity: info
+          name: pdfTeX
+          category: Package hyperref
+          text: Hyper index ON
+          source:
+            file: main.tex
+            range:
+              start: 4494
+              end: 4494
+          log:
+            file: main.log
+            range:
+              start: 132
+              end: 132
+        - severity: info
+          name: pdfTeX
+          category: Package hyperref
+          text: Plain pages OFF
+          source:
+            file: main.tex
+            range:
+              start: 4501
+              end: 4501
+          log:
+            file: main.log
+            range:
+              start: 133
+              end: 133
+        - severity: info
+          name: pdfTeX
+          category: Package hyperref
+          text: Backreferencing OFF
+          source:
+            file: main.tex
+            range:
+              start: 4506
+              end: 4506
+          log:
+            file: main.log
+            range:
+              start: 134
+              end: 134
+        - severity: info
+          name: pdfTeX
+          category: Package hyperref
+          text: Implicit mode ON; LaTeX internals redefined.
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 135
+              end: 135
+        - severity: info
+          name: pdfTeX
+          category: Package hyperref
+          text: Bookmarks ON
+          source:
+            file: main.tex
+            range:
+              start: 4735
+              end: 4735
+          log:
+            file: main.log
+            range:
+              start: 136
+              end: 136
+        - name: pdfTeX
+          severity: info
+          text: 'url 2013/09/16 ver 3.4 Verb mode for urls, etc.'
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 140
+              end: 140
+        - severity: info
+          name: pdfTeX
+          category: LaTeX
+          text: Redefining \url
+          source:
+            file: main.tex
+            range:
+              start: 5088
+              end: 5088
+          log:
+            file: main.log
+            range:
+              start: 142
+              end: 142
+        - severity: info
+          name: pdfTeX
+          category: Package hyperref
+          text: Hyper figures OFF
+          source:
+            file: main.tex
+            range:
+              start: 6342
+              end: 6342
+          log:
+            file: main.log
+            range:
+              start: 147
+              end: 147
+        - severity: info
+          name: pdfTeX
+          category: Package hyperref
+          text: Link nesting OFF
+          source:
+            file: main.tex
+            range:
+              start: 6347
+              end: 6347
+          log:
+            file: main.log
+            range:
+              start: 148
+              end: 148
+        - severity: info
+          name: pdfTeX
+          category: Package hyperref
+          text: Hyper index ON
+          source:
+            file: main.tex
+            range:
+              start: 6350
+              end: 6350
+          log:
+            file: main.log
+            range:
+              start: 149
+              end: 149
+        - severity: info
+          name: pdfTeX
+          category: Package hyperref
+          text: backreferencing OFF
+          source:
+            file: main.tex
+            range:
+              start: 6357
+              end: 6357
+          log:
+            file: main.log
+            range:
+              start: 150
+              end: 150
+        - severity: info
+          name: pdfTeX
+          category: Package hyperref
+          text: Link coloring OFF
+          source:
+            file: main.tex
+            range:
+              start: 6362
+              end: 6362
+          log:
+            file: main.log
+            range:
+              start: 151
+              end: 151
+        - severity: info
+          name: pdfTeX
+          category: Package hyperref
+          text: Link coloring with OCG OFF
+          source:
+            file: main.tex
+            range:
+              start: 6367
+              end: 6367
+          log:
+            file: main.log
+            range:
+              start: 152
+              end: 152
+        - severity: info
+          name: pdfTeX
+          category: Package hyperref
+          text: PDF/A mode OFF
+          source:
+            file: main.tex
+            range:
+              start: 6372
+              end: 6372
+          log:
+            file: main.log
+            range:
+              start: 153
+              end: 153
+        - severity: info
+          name: pdfTeX
+          category: LaTeX
+          text: Redefining \ref
+          source:
+            file: main.tex
+            range:
+              start: 6412
+              end: 6412
+          log:
+            file: main.log
+            range:
+              start: 154
+              end: 154
+        - severity: info
+          name: pdfTeX
+          category: LaTeX
+          text: Redefining \pageref
+          source:
+            file: main.tex
+            range:
+              start: 6416
+              end: 6416
+          log:
+            file: main.log
+            range:
+              start: 155
+              end: 155
+        - name: pdfTeX
+          severity: info
+          text: rerunfilecheck 2016/05/16 v1.8 Rerun checks for auxiliary files (HO)
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 168
+              end: 168
+        - severity: info
+          name: pdfTeX
+          category: Package uniquecounter
+          text: New unique counter `rerunfilecheck'
+          source:
+            file: main.tex
+            range:
+              start: 282
+              end: 282
+          log:
+            file: main.log
+            range:
+              start: 169
+              end: 170
+        - name: pdfTeX
+          severity: info
+          text: tocbibind 2010/10/13 v1.5k extra ToC listings
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 174
+              end: 174
+        - severity: info
+          name: pdfTeX
+          category: Package tocbibind
+          text: The document has section divisions
+          source:
+            file: main.tex
+            range:
+              start: 50
+              end: 50
+          log:
+            file: main.log
+            range:
+              start: 175
+              end: 175
+        - name: pdfTeX
+          severity: info
+          text: inputenc 2015/03/17 v1.2c Input encoding file
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 180
+              end: 180
+        - name: pdfTeX
+          severity: info
+          text: fontenc 2017/02/22 v2.0g Standard LaTeX package
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 495
+              end: 495
+        - severity: info
+          name: pdfTeX
+          category: LaTeX Font
+          text: Redeclaring font encoding T1
+          source:
+            file: main.tex
+            range:
+              start: 48
+              end: 48
+          log:
+            file: main.log
+            range:
+              start: 498
+              end: 498
+        - name: pdfTeX
+          severity: info
+          text: color 2016/07/10 v1.1e Standard LaTeX Color (DPC)
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 500
+              end: 500
+        - severity: info
+          name: pdfTeX
+          category: Package color
+          text: 'Driver file: pdftex.def'
+          source:
+            file: main.tex
+            range:
+              start: 147
+              end: 147
+          log:
+            file: main.log
+            range:
+              start: 504
+              end: 504
         - name: pdfTeX
           severity: info
           text: amssymb 2013/01/14 v3.01 AMS font symbols
@@ -745,8 +1301,8 @@ files:
           log:
             file: main.log
             range:
-              start: 123
-              end: 123
+              start: 509
+              end: 509
         - name: pdfTeX
           severity: info
           text: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
@@ -755,8 +1311,8 @@ files:
           log:
             file: main.log
             range:
-              start: 125
-              end: 125
+              start: 511
+              end: 511
         - severity: info
           name: pdfTeX
           category: LaTeX Font
@@ -771,728 +1327,174 @@ files:
           log:
             file: main.log
             range:
-              start: 128
-              end: 129
+              start: 515
+              end: 516
         - name: pdfTeX
           severity: info
-          text: hyperref 2016/06/24 v6.83q Hypertext links for LaTeX
+          text: amsmath 2016/11/05 v2.16a AMS math features
           source:
             file: main.tex
           log:
             file: main.log
             range:
-              start: 134
-              end: 134
+              start: 518
+              end: 518
         - name: pdfTeX
           severity: info
-          text: >-
-            hobsub-hyperref 2016/05/16 v1.14 Bundle oberdiek, subset hyperref
-            (HO)
+          text: amstext 2000/06/29 v2.01 AMS text
           source:
             file: main.tex
           log:
             file: main.log
             range:
-              start: 136
-              end: 137
+              start: 522
+              end: 522
         - name: pdfTeX
           severity: info
-          text: 'hobsub-generic 2016/05/16 v1.14 Bundle oberdiek, subset generic (HO)'
+          text: amsbsy 1999/11/29 v1.2d Bold Symbols
           source:
             file: main.tex
           log:
             file: main.log
             range:
-              start: 139
-              end: 139
+              start: 528
+              end: 528
         - name: pdfTeX
           severity: info
-          text: hobsub 2016/05/16 v1.14 Construct package bundles (HO)
+          text: amsopn 2016/03/08 v2.02 operator names
           source:
             file: main.tex
           log:
             file: main.log
             range:
-              start: 140
-              end: 140
-        - name: pdfTeX
-          severity: info
-          text: infwarerr 2016/05/16 v1.4 Providing info/warning/error messages (HO)
-          source:
-            file: main.tex
-          log:
-            file: main.log
-            range:
-              start: 141
-              end: 141
-        - name: pdfTeX
-          severity: info
-          text: ltxcmds 2016/05/16 v1.23 LaTeX kernel commands for general use (HO)
-          source:
-            file: main.tex
-          log:
-            file: main.log
-            range:
-              start: 142
-              end: 142
-        - name: pdfTeX
-          severity: info
-          text: ifluatex 2016/05/16 v1.4 Provides the ifluatex switch (HO)
-          source:
-            file: main.tex
-          log:
-            file: main.log
-            range:
-              start: 143
-              end: 143
-        - severity: info
-          name: pdfTeX
-          category: Package ifluatex
-          text: LuaTeX not detected.
-          source:
-            file: main.tex
-          log:
-            file: main.log
-            range:
-              start: 144
-              end: 144
-        - severity: info
-          name: pdfTeX
-          category: Package hobsub
-          text: Skipping package `ifvtex' (already loaded).
-          source:
-            file: main.tex
-          log:
-            file: main.log
-            range:
-              start: 145
-              end: 145
-        - name: pdfTeX
-          severity: info
-          text: intcalc 2016/05/16 v1.2 Expandable calculations with integers (HO)
-          source:
-            file: main.tex
-          log:
-            file: main.log
-            range:
-              start: 146
-              end: 146
-        - severity: info
-          name: pdfTeX
-          category: Package hobsub
-          text: Skipping package `ifpdf' (already loaded).
-          source:
-            file: main.tex
-          log:
-            file: main.log
-            range:
-              start: 147
-              end: 147
-        - name: pdfTeX
-          severity: info
-          text: etexcmds 2016/05/16 v1.6 Avoid name clashes with e-TeX commands (HO)
-          source:
-            file: main.tex
-          log:
-            file: main.log
-            range:
-              start: 148
-              end: 148
-        - severity: info
-          name: pdfTeX
-          category: Package etexcmds
-          text: >-
-            Could not find \expanded. That can mean that you are not using
-            pdfTeX 1.50 or that some package has redefined \expanded. In the
-            latter case, load this package earlier.
-          source:
-            file: main.tex
-          log:
-            file: main.log
-            range:
-              start: 149
-              end: 152
-        - name: pdfTeX
-          severity: info
-          text: kvsetkeys 2016/05/16 v1.17 Key value parser (HO)
-          source:
-            file: main.tex
-          log:
-            file: main.log
-            range:
-              start: 153
-              end: 153
-        - name: pdfTeX
-          severity: info
-          text: kvdefinekeys 2016/05/16 v1.4 Define keys (HO)
-          source:
-            file: main.tex
-          log:
-            file: main.log
-            range:
-              start: 154
-              end: 154
-        - name: pdfTeX
-          severity: info
-          text: >-
-            pdftexcmds 2016/05/21 v0.22 Utility functions of pdfTeX for LuaTeX
-            (HO)
-          source:
-            file: main.tex
-          log:
-            file: main.log
-            range:
-              start: 155
-              end: 156
-        - severity: info
-          name: pdfTeX
-          category: Package pdftexcmds
-          text: LuaTeX not detected.
-          source:
-            file: main.tex
-          log:
-            file: main.log
-            range:
-              start: 157
-              end: 157
-        - severity: info
-          name: pdfTeX
-          category: Package pdftexcmds
-          text: \pdf@primitive is available.
-          source:
-            file: main.tex
-          log:
-            file: main.log
-            range:
-              start: 158
-              end: 158
-        - severity: info
-          name: pdfTeX
-          category: Package pdftexcmds
-          text: \pdf@ifprimitive is available.
-          source:
-            file: main.tex
-          log:
-            file: main.log
-            range:
-              start: 159
-              end: 159
-        - severity: info
-          name: pdfTeX
-          category: Package pdftexcmds
-          text: \pdfdraftmode found.
-          source:
-            file: main.tex
-          log:
-            file: main.log
-            range:
-              start: 160
-              end: 160
-        - name: pdfTeX
-          severity: info
-          text: pdfescape 2016/05/16 v1.14 Implements pdfTeX's escape features (HO)
-          source:
-            file: main.tex
-          log:
-            file: main.log
-            range:
-              start: 161
-              end: 161
-        - name: pdfTeX
-          severity: info
-          text: >-
-            bigintcalc 2016/05/16 v1.4 Expandable calculations on big integers
-            (HO)
-          source:
-            file: main.tex
-          log:
-            file: main.log
-            range:
-              start: 162
-              end: 163
-        - name: pdfTeX
-          severity: info
-          text: bitset 2016/05/16 v1.2 Handle bit-vector datatype (HO)
-          source:
-            file: main.tex
-          log:
-            file: main.log
-            range:
-              start: 164
-              end: 164
-        - name: pdfTeX
-          severity: info
-          text: uniquecounter 2016/05/16 v1.3 Provide unlimited unique counter (HO)
-          source:
-            file: main.tex
-          log:
-            file: main.log
-            range:
-              start: 165
-              end: 165
-        - severity: info
-          name: pdfTeX
-          category: Package hobsub
-          text: Skipping package `hobsub' (already loaded).
-          source:
-            file: main.tex
-          log:
-            file: main.log
-            range:
-              start: 167
-              end: 167
-        - name: pdfTeX
-          severity: info
-          text: letltxmacro 2016/05/16 v1.5 Let assignment for LaTeX macros (HO)
-          source:
-            file: main.tex
-          log:
-            file: main.log
-            range:
-              start: 168
-              end: 168
-        - name: pdfTeX
-          severity: info
-          text: hopatch 2016/05/16 v1.3 Wrapper for package hooks (HO)
-          source:
-            file: main.tex
-          log:
-            file: main.log
-            range:
-              start: 169
-              end: 169
-        - name: pdfTeX
-          severity: info
-          text: xcolor-patch 2016/05/16 xcolor patch
-          source:
-            file: main.tex
-          log:
-            file: main.log
-            range:
-              start: 170
-              end: 170
-        - name: pdfTeX
-          severity: info
-          text: atveryend 2016/05/16 v1.9 Hooks at the very end of document (HO)
-          source:
-            file: main.tex
-          log:
-            file: main.log
-            range:
-              start: 171
-              end: 171
-        - severity: info
-          name: pdfTeX
-          category: Package atveryend
-          text: \enddocument detected (standard20110627).
-          source:
-            file: main.tex
-          log:
-            file: main.log
-            range:
-              start: 172
-              end: 172
-        - name: pdfTeX
-          severity: info
-          text: atbegshi 2016/06/09 v1.18 At begin shipout hook (HO)
-          source:
-            file: main.tex
-          log:
-            file: main.log
-            range:
-              start: 173
-              end: 173
-        - name: pdfTeX
-          severity: info
-          text: refcount 2016/05/16 v3.5 Data extraction from label references (HO)
-          source:
-            file: main.tex
-          log:
-            file: main.log
-            range:
-              start: 174
-              end: 174
-        - name: pdfTeX
-          severity: info
-          text: hycolor 2016/05/16 v1.8 Color options for hyperref/bookmark (HO)
-          source:
-            file: main.tex
-          log:
-            file: main.log
-            range:
-              start: 175
-              end: 175
-        - name: pdfTeX
-          severity: info
-          text: auxhook 2016/05/16 v1.4 Hooks for auxiliary files (HO)
-          source:
-            file: main.tex
-          log:
-            file: main.log
-            range:
-              start: 177
-              end: 177
-        - name: pdfTeX
-          severity: info
-          text: kvoptions 2016/05/16 v3.12 Key value format for package options (HO)
-          source:
-            file: main.tex
-          log:
-            file: main.log
-            range:
-              start: 179
-              end: 179
-        - severity: info
-          name: pdfTeX
-          category: Package hyperref
-          text: Hyper figures OFF
-          source:
-            file: main.tex
-            range:
-              start: 4486
-              end: 4486
-          log:
-            file: main.log
-            range:
-              start: 191
-              end: 191
-        - severity: info
-          name: pdfTeX
-          category: Package hyperref
-          text: Link nesting OFF
-          source:
-            file: main.tex
-            range:
-              start: 4491
-              end: 4491
-          log:
-            file: main.log
-            range:
-              start: 192
-              end: 192
-        - severity: info
-          name: pdfTeX
-          category: Package hyperref
-          text: Hyper index ON
-          source:
-            file: main.tex
-            range:
-              start: 4494
-              end: 4494
-          log:
-            file: main.log
-            range:
-              start: 193
-              end: 193
-        - severity: info
-          name: pdfTeX
-          category: Package hyperref
-          text: Plain pages OFF
-          source:
-            file: main.tex
-            range:
-              start: 4501
-              end: 4501
-          log:
-            file: main.log
-            range:
-              start: 194
-              end: 194
-        - severity: info
-          name: pdfTeX
-          category: Package hyperref
-          text: Backreferencing OFF
-          source:
-            file: main.tex
-            range:
-              start: 4506
-              end: 4506
-          log:
-            file: main.log
-            range:
-              start: 195
-              end: 195
-        - severity: info
-          name: pdfTeX
-          category: Package hyperref
-          text: Implicit mode ON; LaTeX internals redefined.
-          source:
-            file: main.tex
-          log:
-            file: main.log
-            range:
-              start: 196
-              end: 196
-        - severity: info
-          name: pdfTeX
-          category: Package hyperref
-          text: Bookmarks ON
-          source:
-            file: main.tex
-            range:
-              start: 4735
-              end: 4735
-          log:
-            file: main.log
-            range:
-              start: 197
-              end: 197
-        - name: pdfTeX
-          severity: info
-          text: 'url 2013/09/16 ver 3.4 Verb mode for urls, etc.'
-          source:
-            file: main.tex
-          log:
-            file: main.log
-            range:
-              start: 201
-              end: 201
+              start: 531
+              end: 531
         - severity: info
           name: pdfTeX
           category: LaTeX
-          text: Redefining \url
+          text: Redefining \frac
           source:
             file: main.tex
-            range:
-              start: 5088
-              end: 5088
-          log:
-            file: main.log
-            range:
-              start: 203
-              end: 203
-        - severity: info
-          name: pdfTeX
-          category: Package hyperref
-          text: Hyper figures OFF
-          source:
-            file: main.tex
-            range:
-              start: 6342
-              end: 6342
-          log:
-            file: main.log
-            range:
-              start: 208
-              end: 208
-        - severity: info
-          name: pdfTeX
-          category: Package hyperref
-          text: Link nesting OFF
-          source:
-            file: main.tex
-            range:
-              start: 6347
-              end: 6347
-          log:
-            file: main.log
-            range:
-              start: 209
-              end: 209
-        - severity: info
-          name: pdfTeX
-          category: Package hyperref
-          text: Hyper index ON
-          source:
-            file: main.tex
-            range:
-              start: 6350
-              end: 6350
-          log:
-            file: main.log
-            range:
-              start: 210
-              end: 210
-        - severity: info
-          name: pdfTeX
-          category: Package hyperref
-          text: backreferencing OFF
-          source:
-            file: main.tex
-            range:
-              start: 6357
-              end: 6357
-          log:
-            file: main.log
-            range:
-              start: 211
-              end: 211
-        - severity: info
-          name: pdfTeX
-          category: Package hyperref
-          text: Link coloring OFF
-          source:
-            file: main.tex
-            range:
-              start: 6362
-              end: 6362
-          log:
-            file: main.log
-            range:
-              start: 212
-              end: 212
-        - severity: info
-          name: pdfTeX
-          category: Package hyperref
-          text: Link coloring with OCG OFF
-          source:
-            file: main.tex
-            range:
-              start: 6367
-              end: 6367
-          log:
-            file: main.log
             range:
               start: 213
               end: 213
-        - severity: info
-          name: pdfTeX
-          category: Package hyperref
-          text: PDF/A mode OFF
-          source:
-            file: main.tex
-            range:
-              start: 6372
-              end: 6372
           log:
             file: main.log
             range:
-              start: 214
-              end: 214
+              start: 534
+              end: 534
         - severity: info
           name: pdfTeX
           category: LaTeX
-          text: Redefining \ref
+          text: Redefining \overline
           source:
             file: main.tex
             range:
-              start: 6412
-              end: 6412
+              start: 375
+              end: 375
           log:
             file: main.log
             range:
-              start: 215
-              end: 215
+              start: 537
+              end: 537
         - severity: info
           name: pdfTeX
           category: LaTeX
-          text: Redefining \pageref
+          text: Redefining \ldots
           source:
             file: main.tex
             range:
-              start: 6416
-              end: 6416
+              start: 472
+              end: 472
           log:
             file: main.log
             range:
-              start: 216
-              end: 216
-        - name: pdfTeX
-          severity: info
-          text: rerunfilecheck 2016/05/16 v1.8 Rerun checks for auxiliary files (HO)
-          source:
-            file: main.tex
-          log:
-            file: main.log
-            range:
-              start: 229
-              end: 229
+              start: 540
+              end: 540
         - severity: info
           name: pdfTeX
-          category: Package uniquecounter
-          text: New unique counter `rerunfilecheck'
+          category: LaTeX
+          text: Redefining \dots
           source:
             file: main.tex
             range:
-              start: 282
-              end: 282
+              start: 475
+              end: 475
           log:
             file: main.log
             range:
-              start: 230
-              end: 231
-        - name: pdfTeX
-          severity: info
-          text: tocbibind 2010/10/13 v1.5k extra ToC listings
-          source:
-            file: main.tex
-          log:
-            file: main.log
-            range:
-              start: 235
-              end: 235
+              start: 541
+              end: 541
         - severity: info
           name: pdfTeX
-          category: Package tocbibind
-          text: The document has section divisions
+          category: LaTeX
+          text: Redefining \cdots
           source:
             file: main.tex
             range:
-              start: 50
-              end: 50
+              start: 596
+              end: 596
           log:
             file: main.log
             range:
-              start: 236
-              end: 236
-        - name: pdfTeX
-          severity: info
-          text: inputenc 2015/03/17 v1.2c Input encoding file
-          source:
-            file: main.tex
-          log:
-            file: main.log
-            range:
-              start: 241
-              end: 241
-        - name: pdfTeX
-          severity: info
-          text: fontenc 2017/02/22 v2.0g Standard LaTeX package
-          source:
-            file: main.tex
-          log:
-            file: main.log
-            range:
-              start: 556
-              end: 556
+              start: 542
+              end: 542
         - severity: info
           name: pdfTeX
           category: LaTeX Font
-          text: Redeclaring font encoding T1
+          text: Redeclaring font encoding OML
           source:
             file: main.tex
             range:
-              start: 48
-              end: 48
+              start: 712
+              end: 712
           log:
             file: main.log
             range:
-              start: 559
-              end: 559
-        - name: pdfTeX
-          severity: info
-          text: color 2016/07/10 v1.1e Standard LaTeX Color (DPC)
-          source:
-            file: main.tex
-          log:
-            file: main.log
-            range:
-              start: 561
-              end: 561
+              start: 546
+              end: 546
         - severity: info
           name: pdfTeX
-          category: Package color
-          text: 'Driver file: pdftex.def'
+          category: LaTeX Font
+          text: Redeclaring font encoding OMS
           source:
             file: main.tex
             range:
-              start: 147
-              end: 147
+              start: 713
+              end: 713
           log:
             file: main.log
             range:
-              start: 565
-              end: 565
+              start: 547
+              end: 547
+        - severity: info
+          name: pdfTeX
+          category: LaTeX
+          text: 'Redefining \['
+          source:
+            file: main.tex
+            range:
+              start: 2817
+              end: 2817
+          log:
+            file: main.log
+            range:
+              start: 568
+              end: 568
+        - severity: info
+          name: pdfTeX
+          category: LaTeX
+          text: 'Redefining \]'
+          source:
+            file: main.tex
+            range:
+              start: 2818
+              end: 2818
+          log:
+            file: main.log
+            range:
+              start: 569
+              end: 569
         - name: pdfTeX
           severity: info
           text: listings 2015/06/04 1.6 (Carsten Heinz)
@@ -1501,8 +1503,8 @@ files:
           log:
             file: main.log
             range:
-              start: 590
-              end: 590
+              start: 591
+              end: 591
         - name: pdfTeX
           severity: info
           text: booktabs 2016/04/27 v1.618033 publication quality tables
@@ -1511,8 +1513,8 @@ files:
           log:
             file: main.log
             range:
-              start: 592
-              end: 592
+              start: 593
+              end: 593
         - name: pdfTeX
           severity: info
           text: 'mdframed 2013/07/01 1.9b: mdframed'
@@ -1521,8 +1523,8 @@ files:
           log:
             file: main.log
             range:
-              start: 611
-              end: 611
+              start: 612
+              end: 612
         - name: pdfTeX
           severity: info
           text: expl3 2016/11/21 v6760 L3 programming layer (loader)
@@ -1531,8 +1533,8 @@ files:
           log:
             file: main.log
             range:
-              start: 614
-              end: 614
+              start: 615
+              end: 615
         - name: pdfTeX
           severity: info
           text: expl3 2016/11/21 v6760 L3 programming layer (code)
@@ -1541,8 +1543,8 @@ files:
           log:
             file: main.log
             range:
-              start: 616
-              end: 616
+              start: 617
+              end: 617
         - name: pdfTeX
           severity: info
           text: xparse 2016/11/21 v6760 L3 Experimental document command parser
@@ -1551,8 +1553,8 @@ files:
           log:
             file: main.log
             range:
-              start: 725
-              end: 725
+              start: 726
+              end: 726
         - name: pdfTeX
           severity: info
           text: etoolbox 2017/01/02 v2.4 e-TeX tools for LaTeX (JAW)
@@ -1561,8 +1563,8 @@ files:
           log:
             file: main.log
             range:
-              start: 732
-              end: 732
+              start: 733
+              end: 733
         - name: pdfTeX
           severity: info
           text: zref-abspage 2016/05/21 v2.26 Module abspage for zref (HO)
@@ -1571,8 +1573,8 @@ files:
           log:
             file: main.log
             range:
-              start: 735
-              end: 735
+              start: 736
+              end: 736
         - name: pdfTeX
           severity: info
           text: zref-base 2016/05/21 v2.26 Module base for zref (HO)
@@ -1581,8 +1583,8 @@ files:
           log:
             file: main.log
             range:
-              start: 737
-              end: 737
+              start: 738
+              end: 738
         - severity: info
           name: pdfTeX
           category: Package zref
@@ -1595,8 +1597,8 @@ files:
           log:
             file: main.log
             range:
-              start: 738
-              end: 738
+              start: 739
+              end: 739
         - severity: info
           name: pdfTeX
           category: Package zref
@@ -1609,8 +1611,8 @@ files:
           log:
             file: main.log
             range:
-              start: 739
-              end: 739
+              start: 740
+              end: 740
         - severity: info
           name: pdfTeX
           category: Package zref
@@ -1623,8 +1625,8 @@ files:
           log:
             file: main.log
             range:
-              start: 740
-              end: 740
+              start: 741
+              end: 741
         - severity: info
           name: pdfTeX
           category: Package zref
@@ -1637,8 +1639,8 @@ files:
           log:
             file: main.log
             range:
-              start: 743
-              end: 743
+              start: 744
+              end: 744
         - name: pdfTeX
           severity: info
           text: needspace 2010/09/12 v1.3d reserve vertical space
@@ -1647,8 +1649,8 @@ files:
           log:
             file: main.log
             range:
-              start: 745
-              end: 745
+              start: 746
+              end: 746
         - severity: info
           name: pdfTeX
           category: LaTeX
@@ -1663,8 +1665,8 @@ files:
           log:
             file: main.log
             range:
-              start: 829
-              end: 833
+              start: 830
+              end: 834
         - severity: info
           name: pdfTeX
           category: LaTeX
@@ -1679,8 +1681,8 @@ files:
           log:
             file: main.log
             range:
-              start: 834
-              end: 838
+              start: 835
+              end: 839
         - severity: info
           name: pdfTeX
           category: Package zref
@@ -1693,8 +1695,8 @@ files:
           log:
             file: main.log
             range:
-              start: 843
-              end: 843
+              start: 844
+              end: 844
         - name: pdfTeX
           severity: info
           text: fixltx2e 2016/12/29 v2.1a fixes to LaTeX (obsolete)
@@ -1703,8 +1705,8 @@ files:
           log:
             file: main.log
             range:
-              start: 845
-              end: 845
+              start: 846
+              end: 846
         - severity: warning
           name: pdfTeX
           category: Package fixltx2e
@@ -1716,8 +1718,8 @@ files:
           log:
             file: main.log
             range:
-              start: 848
-              end: 850
+              start: 849
+              end: 851
         - name: pdfTeX
           severity: info
           text: 'graphicx 2014/10/28 v1.0g Enhanced LaTeX Graphics (DPC,SPQR)'
@@ -1726,8 +1728,8 @@ files:
           log:
             file: main.log
             range:
-              start: 854
-              end: 854
+              start: 855
+              end: 855
         - name: pdfTeX
           severity: info
           text: 'graphics 2016/10/09 v1.0u Standard LaTeX Graphics (DPC,SPQR)'
@@ -1736,8 +1738,8 @@ files:
           log:
             file: main.log
             range:
-              start: 856
-              end: 856
+              start: 857
+              end: 857
         - name: pdfTeX
           severity: info
           text: trig 2016/01/03 v1.10 sin cos tan (DPC)
@@ -1746,8 +1748,8 @@ files:
           log:
             file: main.log
             range:
-              start: 858
-              end: 858
+              start: 859
+              end: 859
         - severity: info
           name: pdfTeX
           category: Package graphics
@@ -1760,8 +1762,8 @@ files:
           log:
             file: main.log
             range:
-              start: 862
-              end: 862
+              start: 863
+              end: 863
         - name: pdfTeX
           severity: info
           text: import 2009/03/23 v 5.1
@@ -1770,8 +1772,8 @@ files:
           log:
             file: main.log
             range:
-              start: 867
-              end: 867
+              start: 868
+              end: 868
         - name: pdfTeX
           severity: info
           text: titletoc 2011/12/15 v1.6 TOC entries
@@ -1780,8 +1782,8 @@ files:
           log:
             file: main.log
             range:
-              start: 869
-              end: 869
+              start: 870
+              end: 870
         - name: pdfTeX
           severity: info
           text: minitoc 2015/07/13 v61 Package minitoc
@@ -1790,8 +1792,8 @@ files:
           log:
             file: main.log
             range:
-              start: 872
-              end: 872
+              start: 873
+              end: 873
         - name: pdfTeX
           severity: info
           text: mtcmess 2006/03/14
@@ -1800,8 +1802,8 @@ files:
           log:
             file: main.log
             range:
-              start: 874
-              end: 874
+              start: 875
+              end: 875
         - severity: info
           name: pdfTeX
           category: Package minitoc
@@ -1811,8 +1813,8 @@ files:
           log:
             file: main.log
             range:
-              start: 876
-              end: 877
+              start: 877
+              end: 878
         - severity: info
           name: pdfTeX
           category: Package minitoc
@@ -1822,8 +1824,8 @@ files:
           log:
             file: main.log
             range:
-              start: 881
-              end: 882
+              start: 882
+              end: 883
         - severity: info
           name: pdfTeX
           category: Package minitoc
@@ -1833,8 +1835,8 @@ files:
           log:
             file: main.log
             range:
-              start: 883
-              end: 884
+              start: 884
+              end: 885
         - severity: info
           name: pdfTeX
           category: Package minitoc
@@ -1844,8 +1846,8 @@ files:
           log:
             file: main.log
             range:
-              start: 885
-              end: 886
+              start: 886
+              end: 887
         - severity: info
           name: pdfTeX
           category: Package minitoc
@@ -1855,8 +1857,8 @@ files:
           log:
             file: main.log
             range:
-              start: 887
-              end: 888
+              start: 888
+              end: 889
         - severity: info
           name: pdfTeX
           category: Package minitoc
@@ -1866,8 +1868,8 @@ files:
           log:
             file: main.log
             range:
-              start: 892
-              end: 893
+              start: 893
+              end: 894
         - severity: info
           name: pdfTeX
           category: Package minitoc
@@ -1877,8 +1879,8 @@ files:
           log:
             file: main.log
             range:
-              start: 899
-              end: 900
+              start: 900
+              end: 901
         - severity: info
           name: pdfTeX
           category: Package minitoc
@@ -1890,8 +1892,8 @@ files:
           log:
             file: main.log
             range:
-              start: 901
-              end: 903
+              start: 902
+              end: 904
         - severity: info
           name: pdfTeX
           category: Package minitoc
@@ -1901,8 +1903,8 @@ files:
           log:
             file: main.log
             range:
-              start: 914
-              end: 916
+              start: 915
+              end: 917
         - name: pdfTeX
           severity: info
           text: wrapfig 2003/01/31 v 3.6
@@ -1911,8 +1913,8 @@ files:
           log:
             file: main.log
             range:
-              start: 927
-              end: 927
+              start: 928
+              end: 928
         - name: pdfTeX
           severity: info
           text: array 2016/10/06 v2.4d Tabular extension package (FMi)
@@ -1921,8 +1923,8 @@ files:
           log:
             file: main.log
             range:
-              start: 929
-              end: 929
+              start: 930
+              end: 930
         - severity: info
           name: pdfTeX
           category: LaTeX Font
@@ -1930,22 +1932,8 @@ files:
           source:
             file: main.tex
             range:
-              start: 44
-              end: 44
-          log:
-            file: main.log
-            range:
-              start: 938
-              end: 938
-        - severity: info
-          name: pdfTeX
-          category: LaTeX Font
-          text: ... okay
-          source:
-            file: main.tex
-            range:
-              start: 44
-              end: 44
+              start: 41
+              end: 41
           log:
             file: main.log
             range:
@@ -1954,12 +1942,12 @@ files:
         - severity: info
           name: pdfTeX
           category: LaTeX Font
-          text: Checking defaults for T1/cmr/m/n
+          text: ... okay
           source:
             file: main.tex
             range:
-              start: 44
-              end: 44
+              start: 41
+              end: 41
           log:
             file: main.log
             range:
@@ -1968,12 +1956,12 @@ files:
         - severity: info
           name: pdfTeX
           category: LaTeX Font
-          text: ... okay
+          text: Checking defaults for T1/cmr/m/n
           source:
             file: main.tex
             range:
-              start: 44
-              end: 44
+              start: 41
+              end: 41
           log:
             file: main.log
             range:
@@ -1982,12 +1970,12 @@ files:
         - severity: info
           name: pdfTeX
           category: LaTeX Font
-          text: Checking defaults for OT1/cmr/m/n
+          text: ... okay
           source:
             file: main.tex
             range:
-              start: 44
-              end: 44
+              start: 41
+              end: 41
           log:
             file: main.log
             range:
@@ -1996,12 +1984,12 @@ files:
         - severity: info
           name: pdfTeX
           category: LaTeX Font
-          text: ... okay
+          text: Checking defaults for OT1/cmr/m/n
           source:
             file: main.tex
             range:
-              start: 44
-              end: 44
+              start: 41
+              end: 41
           log:
             file: main.log
             range:
@@ -2010,12 +1998,12 @@ files:
         - severity: info
           name: pdfTeX
           category: LaTeX Font
-          text: Checking defaults for OMS/cmsy/m/n
+          text: ... okay
           source:
             file: main.tex
             range:
-              start: 44
-              end: 44
+              start: 41
+              end: 41
           log:
             file: main.log
             range:
@@ -2024,12 +2012,12 @@ files:
         - severity: info
           name: pdfTeX
           category: LaTeX Font
-          text: ... okay
+          text: Checking defaults for OMS/cmsy/m/n
           source:
             file: main.tex
             range:
-              start: 44
-              end: 44
+              start: 41
+              end: 41
           log:
             file: main.log
             range:
@@ -2038,12 +2026,12 @@ files:
         - severity: info
           name: pdfTeX
           category: LaTeX Font
-          text: Checking defaults for OMX/cmex/m/n
+          text: ... okay
           source:
             file: main.tex
             range:
-              start: 44
-              end: 44
+              start: 41
+              end: 41
           log:
             file: main.log
             range:
@@ -2052,12 +2040,12 @@ files:
         - severity: info
           name: pdfTeX
           category: LaTeX Font
-          text: ... okay
+          text: Checking defaults for OMX/cmex/m/n
           source:
             file: main.tex
             range:
-              start: 44
-              end: 44
+              start: 41
+              end: 41
           log:
             file: main.log
             range:
@@ -2066,12 +2054,12 @@ files:
         - severity: info
           name: pdfTeX
           category: LaTeX Font
-          text: Checking defaults for U/cmr/m/n
+          text: ... okay
           source:
             file: main.tex
             range:
-              start: 44
-              end: 44
+              start: 41
+              end: 41
           log:
             file: main.log
             range:
@@ -2080,12 +2068,12 @@ files:
         - severity: info
           name: pdfTeX
           category: LaTeX Font
-          text: ... okay
+          text: Checking defaults for U/cmr/m/n
           source:
             file: main.tex
             range:
-              start: 44
-              end: 44
+              start: 41
+              end: 41
           log:
             file: main.log
             range:
@@ -2094,17 +2082,31 @@ files:
         - severity: info
           name: pdfTeX
           category: LaTeX Font
-          text: Checking defaults for PD1/pdf/m/n
+          text: ... okay
           source:
             file: main.tex
             range:
-              start: 44
-              end: 44
+              start: 41
+              end: 41
           log:
             file: main.log
             range:
               start: 950
               end: 950
+        - severity: info
+          name: pdfTeX
+          category: LaTeX Font
+          text: Checking defaults for PD1/pdf/m/n
+          source:
+            file: main.tex
+            range:
+              start: 41
+              end: 41
+          log:
+            file: main.log
+            range:
+              start: 951
+              end: 951
         - severity: info
           name: pdfTeX
           category: LaTeX Font
@@ -2124,13 +2126,13 @@ files:
           source:
             file: main.tex
             range:
-              start: 44
-              end: 44
+              start: 41
+              end: 41
           log:
             file: main.log
             range:
-              start: 951
-              end: 984
+              start: 952
+              end: 985
         - severity: info
           name: pdfTeX
           category: Package hyperref
@@ -2138,13 +2140,13 @@ files:
           source:
             file: main.tex
             range:
-              start: 44
-              end: 44
+              start: 41
+              end: 41
           log:
             file: main.log
             range:
-              start: 987
-              end: 987
+              start: 988
+              end: 988
         - name: pdfTeX
           severity: info
           text: nameref 2016/05/21 v2.44 Cross-referencing by name of section
@@ -2153,8 +2155,8 @@ files:
           log:
             file: main.log
             range:
-              start: 989
-              end: 989
+              start: 990
+              end: 990
         - name: pdfTeX
           severity: info
           text: gettitlestring 2016/05/16 v1.5 Cleanup title references (HO)
@@ -2163,8 +2165,8 @@ files:
           log:
             file: main.log
             range:
-              start: 991
-              end: 991
+              start: 992
+              end: 992
         - severity: info
           name: pdfTeX
           category: LaTeX
@@ -2172,22 +2174,8 @@ files:
           source:
             file: main.tex
             range:
-              start: 44
-              end: 44
-          log:
-            file: main.log
-            range:
-              start: 995
-              end: 995
-        - severity: info
-          name: pdfTeX
-          category: LaTeX
-          text: Redefining \pageref
-          source:
-            file: main.tex
-            range:
-              start: 44
-              end: 44
+              start: 41
+              end: 41
           log:
             file: main.log
             range:
@@ -2196,17 +2184,31 @@ files:
         - severity: info
           name: pdfTeX
           category: LaTeX
-          text: Redefining \nameref
+          text: Redefining \pageref
           source:
             file: main.tex
             range:
-              start: 44
-              end: 44
+              start: 41
+              end: 41
           log:
             file: main.log
             range:
               start: 997
               end: 997
+        - severity: info
+          name: pdfTeX
+          category: LaTeX
+          text: Redefining \nameref
+          source:
+            file: main.tex
+            range:
+              start: 41
+              end: 41
+          log:
+            file: main.log
+            range:
+              start: 998
+              end: 998
         - name: pdfTeX
           severity: info
           text: epstopdf-base 2016/05/15 v2.6 Base part for package epstopdf
@@ -2215,8 +2217,8 @@ files:
           log:
             file: main.log
             range:
-              start: 1017
-              end: 1017
+              start: 1018
+              end: 1018
         - name: pdfTeX
           severity: info
           text: grfext 2016/05/16 v1.2 Manage graphics extensions (HO)
@@ -2225,8 +2227,8 @@ files:
           log:
             file: main.log
             range:
-              start: 1019
-              end: 1019
+              start: 1020
+              end: 1020
         - severity: info
           name: pdfTeX
           category: Package epstopdf-base
@@ -2239,8 +2241,8 @@ files:
           log:
             file: main.log
             range:
-              start: 1021
-              end: 1022
+              start: 1022
+              end: 1023
         - severity: info
           name: pdfTeX
           category: Package grfext
@@ -2255,8 +2257,8 @@ files:
           log:
             file: main.log
             range:
-              start: 1023
-              end: 1025
+              start: 1024
+              end: 1026
         - severity: info
           name: pdfTeX
           category: Package minitoc(hints)
@@ -2266,8 +2268,8 @@ files:
           log:
             file: main.log
             range:
-              start: 1031
-              end: 1031
+              start: 1032
+              end: 1032
         - severity: info
           name: pdfTeX
           category: Package minitoc(hints)
@@ -2277,8 +2279,8 @@ files:
           log:
             file: main.log
             range:
-              start: 1034
-              end: 1034
+              start: 1035
+              end: 1035
         - severity: warning
           name: pdfTeX
           category: Package minitoc(hints)
@@ -2288,8 +2290,8 @@ files:
           log:
             file: main.log
             range:
-              start: 1039
-              end: 1039
+              start: 1040
+              end: 1040
         - severity: warning
           name: pdfTeX
           category: Package minitoc(hints)
@@ -2299,8 +2301,8 @@ files:
           log:
             file: main.log
             range:
-              start: 1045
-              end: 1045
+              start: 1046
+              end: 1046
         - severity: warning
           name: pdfTeX
           category: Package minitoc(hints)
@@ -2310,8 +2312,8 @@ files:
           log:
             file: main.log
             range:
-              start: 1050
-              end: 1050
+              start: 1051
+              end: 1051
         - severity: warning
           name: pdfTeX
           category: Package minitoc(hints)
@@ -2321,8 +2323,8 @@ files:
           log:
             file: main.log
             range:
-              start: 1055
-              end: 1055
+              start: 1056
+              end: 1056
         - severity: warning
           name: pdfTeX
           category: Package minitoc(hints)
@@ -2332,8 +2334,8 @@ files:
           log:
             file: main.log
             range:
-              start: 1060
-              end: 1060
+              start: 1061
+              end: 1061
         - severity: info
           name: pdfTeX
           category: Package pdftex.def
@@ -2346,8 +2348,8 @@ files:
           log:
             file: main.log
             range:
-              start: 1067
-              end: 1068
+              start: 1068
+              end: 1069
         - severity: info
           name: pdfTeX
           category: LaTeX Font
@@ -2360,8 +2362,8 @@ files:
           log:
             file: main.log
             range:
-              start: 1077
-              end: 1077
+              start: 1078
+              end: 1078
         - severity: info
           name: pdfTeX
           category: LaTeX Font
@@ -2374,8 +2376,8 @@ files:
           log:
             file: main.log
             range:
-              start: 1081
-              end: 1081
+              start: 1082
+              end: 1082
         - severity: info
           name: pdfTeX
           category: Package pdftex.def
@@ -2390,8 +2392,8 @@ files:
           log:
             file: main.log
             range:
-              start: 1097
-              end: 1099
+              start: 1098
+              end: 1100
         - severity: info
           name: pdfTeX
           category: Package pdftex.def
@@ -2406,8 +2408,8 @@ files:
           log:
             file: main.log
             range:
-              start: 1103
-              end: 1105
+              start: 1104
+              end: 1106
         - severity: info
           name: pdfTeX
           category: Package minitoc
@@ -2417,8 +2419,8 @@ files:
           log:
             file: main.log
             range:
-              start: 1107
-              end: 1109
+              start: 1109
+              end: 1111
         - severity: info
           name: pdfTeX
           category: Package minitoc(hints)
@@ -2428,8 +2430,8 @@ files:
           log:
             file: main.log
             range:
-              start: 1112
-              end: 1112
+              start: 1114
+              end: 1114
         - severity: warning
           name: pdfTeX
           category: Package minitoc(hints)
@@ -2439,8 +2441,8 @@ files:
           log:
             file: main.log
             range:
-              start: 1118
-              end: 1118
+              start: 1120
+              end: 1120
         - severity: info
           name: pdfTeX
           category: Package atveryend
@@ -2453,26 +2455,12 @@ files:
           log:
             file: main.log
             range:
-              start: 1122
-              end: 1122
+              start: 1124
+              end: 1124
         - severity: info
           name: pdfTeX
           category: Package atveryend
           text: Empty hook `AfterLastShipout'
-          source:
-            file: main.tex
-            range:
-              start: 77
-              end: 77
-          log:
-            file: main.log
-            range:
-              start: 1130
-              end: 1130
-        - severity: info
-          name: pdfTeX
-          category: Package atveryend
-          text: Executing hook `AtVeryEndDocument'
           source:
             file: main.tex
             range:
@@ -2486,6 +2474,20 @@ files:
         - severity: info
           name: pdfTeX
           category: Package atveryend
+          text: Executing hook `AtVeryEndDocument'
+          source:
+            file: main.tex
+            range:
+              start: 77
+              end: 77
+          log:
+            file: main.log
+            range:
+              start: 1134
+              end: 1134
+        - severity: info
+          name: pdfTeX
+          category: Package atveryend
           text: Executing hook `AtEndAfterFileList'
           source:
             file: main.tex
@@ -2495,35 +2497,21 @@ files:
           log:
             file: main.log
             range:
-              start: 1133
-              end: 1133
-        - severity: warning
-          name: pdfTeX
-          category: Package rerunfilecheck
-          text: >-
-            File `main.out' has changed. Rerun to get outlines right or use
-            package `bookmark'.
-          source:
-            file: main.tex
-          log:
-            file: main.log
-            range:
               start: 1135
-              end: 1137
+              end: 1135
         - severity: info
           name: pdfTeX
           category: Package rerunfilecheck
           text: >-
-            Checksums for `main.out': Before:
-            8C415186DA19014FBAB2058C29B32F6F;139 After:
-            57BEA8673D4B17CB6581641740A2E570;188.
+            File `main.out' has not changed. Checksum:
+            3AC25B82F7154B6B4EC60CEE8DE5095A;275.
           source:
             file: main.tex
           log:
             file: main.log
             range:
-              start: 1139
-              end: 1141
+              start: 1136
+              end: 1137
         - severity: info
           name: pdfTeX
           category: Package atveryend
@@ -2536,8 +2524,8 @@ files:
           log:
             file: main.log
             range:
-              start: 1142
-              end: 1142
+              start: 1138
+              end: 1138
       inputs: []
       outputs:
         - main.pdf
@@ -2545,27 +2533,27 @@ files:
     jobNames: []
     type: ParsedLaTeXLog
   main.pdf:
-    timeStamp: 2017-10-18T11:59:28.560Z
-    hash: BEHRzC93aPej4IAUccue/nK0LC27eoRbpExe2K5Vs2I=
+    timeStamp: 2017-10-18T12:27:24.680Z
+    hash: gNVh4y8r7bvEj9PfCiRicLtBtEFZ8uXpipIYcM+lESE=
     jobNames: []
     type: PortableDocumentFormat
   main.aux:
-    timeStamp: 2017-10-18T11:59:28.548Z
-    hash: /QMtys6YnELHyZIpk+ZSU7FKOVanGTQC9630ENIMzuc=
+    timeStamp: 2017-10-18T12:27:24.660Z
+    hash: ZvubzczLeyfCZ3pFNqsJ3TjIRt7tPhkEt/SeKqWXi0g=
     jobNames: []
     type: LaTeXAuxilary
   main.fls:
-    timeStamp: 2017-10-18T11:59:28.556Z
-    hash: dok3Bq9nY2E4GuJPMYSoqRQ2U6k/W8cgfw/RbJDGSMw=
+    timeStamp: 2017-10-18T12:27:24.672Z
+    hash: L91nUpiDaxhS2459L5dgJXBh6Bwc8khg0JCcuVT3Hg8=
     jobNames: []
     type: FileListing
   main.synctex.gz:
-    timeStamp: 2017-10-18T11:59:28.560Z
-    hash: zn6YJ1ZTKcebkJsB2QaH9342rOjA+FW7ZdaNqAteusA=
+    timeStamp: 2017-10-18T12:27:24.680Z
+    hash: G/VfjFyt9Szppnz66He19F0/O8XcTBovbjq5YO8JvVU=
     jobNames: []
     type: SyncTeX
   main.aux-ParsedLaTeXAuxilary:
-    timeStamp: 2017-10-18T11:59:28.650Z
+    timeStamp: 2017-10-18T12:26:00.114Z
     value:
       commands:
         - relax
@@ -2596,6 +2584,12 @@ files:
         - newlabel
         - '@writefile'
         - newlabel
+        - '@writefile'
+        - '@writefile'
+        - '@writefile'
+        - '@writefile'
+        - '@writefile'
+        - '@writefile'
         - '@writefile'
         - '@writefile'
         - '@writefile'
@@ -3646,47 +3640,55 @@ files:
     hash: pYbm/y00aAolkJzV89mTAGKi6Orq7JcEifwf2d4eDRk=
     jobNames: []
   main.lof:
-    timeStamp: 2017-10-18T11:59:28.548Z
-    hash: 0qVwkrC7ZWdAUrGF+g6Lmc195VBXYqQXKzMNqoVNwqM=
+    timeStamp: 2017-10-18T12:27:24.664Z
+    hash: SaHUolcz1Kw3re+qUMbiaKZlAZbE0ucBhB/ow+8W7iY=
     jobNames: []
     type: ListOfFigures
   main.mtc:
-    timeStamp: 2017-10-18T11:59:28.448Z
+    timeStamp: 2017-10-18T12:27:24.560Z
     hash: 47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=
     jobNames: []
   main.mtc0:
-    timeStamp: 2017-10-18T11:59:28.452Z
+    timeStamp: 2017-10-18T12:27:24.560Z
     hash: 47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=
     jobNames: []
   main.out:
-    timeStamp: 2017-10-18T11:59:28.548Z
-    hash: 4meeEJvR2ixohQA5aN/JJuFWSgrnMfhNh9+sODDcoPo=
+    timeStamp: 2017-10-18T12:27:24.664Z
+    hash: JNCGRMnCnx+g/tQIpUxzhdTPcbqvpK7VZOzoitjwXyQ=
     jobNames: []
     type: OUT
   main.toc:
-    timeStamp: 2017-10-18T11:59:28.548Z
-    hash: y9IU80cbuQN9nmN2bnq5UAKO0szI904yFB1DdkG018A=
+    timeStamp: 2017-10-18T12:27:24.664Z
+    hash: TJcdt280vhBElhituoT1PIVl/StOsBuD1ES7ST/VdCs=
     jobNames: []
     type: TableOfContents
   modules/introduction.tex:
-    timeStamp: 2017-10-17T22:41:30.924Z
-    hash: rbpezC8ftDyrROxBVvaXDiS/cb72uzxpYKHVvV7S6sk=
+    timeStamp: 2017-10-18T12:01:34.971Z
+    hash: cRyoFfjgB9NZw3uAuzlcIqLPrhZruFvPsQyRTXjQ4v4=
     jobNames: []
   modules/title.tex:
     timeStamp: 2017-10-17T22:41:30.924Z
     hash: rGHJxI5mlCjhQ0teoxLYc1gxx9aUnjJIs6hVWbIKSKk=
     jobNames: []
   main.maf:
-    timeStamp: 2017-10-18T11:59:28.524Z
+    timeStamp: 2017-10-18T12:27:24.640Z
     hash: bbXCjUeK+P2vRBXlBH/TKjpGPI5AVdjwUwZUv3OPxiQ=
     jobNames: []
   modules/design.tex:
-    timeStamp: 2017-10-18T11:59:10.645Z
-    hash: nKKidtCuzBP7OcWcEr1xaz60O7gCAXEupPwKwApWYYo=
+    timeStamp: 2017-10-18T12:13:06.206Z
+    hash: /bhjy2uGLz4VrJ/k9Y+s0O+cLA8SD0s7JTr3LgzAH3M=
     jobNames: []
   modules/implementation.tex:
     timeStamp: 2017-10-18T11:59:07.529Z
     hash: d1UZC6ExwhTkZfIHlwluO9uogw1JzXELDvbWnVVL4p0=
+    jobNames: []
+  modules/conclusion.tex:
+    timeStamp: 2017-10-18T12:12:59.954Z
+    hash: QS3wEWl/F8v6uNHO9G5GrK5bx2amYwFMJqVdgMQuRFA=
+    jobNames: []
+  modules/testing.tex:
+    timeStamp: 2017-10-18T12:12:45.542Z
+    hash: bCcO+G1v7SqtcvewozpDpmHSLKLLuOM2dwmcLeeSTL8=
     jobNames: []
 rules:
   - name: ApplyOptions
@@ -4104,6 +4106,8 @@ rules:
       - modules/title.tex
       - modules/design.tex
       - modules/implementation.tex
+      - modules/conclusion.tex
+      - modules/testing.tex
     outputs:
       - main.pdf
       - main.aux

@@ -1,6 +1,8 @@
 \contentsline {xsect}{Introduction}{1}{section*.2}
-\contentsline {figure}{\numberline {1}{\ignorespaces Single-host illustration}}{1}{figure.1}
-\contentsline {figure}{\numberline {2}{\ignorespaces Multi-host illustration}}{1}{figure.2}
+\contentsline {figure}{\numberline {1}{\ignorespaces Single-neighbour illustration}}{1}{figure.1}
+\contentsline {figure}{\numberline {2}{\ignorespaces Multi-neighbour illustration}}{1}{figure.2}
 \contentsline {xsect}{Design}{1}{figure.2}
 \contentsline {xsect}{Implementation}{1}{section.2}
+\contentsline {xsect}{Testing}{1}{section.3}
+\contentsline {xsect}{Conclusion}{1}{section.4}
 \contentsfinish 
