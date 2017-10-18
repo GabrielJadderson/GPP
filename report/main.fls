@@ -435,6 +435,10 @@ INPUT ./figs/single_host_illustration.png
 INPUT ./figs/multi_host_illustration.png
 INPUT ./figs/multi_host_illustration.png
 INPUT ./figs/multi_host_illustration.png
+INPUT ./modules/design.tex
+INPUT ./modules/design.tex
+INPUT ./modules/implementation.tex
+INPUT ./modules/implementation.tex
 OUTPUT main.maf
 INPUT /home/rogue/github/GPP/report/main.mtc
 INPUT /home/rogue/github/GPP/report/main.mtc0

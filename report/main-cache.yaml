@@ -99,26 +99,26 @@ files:
     jobNames: []
     type: ParsedYAML
   main.tex:
-    timeStamp: 2017-10-17T23:28:54.743Z
-    hash: T/uRdChIMqlVjMhMawmO/INh/OwGUufowZ9SmwMSafQ=
+    timeStamp: 2017-10-18T11:59:25.912Z
+    hash: sm7h53SSsJN/ZDNg6XxbNHJsMGxdQZ4WWBNOc7+GSNA=
     jobNames: []
     type: LaTeX
     subType: article
   /home/rogue/.dicy.yaml:
-    timeStamp: 2017-10-17T23:28:50.171Z
+    timeStamp: 2017-10-18T11:08:06.711Z
     jobNames: []
     type: YAML
   x.y-Nil:
     jobNames: []
     type: Nil
   main.log:
-    timeStamp: 2017-10-17T23:27:06.912Z
-    hash: /hsdOsS7wH+sy/fInJ1rK+yQZFNS/hAY3ToIdHr80M8=
+    timeStamp: 2017-10-18T11:59:28.560Z
+    hash: GPctA0bGhEqwgbj/5E7hGWMvbiSYJn9QQ2b6xZETDlQ=
     jobNames: []
     type: LaTeXLog
     subType: pdfTeX
   main.fls-ParsedFileListing:
-    timeStamp: 2017-10-17T23:27:06.994Z
+    timeStamp: 2017-10-18T11:58:13.731Z
     value:
       messages: []
       inputs:
@@ -469,6 +469,8 @@ files:
         - main.out
         - main.tex
         - main.toc
+        - modules/design.tex
+        - modules/implementation.tex
         - modules/introduction.tex
         - modules/title.tex
       outputs:
@@ -485,7 +487,7 @@ files:
     jobNames: []
     type: ParsedFileListing
   main.log-ParsedLaTeXLog:
-    timeStamp: 2017-10-17T23:27:07.036Z
+    timeStamp: 2017-10-18T11:59:28.733Z
     value:
       messages:
         - name: pdfTeX
@@ -2394,8 +2396,8 @@ files:
           name: pdfTeX
           category: Package pdftex.def
           text: >-
-            ./figs/multi_host_illustration.png used Requested size: 91.24158pt x
-            26.19807pt.
+            ./figs/multi_host_illustration.png used Requested size: 90.94044pt x
+            44.2657pt.
           source:
             file: main.tex
             range:
@@ -2446,8 +2448,8 @@ files:
           source:
             file: main.tex
             range:
-              start: 73
-              end: 73
+              start: 77
+              end: 77
           log:
             file: main.log
             range:
@@ -2460,8 +2462,8 @@ files:
           source:
             file: main.tex
             range:
-              start: 73
-              end: 73
+              start: 77
+              end: 77
           log:
             file: main.log
             range:
@@ -2474,8 +2476,8 @@ files:
           source:
             file: main.tex
             range:
-              start: 73
-              end: 73
+              start: 77
+              end: 77
           log:
             file: main.log
             range:
@@ -2488,26 +2490,40 @@ files:
           source:
             file: main.tex
             range:
-              start: 73
-              end: 73
+              start: 77
+              end: 77
           log:
             file: main.log
             range:
               start: 1133
               end: 1133
-        - severity: info
+        - severity: warning
           name: pdfTeX
           category: Package rerunfilecheck
           text: >-
-            File `main.out' has not changed. Checksum:
-            7713C234CD432009FB338FA9996488BA;98.
+            File `main.out' has changed. Rerun to get outlines right or use
+            package `bookmark'.
           source:
             file: main.tex
           log:
             file: main.log
             range:
-              start: 1134
-              end: 1135
+              start: 1135
+              end: 1137
+        - severity: info
+          name: pdfTeX
+          category: Package rerunfilecheck
+          text: >-
+            Checksums for `main.out': Before:
+            8C415186DA19014FBAB2058C29B32F6F;139 After:
+            57BEA8673D4B17CB6581641740A2E570;188.
+          source:
+            file: main.tex
+          log:
+            file: main.log
+            range:
+              start: 1139
+              end: 1141
         - severity: info
           name: pdfTeX
           category: Package atveryend
@@ -2515,13 +2531,13 @@ files:
           source:
             file: main.tex
             range:
-              start: 73
-              end: 73
+              start: 77
+              end: 77
           log:
             file: main.log
             range:
-              start: 1136
-              end: 1136
+              start: 1142
+              end: 1142
       inputs: []
       outputs:
         - main.pdf
@@ -2529,27 +2545,27 @@ files:
     jobNames: []
     type: ParsedLaTeXLog
   main.pdf:
-    timeStamp: 2017-10-17T23:27:06.908Z
-    hash: SZm4b39by5Vlr5g1iPn/PByj973mps5dW1hpVbha57E=
+    timeStamp: 2017-10-18T11:59:28.560Z
+    hash: BEHRzC93aPej4IAUccue/nK0LC27eoRbpExe2K5Vs2I=
     jobNames: []
     type: PortableDocumentFormat
   main.aux:
-    timeStamp: 2017-10-17T23:27:06.892Z
-    hash: V7CZfb0b5VlMSiTGVZDgcjiTKKvrbjrrhqD1kASv8Dk=
+    timeStamp: 2017-10-18T11:59:28.548Z
+    hash: /QMtys6YnELHyZIpk+ZSU7FKOVanGTQC9630ENIMzuc=
     jobNames: []
     type: LaTeXAuxilary
   main.fls:
-    timeStamp: 2017-10-17T23:27:06.904Z
-    hash: Yd5HubNhIGwjpxnWLK0Sn/j/6hcAIVAU6BDhwEO7V8E=
+    timeStamp: 2017-10-18T11:59:28.556Z
+    hash: dok3Bq9nY2E4GuJPMYSoqRQ2U6k/W8cgfw/RbJDGSMw=
     jobNames: []
     type: FileListing
   main.synctex.gz:
-    timeStamp: 2017-10-17T23:27:06.912Z
-    hash: SaCLiacqEOkhzhDpT8LXC+33wP7I9gTsK8uhfdFK1hg=
+    timeStamp: 2017-10-18T11:59:28.560Z
+    hash: zn6YJ1ZTKcebkJsB2QaH9342rOjA+FW7ZdaNqAteusA=
     jobNames: []
     type: SyncTeX
   main.aux-ParsedLaTeXAuxilary:
-    timeStamp: 2017-10-17T23:27:06.972Z
+    timeStamp: 2017-10-18T11:59:28.650Z
     value:
       commands:
         - relax
@@ -2580,6 +2596,12 @@ files:
         - newlabel
         - '@writefile'
         - newlabel
+        - '@writefile'
+        - '@writefile'
+        - '@writefile'
+        - '@writefile'
+        - '@writefile'
+        - '@writefile'
         - ttl@finishall
     jobNames: []
     type: ParsedLaTeXAuxilary
@@ -3616,34 +3638,34 @@ files:
     hash: qNIgnargSMi52LE1wVSfaP7n/NzHAKgzH70ujC3AuTQ=
     jobNames: []
   figs/multi_host_illustration.png:
-    timeStamp: 2017-10-17T22:41:30.924Z
-    hash: kIHyfgiYI4QrYG2OQK4HzclUghjEpQ1HXq6LuLCrhzI=
+    timeStamp: 2017-10-17T23:32:03.821Z
+    hash: bdwbP1wKKRLJj4zrsJ2qRM4laL70pxlYSVHXl5XhJTE=
     jobNames: []
   figs/single_host_illustration.png:
     timeStamp: 2017-10-17T22:41:30.924Z
     hash: pYbm/y00aAolkJzV89mTAGKi6Orq7JcEifwf2d4eDRk=
     jobNames: []
   main.lof:
-    timeStamp: 2017-10-17T23:27:06.892Z
-    hash: /w5Nx5rN5H2d8LsFg1Uc8G0KgE5ZOVicU4ZfhcEb2oU=
+    timeStamp: 2017-10-18T11:59:28.548Z
+    hash: 0qVwkrC7ZWdAUrGF+g6Lmc195VBXYqQXKzMNqoVNwqM=
     jobNames: []
     type: ListOfFigures
   main.mtc:
-    timeStamp: 2017-10-17T23:27:06.780Z
+    timeStamp: 2017-10-18T11:59:28.448Z
     hash: 47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=
     jobNames: []
   main.mtc0:
-    timeStamp: 2017-10-17T23:27:06.780Z
+    timeStamp: 2017-10-18T11:59:28.452Z
     hash: 47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=
     jobNames: []
   main.out:
-    timeStamp: 2017-10-17T23:27:06.892Z
-    hash: QncYdeztXQkN9yDbdnV17ro19hiDV3BXq4rWv9ZfGJA=
+    timeStamp: 2017-10-18T11:59:28.548Z
+    hash: 4meeEJvR2ixohQA5aN/JJuFWSgrnMfhNh9+sODDcoPo=
     jobNames: []
     type: OUT
   main.toc:
-    timeStamp: 2017-10-17T23:27:06.892Z
-    hash: Gq7oQWRVnyI5jQDZmE8RCa5nxJvy2zmbuIpzp8A/GW0=
+    timeStamp: 2017-10-18T11:59:28.548Z
+    hash: y9IU80cbuQN9nmN2bnq5UAKO0szI904yFB1DdkG018A=
     jobNames: []
     type: TableOfContents
   modules/introduction.tex:
@@ -3655,8 +3677,16 @@ files:
     hash: rGHJxI5mlCjhQ0teoxLYc1gxx9aUnjJIs6hVWbIKSKk=
     jobNames: []
   main.maf:
-    timeStamp: 2017-10-17T23:27:06.872Z
+    timeStamp: 2017-10-18T11:59:28.524Z
     hash: bbXCjUeK+P2vRBXlBH/TKjpGPI5AVdjwUwZUv3OPxiQ=
+    jobNames: []
+  modules/design.tex:
+    timeStamp: 2017-10-18T11:59:10.645Z
+    hash: nKKidtCuzBP7OcWcEr1xaz60O7gCAXEupPwKwApWYYo=
+    jobNames: []
+  modules/implementation.tex:
+    timeStamp: 2017-10-18T11:59:07.529Z
+    hash: d1UZC6ExwhTkZfIHlwluO9uogw1JzXELDvbWnVVL4p0=
     jobNames: []
 rules:
   - name: ApplyOptions
@@ -4072,6 +4102,8 @@ rules:
       - main.toc
       - modules/introduction.tex
       - modules/title.tex
+      - modules/design.tex
+      - modules/implementation.tex
     outputs:
       - main.pdf
       - main.aux
