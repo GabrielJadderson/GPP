@@ -17,6 +17,20 @@ timertest
 libsubnet.a
 lib/libsubnet.a
 
+# Some latex shit
+main-cache.yaml
+main.aux
+main.fls
+main.lof
+main.log
+main.maf
+main.mtc
+main.mtc0
+main.out
+main.pdf
+main.synctex.gz
+main.toc
+
 # Prerequisites
 *.d
 
