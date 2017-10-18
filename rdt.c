@@ -222,7 +222,7 @@ void selective_repeat() {
 	            break;
 
 	        case frame_arrival:        /* a data or control frame has arrived */
-				currentNeighbour = stationID2neighbourindex(from_physical_layer(&r));        /* fetch incoming frame from physical layer */
+				currentNeighbour = from_physical_layer(&r); //stationID2neighbourindex(from_physical_layer(&r));        /* fetch incoming frame from physical layer */
 //            	logLine(succes, "frame_arrival r.ack: %d\n", r.ack);
 				if (r.kind == DATA) {
 					/* An undamaged frame has arrived. */
@@ -400,7 +400,7 @@ int from_physical_layer(frame *r) {
 	FromSubnet(&source, &dest, (char *) r, &length);
 	print_frame(r, "received");
 
-	return source;
+	return stationID2neighbourindex(source);
 }
 
 
