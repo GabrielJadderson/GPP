@@ -1,7 +1,0 @@
-\contentsline {section}{List of Figures}{}{section*.2}
-\contentsline {section}{\numberline {1}Introduction}{1}{section.1}
-\contentsline {section}{\numberline {2}Design}{1}{section.2}
-\contentsline {section}{\numberline {3}Implementation}{1}{section.3}
-\contentsline {section}{\numberline {4}Testing}{1}{section.4}
-\contentsline {section}{\numberline {5}Conclusion}{1}{section.5}
-\contentsfinish 
