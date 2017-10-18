@@ -1,1 +1,16 @@
 \section{Implementation}
+
+
+
+\begin{lstlisting}
+typedef struct {
+    int stationID;
+		int ack_timer_id;
+    int timer_ids[NR_BUFS];
+    boolean no_nak;
+} neighbour;
+\end{lstlisting}
+
+each neighbour will have it's own associated stationID,
+this way we can differentiate between each neighbour/station.
+Furtheremore each neighbour has it's own ack-timer-id that way we 
