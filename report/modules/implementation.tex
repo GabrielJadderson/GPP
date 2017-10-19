@@ -81,15 +81,7 @@ and in return we get the associated **msg. (note: this is why we store the id of
 
 
 \begin{itemize}
-  \item \texttt{ network\_layer\_allowed\_to\_send:}
-  Signals the network layer that it can send a piece of data.
-  Here the network layer should make sure the from\_network\_layer\_queue contains at least one element,
-  after which it can signal network\_layer\_ready, which means that the network layer has prepared at least one element in the queue.
-
-  \item \texttt{ network\_layer\_ready: }
-  This signal signals to the link layer that the network layer has prepared an element
-  to be sent in the from\_network\_layer\_queue queue and that it should be sent now.
-  \item \texttt{ data\_for\_network\_layer: }
-  This signal signals to the network layer that the for\_network\_layer\_queue contains
-  a data element for it to take care of. (a data element has been received)
+  \item \texttt{ network\_layer\_allowed\_to\_send:} Signals the network layer that it can send a piece of data. Here the network layer should make sure the \texttt{from\_network\_layer\_queue} contains at least one element, after which it can signal  \texttt{network\_layer\_ready}, which means that the network layer has prepared at least one element in the queue.
+  \item \texttt{ network\_layer\_ready: }  This signal signals to the link layer that the network layer has prepared an element to be sent in the  \texttt{from\_network\_layer\_queue} queue and that it should be sent now.
+  \item \texttt{ data\_for\_network\_layer: }  This signal signals to the network layer that the \texttt{for\_network\_layer\_queue} contains a data element for it to take care of. (a data element has been received)
 \end{itemize}
