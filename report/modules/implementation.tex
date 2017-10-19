@@ -26,8 +26,6 @@ typedef struct { //The data only visible to selective repeat.
   seq_nr next_frame_to_send;        // upper edge of sender's window + 1
   seq_nr frame_expected;            // lower edge of receiver's window
   seq_nr too_far;                   // upper edge of receiver's window + 1
-  //int i;                            // index into buffer pool //Was never used?
-  //frame r;                          // scratch variable //Not needed to have it in here, it is used at the outermost level of SR
   packet out_buf[NR_BUFS];          // buffers for the outbound stream
   packet in_buf[NR_BUFS];           // buffers for the inbound stream
   boolean arrived[NR_BUFS];         // inbound bit map
@@ -47,8 +45,6 @@ typedef struct {
 
 \hfill \break
 \subsection{Actual Code}
-
-
 
 
 We've changed the following functions to take the neighbours id's as parameters.
@@ -82,8 +78,8 @@ void start_timer(neighbourid neighbour, seq_nr k) {
 
 To stop the timers we simply invoke the subnet function: \texttt{StopTimer} with the id of the timer
 and in return we get the associated **msg. (note: this is why we store the id of thet timer in the first place)
-
-
+\newline
+\newline
 In main we've set up our neighbours/stations accordingly, then activate the networklayer and selective-repeat for each consequtive neighbour.
 this provides some limitations in terms of flexibility,
 essiantially in the future we want to improve this setup to be more dynamic instead of it's current hard-coded state.
@@ -118,25 +114,8 @@ ACTIVATE(2, selective_repeat);
 ACTIVATE(3, FakeNetworkLayer_Test1);
 ACTIVATE(3, selective_repeat);
 \end{lstlisting}
-
-
-
+\  \\%fake line ...
 The following is a description of what the three events in our code do:
-\\
-
-%\begin{itemize}
-%  \item[$\square$]{ \texttt{ network\_layer\_allowed\_to\_send:}\\
-%  Signals the network layer that it can send a piece of data. Here the network layer should make sure the \texttt{from\_network\_layer\_queue} contains at least one element, after which it can signal \texttt{network\_layer\_ready}, which means that the network layer has prepared at least one element in the queue.}
-%
-%  \item[$\square$]{ \texttt{ network\_layer\_ready:}\\
-%  This signal signals to the link layer that the network layer has prepared an element to be sent in the
-%  \texttt{from\_network\_layer\_queue} queue and that it should be sent now.}
-%
-%  \item[$\square$]{ \texttt{ data\_for\_network\_layer:}\\
-%  This signal signals to the network layer that the \\
-%  \texttt{for\_network\_layer\_queue} contains a data element for it to take care of. (a data element has been received)}
-%\end{itemize}
-
 \begin{description}[leftmargin=1em, style=nextline]
 \item [\texttt{network\_layer\_allowed\_to\_send}] Signals the network layer that it can send a piece of data.
 Here the network layer should make sure the \texttt{from\_network\_layer\_queue}
