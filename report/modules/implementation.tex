@@ -1,7 +1,5 @@
 \section{Implementation}
-TODO: INTRO TO IMPL
-\\
-\subsection{Overview}
+\subsection{Information restructuring}
 
 \begin{lstlisting}
 typedef struct {
@@ -65,8 +63,8 @@ void stop_ack_timer(neighbourid neighbour)
 \end{lstlisting}
 
 
-Our implementation of \texttt{start\_timer} is as follows. We first allocate memory for our {packetTimerMessage}
-The sequence number is updated accordingly to our parameter, on the \texttt{start\_ack\_timer} function however, we set the sequence number to -1 (not used) since it redundant in that case.
+Our implementation of \texttt{start\_timer} is as follows. We first allocate memory for our {packetTimerMessage} 
+The sequence number is updated accordingly to our parameter, on the \linebreak\texttt{start\_ack\_timer} function however, we set the sequence number to -1 (not used) since it redundant in that case.
 Afterwards the neighbour id is updated accordingly and a timer is initiated from the SetTimer function, this function starts a timer and returns the id of that timer,
 which we then store in our specified neighbour.
 we use modulo to wrap it around the index range since the sequence numbers increase linearly.

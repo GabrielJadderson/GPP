@@ -28,7 +28,7 @@ When receiving, the station needs to be able to determine which neighbour sent a
 To make the expansion to multiple neighbours as simple as possible, a restraint was decided upon; only one neighbour's communication is processed at a given time. This means that the selective repeat function must alternate between the neighbours. Fortunately, this is possible to do for all the signals the selective repeat function processes with few alterations.
 \begin{itemize}
   \item $network\_layer\_ready$: The fake network layer identifies the neighbour to send to in the msg field of the signal.
-  \item $frame\_arrival$: The station ID of the sender is determined when the frame is received and is translated to the corresponding neighbour ID by the\\ from\_physical\_layer function. %I don't know why the line break is needed. Probably something about how \_ is defined but I'm not sure.
+  \item $frame\_arrival$: The station ID of the sender is determined when the frame is received and is translated to the corresponding neighbour ID by the from\_physical\_layer function. %I don't know why the line break is needed. Probably something about how \_ is defined but I'm not sure.
   \item $timeout$: The functions for timer control already require the neighbour ID to determine which neighbour it is starting a timer for. Add this information to the timer msg and extract the information when handling the signal in selective repeat.
 \end{itemize}
 
