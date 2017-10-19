@@ -19,7 +19,7 @@ It is not allowed for two neighbours to correspond to the same station.
 % *** Expansion to more neighbours ***
 % > neighbourids for functions used by selective repeat
 % > currentNeighbour
-% 
+%
 
 \subsection{Distinguishing Neighbours}
 When a station is sending to a neighbour, it knows the id of the neighbour it is sending. The change to be made from a sender's perspective is to add a parameter to the functions related in that process, which takes the id of the neighbour that is being sent to, rather than using station IDs, which can be looked up using the neighbour ID if necessary, such as for the to\_physical\_layer function, which sends the frames to the subnet based on the station ID. Furthermore, the communication from the fake network layer to the link layer, at the time the fake network layer prepares the package to send, needs to contain information about which neighbour the package should be sent to. This was decided on to be done by setting the msg parameter of the network\_layer\_ready signal to the neighbour ID of the neighbour to send the packet to, which the selective repeat function can extract from the signal directly.\\
@@ -38,20 +38,3 @@ This approach avoids the need to run multiple selective repeat processes, which 
 
 \subsection{variable locality}
 The local variables of the selective repeat function have been retained local, and as such a second struct for neighbours were devised to contain the neighbour data for the selective repeat function. This is to retain the variable locality that was present in the original implementation.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
