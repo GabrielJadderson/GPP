@@ -81,7 +81,7 @@ static void send_frame(frame_kind fk, seq_nr frame_nr, seq_nr frame_expected, pa
     	neighbours[0].no_nak = false;        /* one nak per frame, please */
     }
     //logLine(succes, "Sending frame to physical layer for recipient: %d\n", recipient);
-    to_physical_layer(&s, neighbours[recipient].stationID);        /* transmit the frame */
+    to_physical_layer(&s, recipient);        /* transmit the frame */
     if (fk == DATA)
     {
     	start_timer(recipient, frame_nr); //TODO
@@ -404,7 +404,7 @@ int from_physical_layer(frame *r) {
 }
 
 
-void to_physical_layer(frame *s, int target)
+void to_physical_layer(frame *s, int neighbour)
 {
 	/*int send_to;
 
@@ -419,7 +419,7 @@ void to_physical_layer(frame *s, int target)
         //char temp[MAX_PKT+1];
         //packet_to_string(&(s->info), temp);
 	//ToSubnet(ThisStation, send_to, (char *) s, sizeof(frame));
-	ToSubnet(ThisStation, target, (char *) s, sizeof(frame));
+	ToSubnet(ThisStation, neighbours[neighbour].stationID, (char *) s, sizeof(frame));
         //logLine(succes, "Trying to send packet to: %d; with contents: %s\n", target, temp);
 }
 
