@@ -169,22 +169,21 @@ void selective_repeat()
 		log_event_received(event.type);
 
 		switch (event.type) {
-		case network_layer_ready:        /* accept, save, and transmit a new frame */
+		case network_layer_ready: // accept, save, and transmit a new frame
 			logLine(trace, "Network layer delivers frame - lets send it\n");
 
 			currentNeighbour = event.msg;
 
-			neighbourData[currentNeighbour].nbuffered = neighbourData[currentNeighbour].nbuffered + 1;        /* expand the window */
-			from_network_layer(&neighbourData[currentNeighbour].out_buf[neighbourData[currentNeighbour].next_frame_to_send % NR_BUFS]); /* fetch new packet */
-			send_frame(DATA, neighbourData[currentNeighbour].next_frame_to_send, neighbourData[currentNeighbour].frame_expected, neighbourData[currentNeighbour].out_buf, currentNeighbour);        /* transmit the frame */
-			inc(neighbourData[currentNeighbour].next_frame_to_send);        /* advance upper window edge */
+			neighbourData[currentNeighbour].nbuffered = neighbourData[currentNeighbour].nbuffered + 1; // expand the window
+			from_network_layer(&neighbourData[currentNeighbour].out_buf[neighbourData[currentNeighbour].next_frame_to_send % NR_BUFS]); //fetch new packet
+			send_frame(DATA, neighbourData[currentNeighbour].next_frame_to_send, neighbourData[currentNeighbour].frame_expected, neighbourData[currentNeighbour].out_buf, currentNeighbour); // transmit the frame
+			inc(neighbourData[currentNeighbour].next_frame_to_send); // advance upper window edge
 			break;
 
-		case frame_arrival:        /* a data or control frame has arrived */
-			currentNeighbour = from_physical_layer(&r); //stationID2neighbourindex(from_physical_layer(&r));        /* fetch incoming frame from physical layer */
-														//            	logLine(succes, "frame_arrival r.ack: %d\n", r.ack);
+		case frame_arrival: // a data or control frame has arrived
+			currentNeighbour = from_physical_layer(&r);  // fetch incoming frame from physical layer
 			if (r.kind == DATA) {
-				/* An undamaged frame has arrived. */
+				// An undamaged frame has arrived.
 				if ((r.seq != neighbourData[currentNeighbour].frame_expected) && neighbours[0].no_nak) {
 					send_frame(NAK, 0, neighbourData[currentNeighbour].frame_expected, neighbourData[currentNeighbour].out_buf, currentNeighbour);
 				}
@@ -192,17 +191,17 @@ void selective_repeat()
 					start_ack_timer(currentNeighbour);
 				}
 				if (between(neighbourData[currentNeighbour].frame_expected, r.seq, neighbourData[currentNeighbour].too_far) && (neighbourData[currentNeighbour].arrived[r.seq%NR_BUFS] == false)) {
-					/* Frames may be accepted in any order. */
-					neighbourData[currentNeighbour].arrived[r.seq % NR_BUFS] = true;        /* mark buffer as full */
-					neighbourData[currentNeighbour].in_buf[r.seq % NR_BUFS] = r.info;        /* insert data into buffer */
+					// Frames may be accepted in any order.
+					neighbourData[currentNeighbour].arrived[r.seq % NR_BUFS] = true; // mark buffer as full
+					neighbourData[currentNeighbour].in_buf[r.seq % NR_BUFS] = r.info; //insert data into buffer
 					while (neighbourData[currentNeighbour].arrived[neighbourData[currentNeighbour].frame_expected % NR_BUFS]) {
-						/* Pass frames and advance window. */
+						// Pass frames and advance window.
 						to_network_layer(&neighbourData[currentNeighbour].in_buf[neighbourData[currentNeighbour].frame_expected % NR_BUFS]);
 						neighbours[currentNeighbour].no_nak = true;
 						neighbourData[currentNeighbour].arrived[neighbourData[currentNeighbour].frame_expected % NR_BUFS] = false;
-						inc(neighbourData[currentNeighbour].frame_expected);        /* advance lower edge of receiver's window */
-						inc(neighbourData[currentNeighbour].too_far);        /* advance upper edge of receiver's window */
-						start_ack_timer(currentNeighbour);        /* to see if (a separate ack is needed */
+						inc(neighbourData[currentNeighbour].frame_expected); // advance lower edge of receiver's window
+						inc(neighbourData[currentNeighbour].too_far); // advance upper edge of receiver's window
+						start_ack_timer(currentNeighbour); // to see if (a separate ack is needed
 					}
 				}
 			}
@@ -213,15 +212,15 @@ void selective_repeat()
 			logLine(info, "Are we between so we can advance window? ack_expected=%d, r.ack=%d, next_frame_to_send=%d\n", neighbourData[currentNeighbour].ack_expected, r.ack, neighbourData[currentNeighbour].next_frame_to_send);
 			while (between(neighbourData[currentNeighbour].ack_expected, r.ack, neighbourData[currentNeighbour].next_frame_to_send)) {
 				logLine(debug, "Advancing window %d\n", neighbourData[currentNeighbour].ack_expected);
-				neighbourData[currentNeighbour].nbuffered = neighbourData[currentNeighbour].nbuffered - 1;        		/* handle piggybacked ack */
-																														//stop_timer(ack_expected % NR_BUFS);     /* frame arrived intact */
-				stop_timer(currentNeighbour, neighbourData[currentNeighbour].ack_expected % NR_BUFS);     /* frame arrived intact */ //TODO
-				inc(neighbourData[currentNeighbour].ack_expected);        				/* advance lower edge of sender's window */
+				neighbourData[currentNeighbour].nbuffered = neighbourData[currentNeighbour].nbuffered - 1; //handle piggybacked ack
+
+				stop_timer(currentNeighbour, neighbourData[currentNeighbour].ack_expected % NR_BUFS); //frame arrived intact
+				inc(neighbourData[currentNeighbour].ack_expected);  //advance lower edge of sender's window
 			}
 			break;
 
-		case timeout: /* Ack timeout or regular timeout*/
-					  // Check if it is the ack_timer
+		case timeout: // Ack timeout or regular timeout
+		  // Check if it is the ack_timer
 			timer_id = event.timer_id;
 			logLine(trace, "Timeout with id: %d - acktimer_id is %d\n", timer_id, neighbours[0].ack_timer_id);
 
