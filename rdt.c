@@ -118,7 +118,7 @@ void selective_repeat()
 
 	frame r; // scratch variable
 
-	int currentNeighbour = 0; //Each time this is used, it should be set.
+	neighbourid currentNeighbour = 0; //Each time this is used, it should be set.
 	neighbour_SR_Data neighbourData[NUM_MAX_NEIGHBOURS];
 	event_t event;
 	long int events_we_handle;
