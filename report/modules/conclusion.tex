@@ -5,4 +5,6 @@ From that point on, and after further investigation of the underlying systems, i
 \\~
 Our testing has then verified that the hosts can communicate reliably with each other, which was done by running the simulation multiple times with a 90\% error rate. (-e 900)\\
 \\~
-Based on the perceived reliability of the solution, based on the tests, it is concluded that RDT between multiple hosts on the link level has been correctly implemented.
+Based on the perceived reliability of the solution, based on the tests, it is concluded that RDT between multiple hosts on the link level has been correctly implemented.\\
+\\~
+A possible improvement of the system would be to support dynamic establishment of new connections. The current connection requires that the connections are preconfigured, which is only useful when the connections are known beforehand. Dynamically establishing connections would also require dynamic expansion of the number of neighbours and some means of tearing down connections as well.
