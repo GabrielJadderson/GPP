@@ -63,7 +63,7 @@ void stop_ack_timer(neighbourid neighbour)
 \end{lstlisting}
 
 
-Our implementation of \texttt{start\_timer} is as follows. We first allocate memory for our {packetTimerMessage} 
+Our implementation of \texttt{start\_timer} is as follows. We first allocate memory for our {packetTimerMessage}
 The sequence number is updated accordingly to our parameter, on the \linebreak\texttt{start\_ack\_timer} function however, we set the sequence number to -1 (not used) since it redundant in that case.
 Afterwards the neighbour id is updated accordingly and a timer is initiated from the SetTimer function, this function starts a timer and returns the id of that timer,
 which we then store in our specified neighbour.
@@ -82,6 +82,43 @@ void start_timer(neighbourid neighbour, seq_nr k) {
 
 To stop the timers we simply invoke the subnet function: \texttt{StopTimer} with the id of the timer
 and in return we get the associated **msg. (note: this is why we store the id of thet timer in the first place)
+
+
+In main we've set up our neighbours/stations accordingly, then activate the networklayer and selective-repeat for each consequtive neighbour.
+this provides some limitations in terms of flexibility,
+essiantially in the future we want to improve this setup to be more dynamic instead of it's current hard-coded state.
+\begin{lstlisting}
+switch (ThisStation) {
+case 1:
+  neighbours[0].stationID = 2;
+  neighbours[1].stationID = 3;
+  neighbours[2].stationID = -1;
+  neighbours[3].stationID = -1;
+  break;
+case 2:
+  neighbours[0].stationID = 1;
+  neighbours[1].stationID = 3;
+  neighbours[2].stationID = -1;
+  neighbours[3].stationID = -1;
+  break;
+case 3:
+  neighbours[0].stationID = 1;
+  neighbours[1].stationID = 2;
+  neighbours[2].stationID = -1;
+  neighbours[3].stationID = -1;
+  break;
+}
+
+ACTIVATE(1, FakeNetworkLayer_Test1);
+ACTIVATE(1, selective_repeat);
+
+ACTIVATE(2, FakeNetworkLayer_Test1);
+ACTIVATE(2, selective_repeat);
+
+ACTIVATE(3, FakeNetworkLayer_Test1);
+ACTIVATE(3, selective_repeat);
+\end{lstlisting}
+
 
 
 The following is a description of what the three events in our code do:
