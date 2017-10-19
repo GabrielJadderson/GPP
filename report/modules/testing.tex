@@ -1,7 +1,6 @@
 \section{Testing}
 The scenario used for testing is the one shown in figure \ref{fig:threestationsetup}.\\
-Each station sends a message that looks like this:\\
-
+Each station sends a message that looks like this:
 \begin{align*}
 Packet &= S to R\\
 S &= ThisStation\\
@@ -12,7 +11,7 @@ Where Packet is the packet that is sent to the receiver, S is the station ID of 
 For example, for station 1 sending to station 3: $1\ to\ 3$\\
 \\~
 %Screenshot of testing this for three stations, where all stations sends one message to each of the other two:
-The test was made with the three stations and an error frequency of 90\%. (command: ./network -pmynetwork -e100 -n3)
+The test was made with the three stations and an error frequency of 90\%. (command: ./network -pmynetwork -e900 -n3)
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.6\textwidth]{Test1.png}
@@ -20,6 +19,7 @@ The test was made with the three stations and an error frequency of 90\%. (comma
 \label{fig:threestationtest}
 \end{figure}
 
+As seen in figure \ref{fig:threestationtest}, the three stations each received two messages, one from each of the other two stations.
 
 
 
