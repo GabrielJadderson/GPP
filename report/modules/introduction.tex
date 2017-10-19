@@ -1,21 +1,44 @@
 \section{Introduction}
-We are required to extend the capabilities of an implemented RDT(Reliable Data Transfer) model to multiple neighbours.
+We are required to extend the capabilities of an implemented RDT (Reliable Data Transfer) model on the link layer to multiple neighbours.\\
 
-The given model can only communicate with two consecutive neighbours, an illustration of this is given in \textbf{Figure \ref{fig:single_host_illustration}}
+The given implementation functions for a setup of two stations communicating to each other, illustrated in figure \ref{fig:originalsetup}.
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
 
-\begin{figure}[H]\center
- \includegraphics[scale=0.30]{single_host_illustration.png}
- \caption{Single-neighbour illustration}
- \label{fig:single_host_illustration}
+\draw[black] (0,0) circle (10pt) node [anchor=center] {A};
+\draw[black] (40pt,0) circle (10pt) node [anchor=center] {B};
+\draw[black,ultra thick,->] (10pt,0) -- (30pt,0);
+\draw[black,ultra thick,<-] (10pt,0) -- (30pt,0);
+
+\end{tikzpicture}
+\caption{original setup}
+\label{fig:originalsetup}
 \end{figure}
 
+The extended version of the implementation should work for a fixed number of neighbours, an example of which is given in figure \ref{fig:threestationsetup}, where three stations each have the other two stations as neighbours, which they both send to and receive from.\\
 
-Thus the goal of this project is to communicate across multiple hosts. \textbf{Figure \ref{fig:multi_host_illustration}}
-\begin{figure}[H]\center
- \includegraphics[scale=0.30]{multi_host_illustration.png}
- \caption{Multi-neighbour illustration}
- \label{fig:multi_host_illustration}
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+
+\draw[black] (0,0) circle (10pt) node [anchor=center] {A};
+\draw[black] (40pt,0) circle (10pt) node [anchor=center] {B};
+\draw[black] (20pt,30pt) circle (10pt) node [anchor=center] {C};
+
+%A<->B
+\draw[black,ultra thick,->] (10pt,0) -- (30pt,0);
+\draw[black,ultra thick,<-] (10pt,0) -- (30pt,0);
+
+%A<->C
+\draw[black,ultra thick,->] (7.07pt,7.07pt) -- (12.92pt,22.92pt);
+\draw[black,ultra thick,<-] (7.07pt,7.07pt) -- (12.92pt,22.92pt);
+
+%B<->C
+\draw[black,ultra thick,->] (32.92pt,7.07pt) -- (27.06pt,22.92pt);
+\draw[black,ultra thick,<-] (32.92pt,7.07pt) -- (27.06pt,22.92pt);
+
+\end{tikzpicture}
+\caption{Three station setup}
+\label{fig:threestationsetup}
 \end{figure}
-
-
-The `neighbour' referenced denotes an entity that can receive and send packets.
