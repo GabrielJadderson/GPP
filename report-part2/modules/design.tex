@@ -1,0 +1,40 @@
+\section{Design}
+%We've expanded the program to handle multiple neighbours,
+%to achieve this we've added a
+%\begin{lstlisting}
+%neighbour
+%\end{lstlisting}
+%struct which contains
+
+% WEEEE
+
+The original design of the system was designed for two hosts to communicate reliably with each other. To expand on this system, the information associated with a neighbour needs to exist in one instance per neighbour. The neighbours are stored in an array of structs for ease and in order encapsulate the information associated with a neighbour.\\
+Furthermore, a central component in multiway communication is a means of distinguishing which neighbour is which. As the stations on the subnet already have unique IDs, these IDs can be used to uniquely identify the neighbours in a linear time lookup, which has a simple implementation for arrays and won't take significant time for the array sizes being used. These station IDs are only used by the functions for which they are relevant though, as the general means of access for neighbour data are the neighbour IDs (array indices).
+
+\subsection{Stations and Neighbours}
+Neighbours are determined by indices in a neighbour array, called the neighbour IDs, and as such are transparently identified regardless of which actual station that neighbour represents. The ID of a station is stored in a neighbour, but is only meant to be utilized for sending to and receiving from the physical layer, and should be encapsulated as closely to these events as possible. When receiving, a neighbour ID for the given station should be returned.\\
+With this method, the actual station represented by a neighbour is unimportant for how the system works at large.\\
+It is not allowed for two neighbours to correspond to the same station.
+
+% *** Expansion to more neighbours ***
+% > neighbourids for functions used by selective repeat
+% > currentNeighbour
+%
+
+\subsection{Distinguishing Neighbours}
+When a station is sending to a neighbour, it knows the id of the neighbour it is sending. The change to be made from a sender's perspective is to add a parameter to the functions related in that process, which takes the id of the neighbour that is being sent to, rather than using station IDs, which can be looked up using the neighbour ID if necessary, such as for the to\_physical\_layer function, which sends the frames to the subnet based on the station ID. Furthermore, the communication from the fake network layer to the link layer, at the time the fake network layer prepares the package to send, needs to contain information about which neighbour the package should be sent to. This was decided on to be done by setting the msg parameter of the network\_layer\_ready signal to the neighbour ID of the neighbour to send the packet to, which the selective repeat function can extract from the signal directly.\\
+When receiving, the station needs to be able to determine which neighbour sent a packet to it. Since the use of station IDs should be encapsulated as closely to the communication with the subnet as possible, it was decided that the function receiving frames from the subnet should perform the translation from station ID to neighbour ID in order to avoid having the selective repeat function interact with station IDs at all.\\
+\\~
+To make the expansion to multiple neighbours as simple as possible, a restraint was decided upon; only one neighbour's communication is processed at a given time. This means that the selective repeat function must alternate between the neighbours. Fortunately, this is possible to do for all the signals the selective repeat function processes with few alterations.
+\begin{itemize}
+  \item $network\_layer\_ready$: The fake network layer identifies the neighbour to send to in the msg field of the signal.
+  \item $frame\_arrival$: The station ID of the sender is determined when the frame is received and is translated to the corresponding neighbour ID by the from\_physical\_layer function. %I don't know why the line break is needed. Probably something about how \_ is defined but I'm not sure.
+  \item $timeout$: The functions for timer control already require the neighbour ID to determine which neighbour it is starting a timer for. Add this information to the timer msg and extract the information when handling the signal in selective repeat.
+\end{itemize}
+
+A single variable can be used to hold this value and for the array indexing.\\
+\\~
+This approach avoids the need to run multiple selective repeat processes, which would cause excessive resource usage and would possibly be slower due to thread scheduling than the chosen solution.
+
+\subsection{variable locality}
+The local variables of the selective repeat function have been retained local, and as such a second struct for neighbours were devised to contain the neighbour data for the selective repeat function. This is to retain the variable locality that was present in the original implementation.
