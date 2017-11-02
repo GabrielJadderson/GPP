@@ -6,13 +6,15 @@
 *  co-authors: Patrick Jakobsen(pajak16), Gabriel Jadderson(gajad16)
 */
 
+#include "networkLayer.h"
+
 #ifndef RDT_H_
 #define RDT_H_
 
 /* Events */
-#define network_layer_allowed_to_send  0x00000004
-#define network_layer_ready            0x00000008
-#define data_for_network_layer         0x00000010
+//#define network_layer_allowed_to_send  0x00000004
+//#define network_layer_ready            0x00000008
+//#define data_for_network_layer         0x00000010
 
 #define frame_timer_timeout_millis  250
 #define act_timer_timeout_millis     50
@@ -37,7 +39,7 @@ typedef struct {        /* frames are transported in this layer */
 /* This struct encapsulates a neighbour */
 #define NR_BUFS 4
 
-typedef unsigned int neighbourid;
+//typedef unsigned int neighbourid;
 
 typedef struct { //The global data for a neighbour.
 	int stationID; //"MAC Address" in the subnet. -1 if no connection.

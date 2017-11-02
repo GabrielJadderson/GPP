@@ -9,11 +9,15 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include "events.h"
+#include "networkLayer.h"
 #include "rdt.h"
 #include "subnetsupport.h"
 #include "subnet.h"
 #include "fifoqueue.h"
 #include "debug.h"
+
+#include "networkLayer.c"
 
 /* En macro for at lette overførslen af korrekt navn til Activate */
 #define ACTIVATE(n, f) Activate(n, f, #f)
@@ -35,8 +39,9 @@ LogBuf mylog;                /* logbufferen                                     
 FifoQueue from_network_layer_queue;           		/* Queue for data from network layer */
 FifoQueue for_network_layer_queue;    /* Queue for data for the network layer */
 
-mlock_t *network_layer_lock;
-mlock_t *write_lock;
+//mlock_t *network_layer_lock;
+//mlock_t *write_lock;
+extern mlock_t *write_lock;
 
 neighbour neighbours[NUM_MAX_NEIGHBOURS]; //this array is global and contains all our neighbours, see rdt.h for neighbours struct.
 
@@ -73,7 +78,7 @@ static void send_frame(frame_kind fk, seq_nr frame_nr, seq_nr frame_expected, pa
 	//            	logLine(succes, "send_frame: %d, %d, %d\n", frame_expected, s.ack, s.kind);
 	if (fk == NAK)
 	{
-		neighbours[0].no_nak = false;        /* one nak per frame, please */
+		neighbours[recipient].no_nak = false;        /* one nak per frame, please */
 	}
 	//logLine(succes, "Sending frame to physical layer for recipient: %d\n", recipient);
 	to_physical_layer(&s, recipient);        /* transmit the frame */
@@ -125,10 +130,10 @@ void selective_repeat()
 	unsigned int timer_id;
 
 	write_lock = malloc(sizeof(mlock_t));
-	network_layer_lock = (mlock_t *)malloc(sizeof(mlock_t));
+	//network_layer_lock = (mlock_t *)malloc(sizeof(mlock_t));
 
 	Init_lock(write_lock);
-	Init_lock(network_layer_lock);
+	//Init_lock(network_layer_lock);
 
 	enable_network_layer();  // initialize
 
@@ -184,7 +189,7 @@ void selective_repeat()
 			currentNeighbour = from_physical_layer(&r);  // fetch incoming frame from physical layer
 			if (r.kind == DATA) {
 				// An undamaged frame has arrived.
-				if ((r.seq != neighbourData[currentNeighbour].frame_expected) && neighbours[0].no_nak) {
+				if ((r.seq != neighbourData[currentNeighbour].frame_expected) && neighbours[currentNeighbour].no_nak) {
 					send_frame(NAK, 0, neighbourData[currentNeighbour].frame_expected, neighbourData[currentNeighbour].out_buf, currentNeighbour);
 				}
 				else {
@@ -222,7 +227,7 @@ void selective_repeat()
 		case timeout: // Ack timeout or regular timeout
 		  // Check if it is the ack_timer
 			timer_id = event.timer_id;
-			logLine(trace, "Timeout with id: %d - acktimer_id is %d\n", timer_id, neighbours[0].ack_timer_id);
+			logLine(trace, "Timeout with id: %d - acktimer_id is %d for neighbour %d\n", timer_id, neighbours[currentNeighbour].ack_timer_id, currentNeighbour);
 
 			//Figure out which neighbour to resend to.
 			currentNeighbour = ((packetTimerMessage*)event.msg)->neighbour;
@@ -281,28 +286,28 @@ neighbourid stationID2neighbourindex(int stationID)
 
 void enable_network_layer(void)
 {
-	Lock(network_layer_lock);
+	//Lock(network_layer_lock);
 	logLine(trace, "enabling network layer\n");
 	network_layer_enabled = true;
 	Signal(network_layer_allowed_to_send, NULL);
-	Unlock(network_layer_lock);
+	//Unlock(network_layer_lock);
 }
 
 void disable_network_layer(void)
 {
-	Lock(network_layer_lock);
+	//Lock(network_layer_lock);
 	logLine(trace, "disabling network layer\n");
 	network_layer_enabled = false;
-	Unlock(network_layer_lock);
+	//Unlock(network_layer_lock);
 }
 
 void from_network_layer(packet *p)
 {
 	FifoQueueEntry e;
 
-	Lock(network_layer_lock);
+	//Lock(network_layer_lock);
 	e = DequeueFQ(from_network_layer_queue);
-	Unlock(network_layer_lock);
+	//Unlock(network_layer_lock);
 
 	if (!e) {
 		logLine(error, "ERROR: We did not receive anything from the queue, like we should have\n");
@@ -318,14 +323,14 @@ void from_network_layer(packet *p)
 void to_network_layer(packet *p)
 {
 	char * buffer;
-	Lock(network_layer_lock);
+	//Lock(network_layer_lock);
 
 	buffer = (char *)malloc(sizeof(char) * (1 + MAX_PKT));
 	packet_to_string(p, buffer);
 
 	EnqueueFQ(NewFQE((void *)buffer), for_network_layer_queue);
 
-	Unlock(network_layer_lock);
+	//Unlock(network_layer_lock);
 
 	Signal(data_for_network_layer, NULL);
 }

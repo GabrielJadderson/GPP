@@ -2,6 +2,7 @@
  *
  * Send 20 packets and receive 10 before we stop
  * */
+/*
 void FakeNetworkLayer1()
 {
 	char *buffer;
@@ -56,12 +57,12 @@ void FakeNetworkLayer1()
 
 		if( i >= 20 && j >= 10) {
 		    logLine(info, "Station %d done. - (\'sleep(5)\')\n", ThisStation);
-		    /* A small break, so all stations can be ready */
+		    // A small break, so all stations can be ready
 		    sleep(5);
 		    Stop();
 		}
     }
-}
+}*/
 
 /* Fake network/upper layers for station 2
  *
@@ -69,7 +70,7 @@ void FakeNetworkLayer1()
  * With this, some acks will be piggybacked, some will be pure acks.
  *
  **/
-void FakeNetworkLayer2()
+/*void FakeNetworkLayer2()
 {
     long int events_we_handle;
     event_t event;
@@ -123,7 +124,7 @@ void FakeNetworkLayer2()
 
     }
 }
-
+*/
 
 
 void FakeNetworkLayer_Test1()
@@ -156,7 +157,7 @@ void FakeNetworkLayer_Test1()
     	Wait(&event, events_we_handle);
     	switch(event.type) {
     		case network_layer_allowed_to_send:
-				Lock( network_layer_lock );
+				//Lock( network_layer_lock );
     			if( i < 2 && network_layer_enabled) {
         			// Signal element is ready
         			logLine(info, "Sending signal for message #%d\n", i);
@@ -164,15 +165,15 @@ void FakeNetworkLayer_Test1()
         			Signal(network_layer_ready, i);
         			i++;
     			}
-				Unlock( network_layer_lock );
+				//Unlock( network_layer_lock );
     			break;
     		case data_for_network_layer:
-				Lock( network_layer_lock );
+				//Lock( network_layer_lock );
 
 				e = DequeueFQ( for_network_layer_queue );
     			logLine(succes, "Received message: %s\n" ,( (char *) e->val) );
 
-				Unlock( network_layer_lock );
+				//Unlock( network_layer_lock );
 
     			j++;
     			break;

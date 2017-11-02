@@ -11,7 +11,8 @@
 #include "subnet.h"
 #include "debug.h"
 
-extern mlock_t *write_lock;
+//extern mlock_t *write_lock;
+mlock_t *write_lock;
 extern int ThisStation;
 
 int global_log_level_limit;
