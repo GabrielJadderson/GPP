@@ -30,8 +30,7 @@ void fake_transportLayer() {
   elem.seg.data[1] = 'E';
   elem.seg.data[2] = 'H';
   elem.seg.data[3] = '.';
-  elem.seg.data[4] = '\n';
-  elem.seg.data[5] = '\0';
+  elem.seg.data[4] = '\0';
   
   Lock(q.lock);
   
