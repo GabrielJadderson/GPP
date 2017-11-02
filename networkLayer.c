@@ -21,7 +21,7 @@ NL_RoutingTable routingTable;
 void initialize_networkLayer(int stationID) {
   switch(stationID) {
     case 1: //Host A
-      thisNetworkAddress = 100;
+      thisNetworkAddress = 111;
       ROUTINGTABLEADD(0, 212, 0);
       ROUTINGTABLEADD(1, -1, -1);
       ROUTINGTABLEADD(2, -1, -1);
@@ -29,14 +29,18 @@ void initialize_networkLayer(int stationID) {
       break;
     case 2: //Host B
       thisNetworkAddress = 212;
-      ROUTINGTABLEADD(0, 100, 0);
+      ROUTINGTABLEADD(0, 111, 0);
       ROUTINGTABLEADD(1, -1, -1);
       ROUTINGTABLEADD(2, -1, -1);
       ROUTINGTABLEADD(3, -1, -1);
       break;
     case 3: //Router 1
-      
-      //break;
+      thisNetworkAddress = 313;
+      ROUTINGTABLEADD(0, 111, 0);
+      ROUTINGTABLEADD(1, 212, 1);
+      ROUTINGTABLEADD(2, -1, -1);
+      ROUTINGTABLEADD(3, -1, -1);
+      break;
     case 4: //Router 2
       
       //break;
@@ -46,6 +50,22 @@ void initialize_networkLayer(int stationID) {
   }
 }
 
+neighbourid NL_TableLookup(networkAddress addr) {return 0;}
+
+/*neighbourid NL_TableLookup(networkAddress addr) {
+  int i = 0;
+  while (routingTable.addresses[i] != addr) {
+    i++;
+    
+    if(i >= NL_ROUTING_TABLE_SIZE) {
+      logLine(error, "NL_TableLookup: unable to find neighbourid for address: %d\n", addr);
+      Stop();
+    }
+  }
+  
+  return i;
+}*/
+  
 //Offer the queue 'offer' to the network layer.
 //The queue gets locked and the caller of the function is no longer allowed to access it until it is unlocked by the network layer again.
 void NL_OfferSendingQueue(ConcurrentFifoQueue *offer) {
@@ -54,6 +74,7 @@ void NL_OfferSendingQueue(ConcurrentFifoQueue *offer) {
   Signal(NL_SendingQueueOffer, (void*) offer);
 }
 
+// Network layer for hosts
 void networkLayerHost() {
   //Since this network layer isn't 'fake', it has no condition to stop and relies on the above layer to handle this.
   long int events_we_handle = network_layer_allowed_to_send | data_for_network_layer | NL_SendingQueueOffer;
@@ -70,7 +91,7 @@ void networkLayerHost() {
   
   datagram d; //Scratch variable
   
-  logLine(succes, "<DEBUGGING> NL Started.\n");
+  logLine(debug, "NL: Started.\n");
   
   while(true) {
     logLine(trace, "NL: Waiting for signals.\n");
@@ -88,7 +109,7 @@ void networkLayerHost() {
         d = *((datagram*) (event.msg));
         
         if(d.dest != thisNetworkAddress) {
-          logLine(trace, "NL: Datagram was not addressed for this host. Dropping.\n");
+          logLine(trace, "NL: Packet was not addressed for this host. Dropping. (Addr: %d)\n", d.dest);
           break; //We don't route packets and this wasn't for us.
         }
         
@@ -110,8 +131,7 @@ void networkLayerHost() {
             break; //Currently unused. Dropping.
         }
         
-        
-        //free(event.msg); //[PJ] Freeing this makes everything explode. It is probably freed internally in the subnet somewhere. This stays to stress this.
+        //free(event.msg); //[PJ] Freeing this makes everything explode, without the network program catching a SIGSEGV. There are instances of freed msg pointers, and why this breaks is beyond me.
         break;
       case NL_SendingQueueOffer://NL_OfferSendingQueue:
         logLine(debug, "NL: Received signal NL_SendingQueueOffer.\n");
@@ -139,7 +159,7 @@ void networkLayerHost() {
           
           //logLine(trace, "NL: 44444\n");
           O = malloc(sizeof(NL_OfferElement));
-          O->otherHostNeighbourid = 0; //TODO: routing table lookup.
+          O->otherHostNeighbourid = NL_TableLookup(d.dest);
           O->dat = d;
           
           //logLine(trace, "NL: 55555\n");
@@ -156,6 +176,73 @@ void networkLayerHost() {
       
     }
     
+    //If we are allowed to send, then do so.
+    // If the signal was sent in this loop iteration: same as if this was in the case directly
+    // otherwise: we received something to send after getting clearance and would have been stuck if this was directly in the case.
+    if(allowedToSendToLL && EmptyFQ(sendingQueue) == 0) {
+      e = DequeueFQ(sendingQueue); //Extract from queue
+      
+      Signal(network_layer_ready, ValueOfFQE(e)); //Just pass it directly.
+    }
+  }
+}
+
+// Network layer for routers
+void networkLayerRouter() {
+  //Since this network layer isn't 'fake', it has no condition to stop and relies on the above layer to handle this.
+  long int events_we_handle = network_layer_allowed_to_send | data_for_network_layer;
+  event_t event;
+  
+  boolean allowedToSendToLL = false;
+  
+  //ConcurrentFifoQueue receivingQueue = CFQ_Init(); //This is concurrent because it is used for communication with the transport layer. The queue is also used for consistence and expandability.
+  FifoQueue sendingQueue = InitializeFQ(); //Doesn't need to be concurrent because elements are given with signals.
+  //ConcurrentFifoQueue *offer;
+  FifoQueueEntry e;
+  //TL_OfferElement *o;
+  NL_OfferElement *O; //Using a pointer to create a new one every time.
+  
+  datagram d; //Scratch variable
+  
+  logLine(debug, "NL: Started.\n");
+  
+  while(true) {
+    logLine(trace, "NL: Waiting for signals.\n");
+    Wait(&event, events_we_handle);
+    
+    switch(event.type) {
+      case network_layer_allowed_to_send:
+        logLine(trace, "NL: Allowed to send by LL.\n");
+        allowedToSendToLL = true; //There might not be an element to send right now. Remember that we can send without getting stuck here.
+        break;
+      case data_for_network_layer:
+        logLine(trace, "NL: Received datagram from LL.\n");
+        //We're a host. We don't route packets, we receive them.
+        
+        d = *((datagram*) (event.msg));
+        
+        if(d.dest != thisNetworkAddress) {
+          logLine(trace, "NL: Packet was not addressed for this Router. Forwarding.\n");
+          
+          O = malloc(sizeof(NL_OfferElement));
+          O->otherHostNeighbourid = NL_TableLookup(d.dest);
+          O->dat = d;
+          
+          EnqueueFQ(NewFQE((void *)O), sendingQueue);
+          
+          break; //Done.
+        }
+        
+        logLine(trace, "NL: Datagram type (enum): %d.\n", d.type);
+        switch(d.type) {
+          //case DATAGRAM: //Datagrams are handled above
+          case ROUTERINFO:
+            break; //Currently unused. Dropping.
+        }
+        
+        //free(event.msg); //[PJ] Freeing this makes everything explode, without the network program catching a SIGSEGV. There are instances of freed msg pointers, and why this breaks is beyond me.
+        break;
+    }
     //If we are allowed to send, then do so.
     // If the signal was sent in this loop iteration: same as if this was in the case directly
     // otherwise: we received something to send after getting clearance and would have been stuck if this was directly in the case.

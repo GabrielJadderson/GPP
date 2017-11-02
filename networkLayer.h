@@ -66,7 +66,7 @@ typedef struct {
 */
 
 //Makes a network address lookup to determine which outgoing neighbour to send to.
-neighbourid networkAddress2neighbourID(networkAddress addr);
+neighbourid NL_TableLookup(networkAddress addr);
 
 //The network layer accepts a queue and feeds it into its own sending system (queue(s)). Blocks the queue for the whole duration.
 // Note: This function locks the queue and returns, allowing for other tasks to be handled. If NL never unlocks it, it will stay locked.

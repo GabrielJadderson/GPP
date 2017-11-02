@@ -506,18 +506,31 @@ int main(int argc, char *argv[])
 	ACTIVATE(3, FakeNetworkLayer_Test1);
 	ACTIVATE(3, selective_repeat);*/
         
+        //Shared
+        //printf("\nInitializing link layer?\n\n");
         initialize_linkLayer(ThisStation);
+        //printf("\nInitializing network layer?\n\n");
         initialize_networkLayer(ThisStation);
         
+        //Host A
+        //printf("\nActivating station 1?\n\n");
         ACTIVATE(1, selective_repeat);
         ACTIVATE(1, networkLayerHost);
         ACTIVATE(1, fake_transportLayer);
         
+        //Host B
+        //printf("\nActivating station 2?\n\n");
         ACTIVATE(2, selective_repeat);
         ACTIVATE(2, networkLayerHost);
         ACTIVATE(2, fake_transportLayer);
         
+        //Router 1
+        //printf("\nActivating station 3?\n\n");
+        ACTIVATE(3, selective_repeat);
+        ACTIVATE(3, networkLayerRouter);
+        
 	/* simuleringen starter */
+        //printf("\nStarting simulation?\n\n");
 	Start();
 	exit(0);
 }
@@ -537,8 +550,11 @@ void initialize_linkLayer(int stationID) {
       neighbours[3].stationID = -1;
       break;
     case 3: //Router 1
-      
-      //break;
+      neighbours[0].stationID = 1;
+      neighbours[1].stationID = 2;
+      neighbours[2].stationID = -1;
+      neighbours[3].stationID = -1;
+      break;
     case 4: //Router 2
       
       //break;

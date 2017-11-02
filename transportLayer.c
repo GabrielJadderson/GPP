@@ -22,7 +22,7 @@ void fake_transportLayer() {
   if(ThisStation == 1) {
     elem.otherHostAddress = 212;
   } else if(ThisStation == 2) {
-    elem.otherHostAddress = 100;
+    elem.otherHostAddress = 111;
   }
   
   //elem.seg = "HEH.\n";
@@ -72,7 +72,7 @@ void fake_transportLayer() {
         
         logLine(trace, "TL: Releasing locks.\n");
         Unlock(offer->lock);
-        sleep(1); //TEMPORARY!!!
+        sleep(2); //TEMPORARY!!!
         Stop();
         
         break;
