@@ -7,6 +7,7 @@
 */
 
 #include "networkLayer.h"
+#include "subnet.h"
 
 #ifndef RDT_H_
 #define RDT_H_
@@ -23,7 +24,7 @@
 
 typedef enum { false, true } boolean;        /* boolean type */
 typedef unsigned int seq_nr;        /* sequence or ack numbers */
-typedef struct { char data[MAX_PKT]; } packet;        /* packet definition */
+//typedef struct { char data[MAX_PKT]; } packet;        /* packet definition */
 typedef enum { DATA, ACK, NAK } frame_kind;        /* frame_kind definition */
 
 
@@ -31,7 +32,7 @@ typedef struct {        /* frames are transported in this layer */
 	frame_kind kind;        /* what kind of a frame is it? */
 	seq_nr seq;           /* sequence number */
 	seq_nr ack;           /* acknowledgement number */
-	packet info;          /* the network layer packet */
+	datagram info;          /* the network layer packet */
 	int sendTime;
 	int recvTime;
 } frame;
@@ -53,8 +54,8 @@ typedef struct { //The data only visible to selective repeat.
 	seq_nr next_frame_to_send;        // upper edge of sender's window + 1
 	seq_nr frame_expected;            // lower edge of receiver's window
 	seq_nr too_far;                   // upper edge of receiver's window + 1
-	packet out_buf[NR_BUFS];          // buffers for the outbound stream
-	packet in_buf[NR_BUFS];           // buffers for the inbound stream
+	datagram out_buf[NR_BUFS];          // buffers for the outbound stream
+	datagram in_buf[NR_BUFS];           // buffers for the inbound stream
 	boolean arrived[NR_BUFS];         // inbound bit map
 	seq_nr nbuffered;                 // how many output buffers currently used
 } neighbour_SR_Data;
@@ -64,7 +65,7 @@ void init_neighbour_SR_Data(neighbour_SR_Data *ND);
 
 neighbourid stationID2neighbourindex(int stationID);
 
-/* init_frame fills in default initial values in a frame. Protocols should
+/* init_frame fills in default initial values i/n a frame. Protocols should
 * call this function before creating a new frame. Protocols may later update
 * some of these fields. This initialization is not strictly needed, but
 * makes the simulation trace look better, showing unused fields as zeros.
@@ -72,10 +73,10 @@ neighbourid stationID2neighbourindex(int stationID);
 void init_frame(frame *s, int count);
 
 /* Fetch a packet from the network layer for transmission on the channel. */
-void from_network_layer(packet *p);
+void from_network_layer(datagram *p, neighbourid *n, event_t *e);
 
 /* Deliver information from an inbound frame to the network layer. */
-void to_network_layer(packet *p);
+void to_network_layer(datagram *p);
 
 /* Go get an inbound frame from the physical layer and copy it to r. */
 int from_physical_layer(frame *r);
@@ -95,10 +96,10 @@ typedef struct {
 	neighbourid neighbour;
 } packetTimerMessage;
 
-void start_ack_timer(unsigned int neighbor);
+void start_ack_timer(neighbourid neighbor);
 
 /* Stop the auxiliary timer and disable the ack_timeout event. */
-void stop_ack_timer(unsigned int neighbor);
+void stop_ack_timer(neighbourid neighbor);
 
 /* Allow the network layer to cause a network_layer_ready event. */
 void enable_network_layer(void);

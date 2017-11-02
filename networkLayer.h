@@ -15,11 +15,12 @@
 *   Types
 */
 
+// [PJ] Made the following values signed because -1 means unused.
 //Address type for devices on the network implementing the network layer. TODO: MOVE TO TRANSPORT LAYER HEADER FILE
-typedef unsigned long networkAddress; //[PJ] Considered making this an unsigned char[4]. Individual component access is unnecessary for this though.
+typedef signed long networkAddress; //[PJ] Considered making this an unsigned char[4]. Individual component access is unnecessary for this though.
 
 //Neighbour ID for neighbouring devices.
-typedef unsigned int neighbourid;
+typedef signed int neighbourid;
 
 // Datagram type. Explicitly not typedeffed. More can be added.
 enum {DATAGRAM, ROUTERINFO};
@@ -55,6 +56,11 @@ typedef struct {
   neighbourid    neighbourids[NL_ROUTING_TABLE_SIZE];
 } NL_RoutingTable;
 
+typedef struct {
+  neighbourid otherHostNeighbourid;
+  datagram dat;
+} NL_OfferElement;
+
 /*
 *   Function Predeclarations
 */
@@ -67,9 +73,6 @@ neighbourid networkAddress2neighbourID(networkAddress addr);
 //Allows the transport layer to better control its sending of data. It can also turn a message into multiple segments and dump them into the queue and send it all with one signal.
 //If the transport layer needs to queue up more segments and the queue is in use, then it needs to use another queue in the meantime.
 void NL_OfferSendingQueue(ConcurrentFifoQueue *queue);
-
-//Same as NL_OfferSendingQueue, but the queue is used to fill into the receiving queue of the network layer.
-void NL_OfferReceivingQueue(ConcurrentFifoQueue *queue);
 
 
 

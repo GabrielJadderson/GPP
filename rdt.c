@@ -17,7 +17,7 @@
 #include "fifoqueue.h"
 #include "debug.h"
 
-#include "transportLayer.c"
+//#include "transportLayer.c" //[PJ] Doing gross testing stuff because we're using a fake one this time around.
 #include "networkLayer.c"
 
 /* En macro for at lette overførslen af korrekt navn til Activate */
@@ -35,10 +35,13 @@ int ThisStation;           /* Globalvariabel der identificerer denne station. */
 log_type LogStyle;         /* Hvilken slags log skal systemet føre            */
 boolean network_layer_enabled;
 
+//[PJ] This should be moved back when no longer messing with a fake transport layer.
+#include "transportLayer.c"
+
 LogBuf mylog;                /* logbufferen                                     */
 
-FifoQueue from_network_layer_queue;           		/* Queue for data from network layer */
-FifoQueue for_network_layer_queue;    /* Queue for data for the network layer */
+//FifoQueue from_network_layer_queue;           		/* Queue for data from network layer */
+//FifoQueue for_network_layer_queue;    /* Queue for data for the network layer */
 
 //mlock_t *network_layer_lock;
 //mlock_t *write_lock;
@@ -59,14 +62,14 @@ static boolean between(seq_nr a, seq_nr b, seq_nr c) //ensures that seq_nr b is 
 }
 
 /* Copies package content to buffer, ensuring it has a string end character. */
-void packet_to_string(packet* data, char* buffer)
+/*void packet_to_string(packet* data, char* buffer) //[PJ] As packets no longer exist in this fashion it doesn't have sense to have this function.
 {
 	strncpy(buffer, (char*)data->data, MAX_PKT);
 	buffer[MAX_PKT] = '\0';
 
-}
+}*/
 
-static void send_frame(frame_kind fk, seq_nr frame_nr, seq_nr frame_expected, packet buffer[], neighbourid recipient)
+static void send_frame(frame_kind fk, seq_nr frame_nr, seq_nr frame_expected, datagram buffer[], neighbourid recipient)
 {
 	/* Construct and send a data, ack, or nak frame. */
 	frame s;        /* scratch variable */
@@ -92,7 +95,7 @@ static void send_frame(frame_kind fk, seq_nr frame_nr, seq_nr frame_expected, pa
 	stop_ack_timer(0);        /* no need for separate ack frame */
 }
 
-#include "rdt_fakeNetworkLayers.c"
+//#include "rdt_fakeNetworkLayers.c" //[PJ] These are no longer valid. Kept around as reference material.
 
 void log_event_received(long int event)
 {
@@ -123,7 +126,6 @@ void log_event_received(long int event)
 
 void selective_repeat()
 {
-
 	frame r; // scratch variable
 
 	neighbourid currentNeighbour = 0; //Each time this is used, it should be set.
@@ -180,10 +182,10 @@ void selective_repeat()
 		case network_layer_ready: // accept, save, and transmit a new frame
 			logLine(trace, "Network layer delivers frame - lets send it\n");
 
-			currentNeighbour = event.msg;
+			//currentNeighbour = event.msg;
 
 			neighbourData[currentNeighbour].nbuffered = neighbourData[currentNeighbour].nbuffered + 1; // expand the window
-			from_network_layer(&neighbourData[currentNeighbour].out_buf[neighbourData[currentNeighbour].next_frame_to_send % NR_BUFS]); //fetch new packet
+			from_network_layer(&neighbourData[currentNeighbour].out_buf[neighbourData[currentNeighbour].next_frame_to_send % NR_BUFS], &currentNeighbour, &event); //fetch new packet
 			send_frame(DATA, neighbourData[currentNeighbour].next_frame_to_send, neighbourData[currentNeighbour].frame_expected, neighbourData[currentNeighbour].out_buf, currentNeighbour); // transmit the frame
 			inc(neighbourData[currentNeighbour].next_frame_to_send); // advance upper window edge
 			break;
@@ -254,9 +256,9 @@ void selective_repeat()
 		if (neighbourData[currentNeighbour].nbuffered < NR_BUFS) {
 			enable_network_layer();
 		}
-		else {
+		/*else {
 			disable_network_layer();
-		}
+		}*/
 	}
 }
 
@@ -291,22 +293,22 @@ void enable_network_layer(void)
 {
 	//Lock(network_layer_lock);
 	logLine(trace, "enabling network layer\n");
-	network_layer_enabled = true;
+	//network_layer_enabled = true;
 	Signal(network_layer_allowed_to_send, NULL);
 	//Unlock(network_layer_lock);
 }
 
-void disable_network_layer(void)
+/*void disable_network_layer(void)
 {
 	//Lock(network_layer_lock);
 	logLine(trace, "disabling network layer\n");
 	network_layer_enabled = false;
 	//Unlock(network_layer_lock);
-}
+}*/
 
-void from_network_layer(packet *p)
+void from_network_layer(datagram *p, neighbourid *n,  event_t* e)
 {
-	FifoQueueEntry e;
+	/*FifoQueueEntry e;
 
 	//Lock(network_layer_lock);
 	e = DequeueFQ(from_network_layer_queue);
@@ -319,29 +321,41 @@ void from_network_layer(packet *p)
 		memcpy(p, (char *)ValueOfFQE(e), sizeof(packet));
 		free((void *)ValueOfFQE(e));
 		DeleteFQE(e);
-	}
+	}*/
+  
+  //Extract values from message.
+  NL_OfferElement o = *((NL_OfferElement*) (e->msg));
+  
+  (*p) = o.dat;
+  (*n) = o.otherHostNeighbourid;
+  
+  free(e->msg);
 }
 
 
-void to_network_layer(packet *p)
+void to_network_layer(datagram *p)
 {
-	char * buffer;
-	//Lock(network_layer_lock);
-
-	buffer = (char *)malloc(sizeof(char) * (1 + MAX_PKT));
-	packet_to_string(p, buffer);
-
-	EnqueueFQ(NewFQE((void *)buffer), for_network_layer_queue);
-
-	//Unlock(network_layer_lock);
-
-	Signal(data_for_network_layer, NULL);
+  /*char * buffer;
+  //Lock(network_layer_lock);
+  
+  buffer = (char *)malloc(sizeof(char) * (1 + MAX_PKT));
+  packet_to_string(p, buffer);
+  
+  EnqueueFQ(NewFQE((void *)buffer), for_network_layer_queue);
+  
+  //Unlock(network_layer_lock);
+  
+  Signal(data_for_network_layer, NULL);*/
+  
+  // Just send the packet to the network layer directly. Semantically identical to what was done before with the "send one element at a time and use a QUEUE TO DO IT???" method.
+  void *ptr = (void*) p;
+  Signal(data_for_network_layer, ptr);
 }
 
 
 void print_frame(frame* s, char *direction)
 {
-	char temp[MAX_PKT + 1];
+	//char temp[MAX_PKT + 1];
 
 	switch (s->kind) {
 	case ACK:
@@ -351,8 +365,9 @@ void print_frame(frame* s, char *direction)
 		logLine(info, "%s: NAK frame. Nak seq_nr=%d\n", direction, s->ack);
 		break;
 	case DATA:
-		packet_to_string(&(s->info), temp);
-		logLine(info, "%s: DATA frame [seq=%d, ack=%d, kind=%d, (%s)] \n", direction, s->seq, s->ack, s->kind, temp);
+		//packet_to_string(&(s->info), temp); //[PJ] Can no longer do this.
+		//logLine(info, "%s: DATA frame [seq=%d, ack=%d, kind=%d, (%s)] \n", direction, s->seq, s->ack, s->kind, temp);
+		logLine(info, "%s: DATA frame [seq=%d, ack=%d, kind=%d, unknown] \n", direction, s->seq, s->ack, s->kind);
 		break;
 	}
 }
@@ -438,6 +453,7 @@ void stop_ack_timer(neighbourid neighbour)
 
 extern int global_log_level_limit;
 
+void initialize_linkLayer(int stationID);
 int main(int argc, char *argv[])
 {
 	StationName = argv[0];
@@ -460,7 +476,7 @@ int main(int argc, char *argv[])
 	printf("Starting network simulation\n");
 
 	//This pre-built table setup piece would ideally be replaced with a connection request with handshake and so on.
-	switch (ThisStation) {
+	/*switch (ThisStation) {
 	case 1:
 		neighbours[0].stationID = 2;
 		neighbours[1].stationID = 3;
@@ -479,7 +495,7 @@ int main(int argc, char *argv[])
 		neighbours[2].stationID = -1;
 		neighbours[3].stationID = -1;
 		break;
-	}
+	}*/
 
 	/*ACTIVATE(1, FakeNetworkLayer_Test1);
 	ACTIVATE(1, selective_repeat);
@@ -490,11 +506,46 @@ int main(int argc, char *argv[])
 	ACTIVATE(3, FakeNetworkLayer_Test1);
 	ACTIVATE(3, selective_repeat);*/
         
-        //ACTIVATE(1, selective_repeat);
-        ACTIVATE(1, networkLayer);
+        initialize_linkLayer(ThisStation);
+        initialize_networkLayer(ThisStation);
+        
+        ACTIVATE(1, selective_repeat);
+        ACTIVATE(1, networkLayerHost);
         ACTIVATE(1, fake_transportLayer);
-
+        
+        ACTIVATE(2, selective_repeat);
+        ACTIVATE(2, networkLayerHost);
+        ACTIVATE(2, fake_transportLayer);
+        
 	/* simuleringen starter */
 	Start();
 	exit(0);
 }
+
+void initialize_linkLayer(int stationID) {
+  switch(stationID) {
+    case 1: //Host A
+      neighbours[0].stationID = 2;
+      neighbours[1].stationID = -1;
+      neighbours[2].stationID = -1;
+      neighbours[3].stationID = -1;
+      break;
+    case 2: //Host B
+      neighbours[0].stationID = 1;
+      neighbours[1].stationID = -1;
+      neighbours[2].stationID = -1;
+      neighbours[3].stationID = -1;
+      break;
+    case 3: //Router 1
+      
+      //break;
+    case 4: //Router 2
+      
+      //break;
+    default:
+      logLine(error, "LL: Link layer initialized for station without a case (%d) - Sending Stop Signal.\n", stationID);
+      Stop();
+  }
+}
+
+
