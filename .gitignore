@@ -4,10 +4,12 @@
 # Some specific compilation files
 rdt.o
 mynetwork
+report/
 
 nettest
 signaltest
 timertest
+network
 
 # log files
 *.log
