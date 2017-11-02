@@ -17,6 +17,7 @@
 #include "fifoqueue.h"
 #include "debug.h"
 
+#include "transportLayer.c"
 #include "networkLayer.c"
 
 /* En macro for at lette overførslen af korrekt navn til Activate */
@@ -41,9 +42,11 @@ FifoQueue for_network_layer_queue;    /* Queue for data for the network layer */
 
 //mlock_t *network_layer_lock;
 //mlock_t *write_lock;
-extern mlock_t *write_lock;
+//extern mlock_t *write_lock;
 
 neighbour neighbours[NUM_MAX_NEIGHBOURS]; //this array is global and contains all our neighbours, see rdt.h for neighbours struct.
+extern networkAddress thisNetworkAddress;
+extern NL_RoutingTable routingTable;
 
 static boolean between(seq_nr a, seq_nr b, seq_nr c) //ensures that seq_nr b is within a and b
 {
@@ -129,10 +132,10 @@ void selective_repeat()
 	long int events_we_handle;
 	unsigned int timer_id;
 
-	write_lock = malloc(sizeof(mlock_t));
+	//write_lock = malloc(sizeof(mlock_t));
 	//network_layer_lock = (mlock_t *)malloc(sizeof(mlock_t));
 
-	Init_lock(write_lock);
+	//Init_lock(write_lock);
 	//Init_lock(network_layer_lock);
 
 	enable_network_layer();  // initialize
@@ -451,6 +454,8 @@ int main(int argc, char *argv[])
 	mylog = InitializeLB("mytest");
 
 	LogStyle = synchronized;
+        
+        initialize_debug();
 
 	printf("Starting network simulation\n");
 
@@ -476,14 +481,18 @@ int main(int argc, char *argv[])
 		break;
 	}
 
-	ACTIVATE(1, FakeNetworkLayer_Test1);
+	/*ACTIVATE(1, FakeNetworkLayer_Test1);
 	ACTIVATE(1, selective_repeat);
 
 	ACTIVATE(2, FakeNetworkLayer_Test1);
 	ACTIVATE(2, selective_repeat);
 
 	ACTIVATE(3, FakeNetworkLayer_Test1);
-	ACTIVATE(3, selective_repeat);
+	ACTIVATE(3, selective_repeat);*/
+        
+        //ACTIVATE(1, selective_repeat);
+        ACTIVATE(1, networkLayer);
+        ACTIVATE(1, fake_transportLayer);
 
 	/* simuleringen starter */
 	Start();

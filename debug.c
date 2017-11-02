@@ -15,6 +15,11 @@
 mlock_t *write_lock;
 extern int ThisStation;
 
+void initialize_debug() {
+  write_lock = malloc(sizeof(mlock_t));
+  Init_lock(write_lock);
+}
+
 int global_log_level_limit;
 
 int logLine(log_level level, const char * __restrict format, ... ) {

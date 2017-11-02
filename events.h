@@ -22,6 +22,7 @@
 #define data_for_network_layer         0x00000010 //LL->NL: NL can retrieve an element from its own inbound queue
 
 // NL <-> TL
-
+#define NL_SendingQueueOffer           0x00000020 //TL->NL: Offer NL a queue of elements for NL to forward. The offered concurrentFifoQueue is assumed locked.
+#define TL_ReceivingQueueOffer         0x00000040 //NL->TL: Offer TL a queue of elements for it to receive. The offered concurrentFifoQueue is assumed locked.
 
 

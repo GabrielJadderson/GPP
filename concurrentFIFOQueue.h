@@ -17,7 +17,9 @@ typedef struct {
   FifoQueue queue;
 } ConcurrentFifoQueue;
 
-//Can possibly add functions for this type, but meh
+/*
+*   Functions
+*/
 
 ConcurrentFifoQueue CFQ_Init() {
   ConcurrentFifoQueue q;
