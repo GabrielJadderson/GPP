@@ -39,7 +39,7 @@ void fake_transportLayer() {
   Unlock(q.lock);*/
   
   Lock (q.lock);
-  #define TL_NUM_HEH 12
+  #define TL_NUM_HEH 100
   int i = 1;
   while(i <= TL_NUM_HEH) {
     elem = malloc(sizeof(TL_OfferElement));
@@ -52,12 +52,12 @@ void fake_transportLayer() {
     }
     
     char a = i/100;
-    if(a == 0) {a = ' ';} else {a += 48;}
+    if(i < 100) {a = ' ';} else {a += 48;}
     char b = (i%100)/10;
-    if(b == 0) {b = ' ';} else {b += 48;}
+    if(i < 10) {b = ' ';} else {b += 48;}
     char c = (i%10)+48;
     
-    logLine(succes, "11111 TL: Making packet with a, b and c: (i=%d) a@(%d, %c) b@(%d, %c) c@(%d, %c)\n", i, a, a, b, b, c, c);
+    //logLine(succes, "11111 TL: Making packet with a, b and c: (i=%d) a@(%d, %c) b@(%d, %c) c@(%d, %c)\n", i, a, a, b, b, c, c);
     
     elem->seg.data[0] = 'H';
     elem->seg.data[1] = 'E';
@@ -84,7 +84,7 @@ void fake_transportLayer() {
   
   
   logLine(trace, "TL: Offering queue.\n");
-  if (ThisStation == 1)
+  //if (ThisStation == 1)
     NL_OfferSendingQueue(&q); //We can do this whenever really as it isn't based on a 1:1 signals-handing-out-information thing.
   
   /*while(Trylock(q.lock) != 0) {
@@ -116,6 +116,7 @@ void fake_transportLayer() {
           o = *((TL_OfferElement*) (e->val));
           
           logLine(succes, "TL: Received from host with address %d: '%s'\n", o.otherHostAddress, o.seg.data);
+          //logLine(succes, "\n                    TL: Received from host with address %d: '%s'\n\n", o.otherHostAddress, o.seg.data);
         }
         
         logLine(trace, "TL: Releasing locks.\n");
@@ -129,16 +130,16 @@ void fake_transportLayer() {
     }
     
     if(numReceivedPackets >= TL_NUM_HEH) {
-      logLine(succes, "Received all packets.\n");
+      /*logLine(succes, "Received all packets.\n");
       if(ThisStation == 1) {
         sleep(2);
         Stop();
       } else {
         NL_OfferSendingQueue(&q);
-      }
+      }*/
       
-      //sleep(2);
-      //Stop();
+      sleep(2);
+      Stop();
     }
     
     

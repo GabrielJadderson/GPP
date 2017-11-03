@@ -17,6 +17,8 @@
 #include "fifoqueue.h"
 #include "debug.h"
 
+#define NUM_MAX_NEIGHBOURS 4
+
 //#include "transportLayer.c" //[PJ] Doing gross testing stuff because we're using a fake one this time around.
 #include "networkLayer.c"
 
@@ -26,7 +28,6 @@
 #define MAX_SEQ 127        /* should be 2^n - 1 */
 #define NR_BUFS 4
 
-#define NUM_MAX_NEIGHBOURS 4
 
 /* Globale variable */
 
@@ -71,7 +72,7 @@ static boolean between(seq_nr a, seq_nr b, seq_nr c) //ensures that seq_nr b is 
 
 static void send_frame(frame_kind fk, seq_nr frame_nr, seq_nr frame_expected, datagram buffer[], neighbourid recipient)
 {
-	logLine(trace, "send_frame: frame_nr=%d\n", frame_nr);
+	logLine(trace, "SF: send_frame: frame_nr=%d\n", frame_nr);
         /* Construct and send a data, ack, or nak frame. */
 	frame s;        /* scratch variable */
 
@@ -128,12 +129,49 @@ void log_event_received(long int event)
 void selective_repeat()
 {
 	frame r; // scratch variable
+        datagram *d; //scratch variable
+        NL_OfferElement *o;
 
 	neighbourid currentNeighbour = 0; //Each time this is used, it should be set.
 	neighbour_SR_Data neighbourData[NUM_MAX_NEIGHBOURS];
 	event_t event;
 	long int events_we_handle;
 	unsigned int timer_id;
+        datagram *transfer_pointer; //Passing to the network layer with this prevents overwriting the buffer contents before the network layer has handled it.
+        
+        ConcurrentFifoQueue *offer;
+        FifoQueue sendingQueue = InitializeFQ();
+        FifoQueueEntry e;
+        
+        /*datagram ERRORDATAGRAM;
+        ERRORDATAGRAM.type = DATAGRAM;
+        ERRORDATAGRAM.reserved = 0;
+        ERRORDATAGRAM.payloadsize = MAX_PAYLOAD;
+        ERRORDATAGRAM.src = 666;
+        ERRORDATAGRAM.dest = thisNetworkAddress;
+        ERRORDATAGRAM.payload.data[0] = 'E';
+        ERRORDATAGRAM.payload.data[1] = 'R';
+        ERRORDATAGRAM.payload.data[2] = 'R';
+        ERRORDATAGRAM.payload.data[3] = 'O';
+        ERRORDATAGRAM.payload.data[4] = 'R';
+        ERRORDATAGRAM.payload.data[5] = '!';
+        ERRORDATAGRAM.payload.data[6] = '\n';
+        ERRORDATAGRAM.payload.data[7] = '\0';
+        
+        datagram INITIALDATAGRAM;
+        INITIALDATAGRAM.type = DATAGRAM;
+        INITIALDATAGRAM.reserved = 0;
+        INITIALDATAGRAM.payloadsize = MAX_PAYLOAD;
+        INITIALDATAGRAM.src = 666;
+        INITIALDATAGRAM.dest = thisNetworkAddress;
+        INITIALDATAGRAM.payload.data[0] = 'E';
+        INITIALDATAGRAM.payload.data[1] = 'R';
+        INITIALDATAGRAM.payload.data[2] = 'R';
+        INITIALDATAGRAM.payload.data[3] = 'O';
+        INITIALDATAGRAM.payload.data[4] = 'R';
+        INITIALDATAGRAM.payload.data[5] = '!';
+        INITIALDATAGRAM.payload.data[6] = '\n';
+        INITIALDATAGRAM.payload.data[7] = '\0';*/
 
 	//write_lock = malloc(sizeof(mlock_t));
 	//network_layer_lock = (mlock_t *)malloc(sizeof(mlock_t));
@@ -155,9 +193,11 @@ void selective_repeat()
 		}
 
 		init_neighbour_SR_Data(&neighbourData[i]);
+                //neighbourData[currentNeighbour].in_buf[i] = INITIALDATAGRAM;
+                //enable_network_layer(i, NR_BUFS);
 	}
 
-	events_we_handle = frame_arrival | timeout | network_layer_ready;
+	events_we_handle = frame_arrival | timeout | network_layer_ready | LL_SendingQueueOffer;
 
 	/*
 	// If you are in doubt how the event numbers should be, comment in this, and you will find out.
@@ -182,19 +222,22 @@ void selective_repeat()
 
 		switch (event.type) {
 		case network_layer_ready: // accept, save, and transmit a new frame
-			logLine(trace, "Network layer delivers frame - lets send it\n");
+			logLine(succes /*trace*/, "Network layer delivers frame - lets send it\n");
 
 			//currentNeighbour = event.msg;
-                        logLine(trace, "Sending delivered frame: next_frame_to_send=%d\n", neighbourData[currentNeighbour].next_frame_to_send);
+                        //logLine(succes, "Sending delivered frame: next_frame_to_send=%d\n", neighbourData[currentNeighbour].next_frame_to_send);
 
 			neighbourData[currentNeighbour].nbuffered = neighbourData[currentNeighbour].nbuffered + 1; // expand the window
 			from_network_layer(&neighbourData[currentNeighbour].out_buf[neighbourData[currentNeighbour].next_frame_to_send % NR_BUFS], &currentNeighbour, &event); //fetch new packet
 			send_frame(DATA, neighbourData[currentNeighbour].next_frame_to_send, neighbourData[currentNeighbour].frame_expected, neighbourData[currentNeighbour].out_buf, currentNeighbour); // transmit the frame
 			inc(neighbourData[currentNeighbour].next_frame_to_send); // advance upper window edge
+                        logLine(succes, "LL: Window after sending: ack_exp=%d, nbuf=%d, nxt_f_t_s=%d\n", neighbourData[currentNeighbour].ack_expected, neighbourData[currentNeighbour].nbuffered, neighbourData[currentNeighbour].next_frame_to_send);
 			break;
 
 		case frame_arrival: // a data or control frame has arrived
 			currentNeighbour = from_physical_layer(&r);  // fetch incoming frame from physical layer
+                        
+                        //logLine(succes, "LL: Received a frame of kind: r.kind=%d\n", r.kind);
 			if (r.kind == DATA) {
                                 logLine(debug, "Received frame context: seq=%d, expected=%d, too_far=%d, no_nak=%d\n", r.seq, neighbourData[currentNeighbour].frame_expected, neighbourData[currentNeighbour].too_far, neighbours[currentNeighbour].no_nak);
 				// An undamaged frame has arrived.
@@ -208,11 +251,20 @@ void selective_repeat()
 					// Frames may be accepted in any order.
 					neighbourData[currentNeighbour].arrived[r.seq % NR_BUFS] = true; // mark buffer as full
 					neighbourData[currentNeighbour].in_buf[r.seq % NR_BUFS] = r.info; //insert data into buffer
+                                        //logLine(succes, "LL: cN=%d; r: kind=%d, seq=%d, ack=%d; r.info: type=%d, reserved=%d, payloadsize=%d; r.info.payload.data=%s \n", currentNeighbour, r.kind, r.seq, r.ack, r.info.type, r.info.reserved, r.info.payloadsize, r.info.payload.data);
+                                        
 					while (neighbourData[currentNeighbour].arrived[neighbourData[currentNeighbour].frame_expected % NR_BUFS]) {
+                                                //logLine(succes, "LL: going through arrived frames. currently arrived frame: %d\n", neighbourData[currentNeighbour].arrived[neighbourData[currentNeighbour].frame_expected % NR_BUFS]);
 						// Pass frames and advance window.
-						to_network_layer(&neighbourData[currentNeighbour].in_buf[neighbourData[currentNeighbour].frame_expected % NR_BUFS]);
+                                                transfer_pointer = malloc(sizeof(datagram));
+                                                *(transfer_pointer) = neighbourData[currentNeighbour].in_buf[neighbourData[currentNeighbour].frame_expected % NR_BUFS];
+                                                to_network_layer(transfer_pointer);
+						//to_network_layer(&neighbourData[currentNeighbour].in_buf[neighbourData[currentNeighbour].frame_expected % NR_BUFS]);
 						neighbours[currentNeighbour].no_nak = true;
 						neighbourData[currentNeighbour].arrived[neighbourData[currentNeighbour].frame_expected % NR_BUFS] = false;
+                                                
+                                                //neighbourData[currentNeighbour].in_buf[r.seq % NR_BUFS] = ERRORDATAGRAM;
+                                                
 						inc(neighbourData[currentNeighbour].frame_expected); // advance lower edge of receiver's window
 						inc(neighbourData[currentNeighbour].too_far); // advance upper edge of receiver's window
 						start_ack_timer(currentNeighbour); // to see if (a separate ack is needed
@@ -224,19 +276,23 @@ void selective_repeat()
 			}
 
 			logLine(info, "Are we between so we can advance window? ack_expected=%d, r.ack=%d, next_frame_to_send=%d\n", neighbourData[currentNeighbour].ack_expected, r.ack, neighbourData[currentNeighbour].next_frame_to_send);
+                        //if (r.kind != DATA) {
 			while (between(neighbourData[currentNeighbour].ack_expected, r.ack, neighbourData[currentNeighbour].next_frame_to_send)) {
 				logLine(debug, "Advancing window %d\n", neighbourData[currentNeighbour].ack_expected);
 				neighbourData[currentNeighbour].nbuffered = neighbourData[currentNeighbour].nbuffered - 1; //handle piggybacked ack
 
 				stop_timer(currentNeighbour, neighbourData[currentNeighbour].ack_expected % NR_BUFS); //frame arrived intact
 				inc(neighbourData[currentNeighbour].ack_expected);  //advance lower edge of sender's window
+                                //logLine(succes, "LL: Window after receiving: ack_exp=%d, nbuf=%d, nxt_f_t_s=%d\n", neighbourData[currentNeighbour].ack_expected, neighbourData[currentNeighbour].nbuffered, neighbourData[currentNeighbour].next_frame_to_send);
 			}
+                        //}
+                        //logLine(succes, "LL: New values: cN=%d, frame_expected=%d, ack_expected=%d\n", currentNeighbour, neighbourData[currentNeighbour].frame_expected, neighbourData[currentNeighbour].ack_expected);
 			break;
 
 		case timeout: // Ack timeout or regular timeout
 		  // Check if it is the ack_timer
 			timer_id = event.timer_id;
-			logLine(trace, "Timeout with id: %d - acktimer_id is %d for neighbour %d\n", timer_id, neighbours[currentNeighbour].ack_timer_id, currentNeighbour);
+			//logLine(succes /*trace*/, "Timeout with id: %d - acktimer_id is %d for neighbour %d\n", timer_id, neighbours[currentNeighbour].ack_timer_id, currentNeighbour);
 
 			//Figure out which neighbour to resend to.
 			currentNeighbour = ((packetTimerMessage*)event.msg)->neighbour;
@@ -251,15 +307,70 @@ void selective_repeat()
 			else {
 				int timed_out_seq_nr = ((packetTimerMessage *)event.msg)->k;
 
-				logLine(debug, "Timeout for frame - need to resend frame %d\n", timed_out_seq_nr);
-				send_frame(DATA, timed_out_seq_nr, neighbourData[currentNeighbour].frame_expected, neighbourData[currentNeighbour].out_buf, currentNeighbour);
+				//logLine(succes /*debug*/, "Timeout for frame - need to resend frame %d\n", timed_out_seq_nr);
+                                //logLine(succes, "  Timeout between result: ack_exp=%d, ^, nxt_f_t_s=%d, res=%d\n", neighbourData[currentNeighbour].ack_expected, neighbourData[currentNeighbour].next_frame_to_send, between(neighbourData[currentNeighbour].ack_expected, timed_out_seq_nr, neighbourData[currentNeighbour].next_frame_to_send));
+                                if(between(neighbourData[currentNeighbour].ack_expected, timed_out_seq_nr, neighbourData[currentNeighbour].next_frame_to_send)) { //Redundant check that shouldn't be necessary, but it is. The stopping of the timers appearently doesn't work, causing resends with wrong sequence numbers.
+				  send_frame(DATA, timed_out_seq_nr, neighbourData[currentNeighbour].frame_expected, neighbourData[currentNeighbour].out_buf, currentNeighbour);
+                                }
 			}
 			break;
+                      case LL_SendingQueueOffer:
+                        logLine(info, "LL: Offered a queue by NL\n");
+                        offer = (ConcurrentFifoQueue*) event.msg;
+                        
+                        logLine(trace, "LL: Is offered queue empty?: %d\n", EmptyFQ(offer->queue));
+                        
+                        while(EmptyFQ(offer->queue) == 0) { //Transfer all elements to own queue.
+                          logLine(trace, "LL: Handling queue element.\n");
+                          e = DequeueFQ(offer->queue);
+                          
+                          o = malloc(sizeof(NL_OfferElement));
+                          //*o = *((NL_OfferElement*) ValueOfFQE(e));
+                          //d = malloc(sizeof(datagram));
+                          //*d = *(ValueOfFQE(e));
+                          
+                          o->otherHostNeighbourid = ((NL_OfferElement*) ValueOfFQE(e))->otherHostNeighbourid;
+                          o->dat = ((NL_OfferElement*) ValueOfFQE(e))->dat;
+                          
+                          logLine(trace, "LL: o contains: n=%d\n", o->otherHostNeighbourid);
+                          
+                          EnqueueFQ(NewFQE((void*) o), sendingQueue);
+                          logLine(trace, "LL: emptyness of sendingQueue: %d\n", EmptyFQ(sendingQueue));
+                        }
+                        
+                        Unlock(offer->lock);
+                        
+                        break;
 		}
+                
+                for(int i = 0; i < NUM_MAX_NEIGHBOURS; i++) {
+                  logLine(debug, "LL: bufslots=%d, empty=%d, entrydest=%d\n",
+                    NR_BUFS-neighbourData[currentNeighbour].nbuffered > 0, EmptyFQ(sendingQueue));
+                  if(NR_BUFS-neighbourData[currentNeighbour].nbuffered > 0
+                      && EmptyFQ(sendingQueue) == 0
+                      && ((NL_OfferElement*)ValueOfFQE(FirstEntryFQ(sendingQueue)))->otherHostNeighbourid == i
+                    ) {
+                    e = DequeueFQ(sendingQueue);
+                    
+                    neighbourData[currentNeighbour].nbuffered = neighbourData[currentNeighbour].nbuffered + 1; // expand the window
+                    neighbourData[currentNeighbour].out_buf[neighbourData[currentNeighbour].next_frame_to_send % NR_BUFS] = ((NL_OfferElement*)ValueOfFQE(e))->dat;
+                    send_frame(DATA, neighbourData[currentNeighbour].next_frame_to_send, neighbourData[currentNeighbour].frame_expected, neighbourData[currentNeighbour].out_buf, currentNeighbour); // transmit the frame
+                    inc(neighbourData[currentNeighbour].next_frame_to_send); // advance upper window edge
+                  }
+                }
+                
+                if(EmptyFQ(sendingQueue)) {
+                  ClearEvent(network_layer_allowed_to_send);
+                  enable_network_layer();
+                }
 
-		if (neighbourData[currentNeighbour].nbuffered < NR_BUFS) {
-			enable_network_layer();
-		}
+		/*logLine(succes, "LL: !!! Checking if there is buffer room: nbuf=%d\n", neighbourData[currentNeighbour].nbuffered);
+                ClearEvent(network_layer_allowed_to_send); //We only want one at a time. Don't stack requests we can't handle anyway.
+                if (neighbourData[currentNeighbour].nbuffered < NR_BUFS) {
+                        logLine(succes, "There was buffer room.\n");
+                        //ClearEvent(network_layer_allowed_to_send); //We only want one at a time. Don't stack requests we can't handle anyway.
+                        enable_network_layer(currentNeighbour, NR_BUFS-neighbourData[currentNeighbour].nbuffered);
+		}*/
 		/*else {
 			disable_network_layer();
 		}*/
@@ -293,11 +404,17 @@ neighbourid stationID2neighbourindex(int stationID)
 	return i;
 }
 
-void enable_network_layer(void)
+void enable_network_layer()
 {
 	//Lock(network_layer_lock);
 	logLine(trace, "enabling network layer\n");
 	//network_layer_enabled = true;
+        
+        //NL_RequestFromLL *req = malloc(sizeof(NL_RequestFromLL));
+        //neighbourid *N = malloc(sizeof(neighbourid));
+        //*N = n;
+        //req->neighbour=n;
+        //req->bufferSlotsAvailable = bufroom;
 	Signal(network_layer_allowed_to_send, NULL);
 	//Unlock(network_layer_lock);
 }
@@ -406,7 +523,7 @@ void start_timer(neighbourid neighbour, seq_nr k)
 	msg->neighbour = neighbour;
 
 	neighbours[neighbour].timer_ids[k % NR_BUFS] = SetTimer(frame_timer_timeout_millis, (void *)msg);
-	logLine(trace, "start_timer for seq_nr=%d timer_ids=[%d, %d, %d, %d] %s\n", k, neighbours[neighbour].timer_ids[0], neighbours[neighbour].timer_ids[1], neighbours[neighbour].timer_ids[2], neighbours[neighbour].timer_ids[3], msg);
+	logLine(trace, "start_timer for neighbour=%d seq_nr=%d timer_ids=[%d, %d, %d, %d]\n", neighbour, k, neighbours[neighbour].timer_ids[0], neighbours[neighbour].timer_ids[1], neighbours[neighbour].timer_ids[2], neighbours[neighbour].timer_ids[3]);
 }
 
 

@@ -61,6 +61,11 @@ typedef struct {
   datagram dat;
 } NL_OfferElement;
 
+typedef struct {
+  neighbourid neighbour;
+  unsigned int bufferSlotsAvailable;
+} NL_RequestFromLL;
+
 /*
 *   Function Predeclarations
 */

@@ -102,7 +102,7 @@ void start_ack_timer(neighbourid neighbor);
 void stop_ack_timer(neighbourid neighbor);
 
 /* Allow the network layer to cause a network_layer_ready event. */
-void enable_network_layer(void);
+void enable_network_layer();
 
 /* Forbid the network layer from causing a network_layer_ready event. */
 void disable_network_layer(void);

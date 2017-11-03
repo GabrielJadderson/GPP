@@ -74,6 +74,14 @@ void NL_OfferSendingQueue(ConcurrentFifoQueue *offer) {
   Signal(NL_SendingQueueOffer, (void*) offer);
 }
 
+//Offer the queue 'offer' to the network layer.
+//The queue gets locked and the caller of the function is no longer allowed to access it until it is unlocked by the network layer again.
+void LL_OfferSendingQueue(ConcurrentFifoQueue *offer) {
+  Lock(offer->lock);
+  
+  Signal(LL_SendingQueueOffer, (void*) offer);
+}
+
 // Network layer for hosts
 void networkLayerHost() {
   //Since this network layer isn't 'fake', it has no condition to stop and relies on the above layer to handle this.
@@ -81,15 +89,27 @@ void networkLayerHost() {
   event_t event;
   
   boolean allowedToSendToLL = false;
+  //boolean allowedToSendToLL[NUM_MAX_NEIGHBOURS]; //Stack variables are 0 by default, i.e. false in this case.
   
   ConcurrentFifoQueue receivingQueue = CFQ_Init(); //This is concurrent because it is used for communication with the transport layer. The queue is also used for consistence and expandability.
-  FifoQueue sendingQueue = InitializeFQ(); //Doesn't need to be concurrent because elements are given with signals.
+  //FifoQueue sendingQueue = InitializeFQ(); //Doesn't need to be concurrent because elements are given with signals.
+  ConcurrentFifoQueue sendingQueue = CFQ_Init();
   ConcurrentFifoQueue *offer;
   FifoQueueEntry e;
   TL_OfferElement *o;
   NL_OfferElement *O; //Using a pointer to create a new one every time.
   
   datagram d; //Scratch variable
+  /*payload err;
+  err.data[0] = 'E';
+  err.data[1] = 'R';
+  err.data[2] = 'R';
+  err.data[3] = 'O';
+  err.data[4] = 'R';
+  err.data[5] = '!';
+  err.data[6] = '\n';
+  err.data[7] = '\0';*/
+  
   
   logLine(debug, "NL: Started.\n");
   
@@ -100,7 +120,21 @@ void networkLayerHost() {
     switch(event.type) {
       case network_layer_allowed_to_send:
         logLine(trace, "NL: Allowed to send by LL.\n");
+        
         allowedToSendToLL = true; //There might not be an element to send right now. Remember that we can send without getting stuck here.
+        
+        //allowedToSendToLL[*((neighbourid*) event.msg)] = true;
+        
+        /*NL_RequestFromLL *req = (NL_RequestFromLL*) event.msg;
+        
+        if(req->bufferSlotsAvailable > 0) {
+          allowedToSendToLL[req->neighbour] = true;
+        }
+        
+        free(event.msg);*/
+        
+        //LL_OfferSendingQueue(&sendingQueue);
+        
         break;
       case data_for_network_layer:
         logLine(trace, "NL: Received datagram from LL.\n");
@@ -119,6 +153,9 @@ void networkLayerHost() {
             o = malloc(sizeof(TL_OfferElement));
             o->otherHostAddress = d.src;
             o->seg = d.payload;
+            
+            logLine(info, "NL: Received packet with contents for TL: %s\n", d.payload.data);
+            //d.payload = err;
             
             logLine(trace, "NL: Locking and enqueueing segment for TL.\n");
             Lock(receivingQueue.lock); //TODO: If queue is locked, then use a secondary queue instead. Will also prevent blocking if the upper layer is stalled for some reason.
@@ -163,7 +200,7 @@ void networkLayerHost() {
           O->dat = d;
           
           //logLine(trace, "NL: 55555\n");
-          EnqueueFQ(NewFQE((void *)O), sendingQueue);
+          EnqueueFQ(NewFQE((void *)O), sendingQueue.queue);
           
           logLine(info, "NL: Received from TL: %s\n", d.payload.data);
         }
@@ -179,10 +216,20 @@ void networkLayerHost() {
     //If we are allowed to send, then do so.
     // If the signal was sent in this loop iteration: same as if this was in the case directly
     // otherwise: we received something to send after getting clearance and would have been stuck if this was directly in the case.
-    if(allowedToSendToLL && EmptyFQ(sendingQueue) == 0) {
-      e = DequeueFQ(sendingQueue); //Extract from queue
+    /*for(int i = 0; i < NUM_MAX_NEIGHBOURS; i++) {
+    if(allowedToSendToLL[i] && EmptyFQ(sendingQueue.queue) == 0 && ((NL_OfferElement*)ValueOfFQE(FirstEntryFQ(sendingQueue.queue)))->otherHostNeighbourid == i) {
+      e = DequeueFQ(sendingQueue.queue); //Extract from queue
       
+      logLine(succes, "NL: Has Element and LL has buffer room.\n");
+      //ClearEvent(network_layer_ready);
       Signal(network_layer_ready, ValueOfFQE(e)); //Just pass it directly.
+      //allowedToSendToLL = false;
+      allowedToSendToLL[i] = false;
+    }
+    }*/
+    if(allowedToSendToLL && EmptyFQ(sendingQueue.queue) == 0) {
+      LL_OfferSendingQueue(&sendingQueue);
+      allowedToSendToLL = false;
     }
   }
 }
@@ -249,6 +296,7 @@ void networkLayerRouter() {
     if(allowedToSendToLL && EmptyFQ(sendingQueue) == 0) {
       e = DequeueFQ(sendingQueue); //Extract from queue
       
+      ClearEvent(network_layer_ready);
       Signal(network_layer_ready, ValueOfFQE(e)); //Just pass it directly.
     }
   }
