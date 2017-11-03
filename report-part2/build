@@ -1,0 +1,12 @@
+#!/bin/bash
+
+pdflatex $1
+rm *.toc
+rm *.out
+rm *.mtc
+rm *.log
+rm *.lof
+rm *.aux
+rm *.mtc0
+rm *.maf
+

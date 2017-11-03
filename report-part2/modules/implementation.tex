@@ -1,164 +1,93 @@
 \section{Implementation}
 \subsection{Information restructuring}
 
-\begin{lstlisting}
-typedef struct {
-    int stationID;
-		int ack_timer_id;
-    int timer_ids[NR_BUFS];
-    boolean no_nak;
-} neighbour;
-\end{lstlisting}
-
-Each neighbour will have it's own associated stationID,
-this way we can differentiate between each neighbour/station.
-Furtheremore each neighbour has it's own \texttt{ack\_timer\_id} that way we ensure that there's only one instance per neighbour
-Each neighbour will start it's own ack timer when they recieve a pakcet,
-this way we can ensure the piggy-backing remains functional.
+We've cleaned and refactored the code, events have been placed in their consecutive class.
+The following elements have been moved to $Events.h$
 \\
+\texttt{network\_layer\_allowed\_to\_send}
+\break
+\texttt{network\_layer\_ready}
+\break
+\texttt{data\_for\_network\_layer}
+\break
 
-The following struct is only used for the selective-repeat function,
-encapsulating our variables in a struct proved to be much more manageable.
+We've added the following two signals/events to the $Events.h$
 
 \begin{lstlisting}
-typedef struct { //The data only visible to selective repeat.
-  seq_nr ack_expected;              // lower edge of sender's window
-  seq_nr next_frame_to_send;        // upper edge of sender's window + 1
-  seq_nr frame_expected;            // lower edge of receiver's window
-  seq_nr too_far;                   // upper edge of receiver's window + 1
-  packet out_buf[NR_BUFS];          // buffers for the outbound stream
-  packet in_buf[NR_BUFS];           // buffers for the inbound stream
-  boolean arrived[NR_BUFS];         // inbound bit map
-  seq_nr nbuffered;                 // how many output buffers currently used
-} neighbour_SR_Data;
+#define NL_SendingQueueOffer    0x00000020 //TL->NL: Offer NL a queue of elements for NL to forward. The offered concurrentFifoQueue is assumed locked.
+#define TL_ReceivingQueueOffer  0x00000040 //NL->TL: Offer TL a queue of elements for it to receive. The offered concurrentFifoQueue is assumed locked.
 \end{lstlisting}
 
+furtheremore, we've removed some locks and unified them under a single lock
 
-We have further implemented \texttt{packetTimerMessage} a struct that is sent to the library whenever we start a timer.
-This way we know which sequence the timer was started for and the respective neighbour id.
+
+we've also created a transportlayer, for this we've first created a struct that acts as our transportlayer header.
+
+
 \begin{lstlisting}
 typedef struct {
-  seq_nr k;
-  neighbourid neighbour;
-} packetTimerMessage;
+  networkAddress receiver;  //This contains ``fake'' ip address of the reciever
+  payload seg;              //our payload is the msg
+} TL_OfferElement;
 \end{lstlisting}
 
-\hfill \break
-\subsection{Actual Code}
-\subsubsection{Timers}
-
-We've changed the following functions to take the neighbours id's as parameters.
-Inside the function we've used the parameter to retrieve the neighbour specified from a global neighbours array.
-This allows us to stop and start the timers for each respective neighbour.
+our implmenetation of the transportlayer is as follows:
 
 \begin{lstlisting}
-void start_timer(neighbourid neighbour, seq_nr k)
-void stop_timer(neighbourid neighbour, seq_nr k)
-void start_ack_timer(neighbourid neighbour)
-void stop_ack_timer(neighbourid neighbour)
 \end{lstlisting}
 
+the goal is to make the network layer and transport layer communicate with each other, this is done by TODO:
 
-Our implementation of \texttt{start\_timer} is as follows. We first allocate memory for our {packetTimerMessage}
-The sequence number is updated accordingly to our parameter, on the \linebreak\texttt{start\_ack\_timer} function however, we set the sequence number to -1 (not used) since it redundant in that case.
-Afterwards the neighbour id is updated accordingly and a timer is initiated from the SetTimer function, a function which starts a timer and returns the id of that timer,
-which we then store in our specified neighbour.
-we use modulo to wrap it around the index range since the sequence numbers increase linearly.
+
+to achieve this/to make this possible a routing table has been implemented with the goal of routing hosts across the network.
+
+TODO: put routing table implementation here
+
+We've implemented a FIFO queue, the idea is to have two queue one for the reciving end and one for the sending end. We've chosen to make the receivingQueue concurrent because the transport layer needs to append stuff into it?
+
 \begin{lstlisting}
-void start_timer(neighbourid neighbour, seq_nr k) {
-        packetTimerMessage *msg = malloc(sizeof(packetTimerMessage));
-        msg->k = k;
-        msg->neighbour = neighbour;
-
-	neighbours[neighbour].timer_ids[k % NR_BUFS] = SetTimer( frame_timer_timeout_millis, (void *)msg );
-	logLine(trace, "start_timer for seq_nr=%d timer_ids=[%d, %d, %d, %d] %s\n", k, neighbours[neighbour].timer_ids[0], neighbours[neighbour].timer_ids[1], neighbours[neighbour].timer_ids[2], neighbours[neighbour].timer_ids[3], msg);
-}
+ConcurrentFifoQueue receivingQueue = CFQ_Init(); //This is concurrent because it is used for communication with the transport layer. The queue is also used for consistence and expandability.
+FifoQueue sendingQueue = InitializeFQ(); //Doesn't need to be concurrent because elements are given with signals.
 \end{lstlisting}
 
 
-To stop the timers we simply invoke the subnet function: \texttt{StopTimer} with the id of the timer
-and in return we get the associated **msg. (note: this is why we store the id of thet timer in the first place)
 
-\subsubsection{Neighbours}
+we initialize our networklayer in the following manner.
+Each host/station is assigned an address
 
-The neighbour switching is handled in the selective repeat using a variable called $currentNeighbour$. This variable is set at as early as possible when handling each of the three types of signals handled by selective repeat.\\
-The snippets here are trimmed extensively. To get a clear overview, please read the event handling cases in the source file rdt.c. Comments have also been removed.\\
-\\~
-network\_layer\_ready:\\
-The id of the neighbour the packet is intended to be sent to is stored in the msg variable of the event.\\
-The fake network layer written for testing gives this value when signaling:
 \begin{lstlisting}
-Signal(network\_layer\_ready, i);
-\end{lstlisting}
-And the selective repeat function reads this value when handling the event:
-\begin{lstlisting}
-currentNeighbour = event.msg;
-\end{lstlisting}
+void initialize_networkLayer(int stationID) {
+   switch(stationID) {
+     case 1: //Host A
+      thisNetworkAddress = 111;
+       ROUTINGTABLEADD(0, 212, 0);
+       ROUTINGTABLEADD(1, -1, -1);
+       ROUTINGTABLEADD(2, -1, -1);
+       ROUTINGTABLEADD(3, -1, -1);
+       break;
+     case 2: //Host B
+       thisNetworkAddress = 212;
+      ROUTINGTABLEADD(0, 111, 0);
+       ROUTINGTABLEADD(1, -1, -1);
+       ROUTINGTABLEADD(2, -1, -1);
+       ROUTINGTABLEADD(3, -1, -1);
+       break;
+     case 3: //Router 1
 
-frame\_arrival:\\
-The id of the neighbour that sent the packet is returned by the function $from\_physical\_layer$.
-\begin{lstlisting}
-currentNeighbour = from\_physical\_layer(&r);
-\end{lstlisting}
+      thisNetworkAddress = 313;
+      ROUTINGTABLEADD(0, 111, 0);
+      ROUTINGTABLEADD(1, 212, 1);
+      ROUTINGTABLEADD(2, -1, -1);
+      ROUTINGTABLEADD(3, -1, -1);
+      break;
+     case 4: //Router 2
 
-timeout:\\
-The timer message contains the id of the neighbour it enables.
-\begin{lstlisting}
-currentNeighbour = ((packetTimerMessage*)event.msg)->neighbour;
-\end{lstlisting}
-
-
-
-\subsubsection{Main Function}
-In main we've set up our neighbours/stations accordingly, then activate the networklayer and selective-repeat for each consequtive neighbour.
-this provides some limitations in terms of flexibility,
-essentially in the future we want to improve this setup to be more dynamic instead of it's current hard-coded state.
-\begin{lstlisting}
-switch (ThisStation) {
-case 1:
-  neighbours[0].stationID = 2;
-  neighbours[1].stationID = 3;
-  neighbours[2].stationID = -1;
-  neighbours[3].stationID = -1;
-  break;
-case 2:
-  neighbours[0].stationID = 1;
-  neighbours[1].stationID = 3;
-  neighbours[2].stationID = -1;
-  neighbours[3].stationID = -1;
-  break;
-case 3:
-  neighbours[0].stationID = 1;
-  neighbours[1].stationID = 2;
-  neighbours[2].stationID = -1;
-  neighbours[3].stationID = -1;
-  break;
-}
-
-ACTIVATE(1, FakeNetworkLayer_Test1);
-ACTIVATE(1, selective_repeat);
-
-ACTIVATE(2, FakeNetworkLayer_Test1);
-ACTIVATE(2, selective_repeat);
-
-ACTIVATE(3, FakeNetworkLayer_Test1);
-ACTIVATE(3, selective_repeat);
+       //break;
+@@ -46,6 +50,22 @@ void initialize_networkLayer(int stationID) {
+   }
+ }
 \end{lstlisting}
 
-\subsubsection{Signals}
-The following is a description of what the three events in our code do:
-\begin{description}[leftmargin=1em, style=nextline]
-\item [\texttt{network\_layer\_allowed\_to\_send}] Signals the network layer that it can send a piece of data.
-Here the network layer should make sure the \texttt{from\_network\_layer\_queue}
-contains at least one element, after which it can signal \texttt{network\_layer\_ready},
-which means that the network layer has prepared at least one element in the queue.
 
-\item [\texttt{network\_layer\_ready}] This signal signals to the link layer that the network layer has prepared an element to be sent in the
-  \texttt{from\_network\_layer\_queue} queue and that it should be sent now.
-
-\item [\texttt{data\_for\_network\_layer}]
-This signal signals to the network layer that the
-\texttt{for\_network\_layer\_queue} contains a data element for it to take care of. (a data element has been received)
-\end{description}
 
 \hfill \break
