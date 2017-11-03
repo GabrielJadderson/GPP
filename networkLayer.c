@@ -71,6 +71,8 @@ neighbourid NL_TableLookup(networkAddress addr) {
 void NL_OfferSendingQueue(ConcurrentFifoQueue *offer) {
   //Lock(offer->lock);
   
+  offer->used = true;
+  
   Signal(NL_SendingQueueOffer, (void*) offer);
 }
 
@@ -78,6 +80,8 @@ void NL_OfferSendingQueue(ConcurrentFifoQueue *offer) {
 //The queue gets locked and the caller of the function is no longer allowed to access it until it is unlocked by the network layer again.
 void LL_OfferSendingQueue(ConcurrentFifoQueue *offer) {
   //Lock(offer->lock);
+  
+  offer->used = true;
   
   Signal(LL_SendingQueueOffer, (void*) offer);
 }
