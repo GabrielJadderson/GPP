@@ -9,7 +9,16 @@ void fake_transportLayer() {
   
   //char* buffer = "HEH.\n";
   ConcurrentFifoQueue *offer;
-  ConcurrentFifoQueue q = CFQ_Init();
+  ConcurrentFifoQueue *q = malloc(sizeof(ConcurrentFifoQueue));
+  *q = CFQ_Init();
+  
+  /*int wtf = Trylock(q->lock);
+  logLine(succes, "TL: Trylock=%d\n", wtf);
+  
+  Unlock(q->lock);
+  wtf = Trylock(q->lock);
+  logLine(succes, "TL: Trylock=%d\n", wtf);
+  Unlock(q->lock);*/
   
   long int events_we_handle = TL_ReceivingQueueOffer;
   event_t event;
@@ -38,7 +47,7 @@ void fake_transportLayer() {
   
   Unlock(q.lock);*/
   
-  Lock (q.lock);
+  //Lock (q->lock);
   #define TL_NUM_HEH 100
   int i = 1;
   while(i <= TL_NUM_HEH) {
@@ -77,15 +86,25 @@ void fake_transportLayer() {
     elem.seg.data[6] = 'I';
     elem.seg.data[7] = '\0';*/
     
-    EnqueueFQ( NewFQE( (void *) elem ), q.queue );
+    EnqueueFQ( NewFQE( (void *) elem ), q->queue );
     i++;
   }
-  Unlock(q.lock);
+  //Unlock(q->lock);
   
   
   logLine(trace, "TL: Offering queue.\n");
-  //if (ThisStation == 1)
-    NL_OfferSendingQueue(&q); //We can do this whenever really as it isn't based on a 1:1 signals-handing-out-information thing.
+  if (ThisStation == 2)
+    NL_OfferSendingQueue(q); //We can do this whenever really as it isn't based on a 1:1 signals-handing-out-information thing.
+  
+  /*wtf = Trylock(q->lock);
+  logLine(succes, "TL: Trylock2=%d\n", wtf);
+
+  Unlock(q->lock);
+  wtf = Trylock(q->lock);
+  logLine(succes, "TL: Trylock2=%d\n", wtf);
+  Unlock(q->lock);*/
+  
+  //Lock(q->lock); //Should no longer be used.
   
   /*while(Trylock(q.lock) != 0) {
     logLine(trace, "TL: Waiting for unlocking of queue.\n");
@@ -100,8 +119,9 @@ void fake_transportLayer() {
   
   while(true) {
     logLine(trace, "TL: Waiting for signals.\n");
+    logLine(succes, "TL: Lockstatus=%d\n", q->used);
     Wait(&event, events_we_handle);
-
+    
     switch(event.type) {
       case TL_ReceivingQueueOffer:
         logLine(debug, "TL: Received signal TL_ReceivingQueueOffer.\n");
@@ -120,7 +140,7 @@ void fake_transportLayer() {
         }
         
         logLine(trace, "TL: Releasing locks.\n");
-        Unlock(offer->lock);
+        //Unlock(offer->lock);
         //sleep(2); //TEMPORARY!!!
         //Stop();
         
@@ -137,6 +157,18 @@ void fake_transportLayer() {
       } else {
         NL_OfferSendingQueue(&q);
       }*/
+      /*Unlock(q->lock);
+      int huh = Trylock(q->lock);
+      logLine(succes, "TL: q lock state: %d\n", Trylock(q->lock));
+      if(huh == 16) {
+         Unlock(q->lock);
+      }
+      Unlock(q->lock);
+      huh = Trylock(q->lock);
+      logLine(succes, "TL: q lock state: %d\n", Trylock(q->lock));
+      if(huh == 0) {
+        Unlock(q->lock);
+      }*/
       
       sleep(2);
       Stop();
@@ -148,7 +180,7 @@ void fake_transportLayer() {
 }
 
 void TL_OfferReceivingQueue(ConcurrentFifoQueue *offer) {
-  Lock(offer->lock);
+  //Lock(offer->lock);
   
   Signal(TL_ReceivingQueueOffer, (void*) offer);
 }

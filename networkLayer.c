@@ -50,9 +50,9 @@ void initialize_networkLayer(int stationID) {
   }
 }
 
-neighbourid NL_TableLookup(networkAddress addr) {return 0;}
+//neighbourid NL_TableLookup(networkAddress addr) {return 0;}
 
-/*neighbourid NL_TableLookup(networkAddress addr) {
+neighbourid NL_TableLookup(networkAddress addr) {
   int i = 0;
   while (routingTable.addresses[i] != addr) {
     i++;
@@ -64,12 +64,12 @@ neighbourid NL_TableLookup(networkAddress addr) {return 0;}
   }
   
   return i;
-}*/
+}
   
 //Offer the queue 'offer' to the network layer.
 //The queue gets locked and the caller of the function is no longer allowed to access it until it is unlocked by the network layer again.
 void NL_OfferSendingQueue(ConcurrentFifoQueue *offer) {
-  Lock(offer->lock);
+  //Lock(offer->lock);
   
   Signal(NL_SendingQueueOffer, (void*) offer);
 }
@@ -77,7 +77,7 @@ void NL_OfferSendingQueue(ConcurrentFifoQueue *offer) {
 //Offer the queue 'offer' to the network layer.
 //The queue gets locked and the caller of the function is no longer allowed to access it until it is unlocked by the network layer again.
 void LL_OfferSendingQueue(ConcurrentFifoQueue *offer) {
-  Lock(offer->lock);
+  //Lock(offer->lock);
   
   Signal(LL_SendingQueueOffer, (void*) offer);
 }
@@ -158,9 +158,9 @@ void networkLayerHost() {
             //d.payload = err;
             
             logLine(trace, "NL: Locking and enqueueing segment for TL.\n");
-            Lock(receivingQueue.lock); //TODO: If queue is locked, then use a secondary queue instead. Will also prevent blocking if the upper layer is stalled for some reason.
+            //Lock(receivingQueue.lock); //TODO: If queue is locked, then use a secondary queue instead. Will also prevent blocking if the upper layer is stalled for some reason.
             EnqueueFQ( NewFQE( (void *) o ), receivingQueue.queue );
-            Unlock(receivingQueue.lock);
+            //Unlock(receivingQueue.lock);
             logLine(trace, "NL: Offering receiving queue to TL.\n");
             TL_OfferReceivingQueue(&receivingQueue);
             break;
@@ -174,7 +174,10 @@ void networkLayerHost() {
         logLine(debug, "NL: Received signal NL_SendingQueueOffer.\n");
         offer = (ConcurrentFifoQueue*) event.msg;
         logLine(trace, "NL: Received offer queue.\n");
-        //Assumes that the queue has already been locked by the offerer. The offerer intends only this process to access the queue and renounces its own access.
+        
+        //Lock(offer->lock);
+        
+        offer->used = true;
         
         //Turn all segments into datagrams
         while(EmptyFQ(offer->queue) == 0) {
@@ -206,7 +209,21 @@ void networkLayerHost() {
         }
         
         logLine(trace, "NL: Releasing locks.\n");
-        Unlock(offer->lock); //Done with this queue, allow access to it again.
+        //Unlock(offer->lock); //Done with this queue, allow access to it again.
+        
+        offer->used = false;
+        
+        /*int huh = Trylock(offer->lock); //This is used to doublecheck the lock actually unlocking.
+        logLine(succes, "NL: lock state: %d\n", huh);
+        if(huh == 16) {
+          Unlock(offer->lock);
+        }
+        Unlock(offer->lock);
+        huh = Trylock(offer->lock);
+        logLine(succes, "NL: lock state: %d\n", huh);
+        if(huh == 0) {
+          Unlock(offer->lock);
+        }*/
         
         logLine(debug, "NL: Finished handling signal NL_SendingQueueOffer.\n");
         break;
@@ -235,7 +252,7 @@ void networkLayerHost() {
 }
 
 // Network layer for routers
-void networkLayerRouter() {
+/*void networkLayerRouter() {
   //Since this network layer isn't 'fake', it has no condition to stop and relies on the above layer to handle this.
   long int events_we_handle = network_layer_allowed_to_send | data_for_network_layer;
   event_t event;
@@ -300,5 +317,105 @@ void networkLayerRouter() {
       Signal(network_layer_ready, ValueOfFQE(e)); //Just pass it directly.
     }
   }
+}*/
+
+void networkLayerRouter() {
+  //Since this network layer isn't 'fake', it has no condition to stop and relies on the above layer to handle this.
+  long int events_we_handle = network_layer_allowed_to_send | data_for_network_layer;
+  event_t event;
+  
+  boolean allowedToSendToLL = false;
+  
+  //ConcurrentFifoQueue receivingQueue = CFQ_Init(); //This is concurrent because it is used for communication with the transport layer. The queue is also used for consistence and expandability.
+  FifoQueue receivedQueue = InitializeFQ();
+  ConcurrentFifoQueue routersendingQueue = CFQ_Init();
+  //ConcurrentFifoQueue *offer;
+  FifoQueueEntry e;
+  //TL_OfferElement *o;
+  NL_OfferElement *O; //Using a pointer to create a new one every time.
+  
+  datagram d; //Scratch variable
+  
+  logLine(debug, "NL: Started.\n");
+  
+  while(true) {
+    logLine(succes/*trace*/, "NL: Waiting for signals.\n");
+    Wait(&event, events_we_handle);
+    
+    switch(event.type) {
+      case network_layer_allowed_to_send:
+        logLine(succes, "NL: Allowed to send by LL.\n");
+        allowedToSendToLL = true; //There might not be an element to send right now. Remember that we can send without getting stuck here.
+        break;
+      case data_for_network_layer:
+        logLine(succes, "NL: Received datagram from LL.\n");
+        //We're a host. We don't route packets, we receive them.
+        
+        d = *((datagram*) (event.msg));
+        
+        if(d.dest != thisNetworkAddress) {
+          logLine(succes, "NL: Packet was not addressed for this Router. Forwarding.\n");
+          
+          O = malloc(sizeof(NL_OfferElement));
+          O->otherHostNeighbourid = NL_TableLookup(d.dest);
+          O->dat = d;
+          
+          logLine(succes, "NL: networkAddresss=%d, neighbourid=%d\n", d.dest, O->otherHostNeighbourid);
+          
+          EnqueueFQ(NewFQE((void *)O), receivedQueue);
+          
+          break; //Done.
+        }
+        
+        logLine(succes, "NL: Datagram type (enum): %d.\n", d.type);
+        switch(d.type) {
+          //case DATAGRAM: //Datagrams are handled above
+          case ROUTERINFO:
+            break; //Currently unused. Dropping.
+        }
+        
+        //free(event.msg); //[PJ] Freeing this makes everything explode, without the network program catching a SIGSEGV. There are instances of freed msg pointers, and why this breaks is beyond me.
+        break;
+    }
+    
+    //logLine(succes, "NL: Trylock of sendingQueue and emptyness of receivedQueue: %d, %d\n", Trylock(routersendingQueue.lock), EmptyFQ(receivedQueue));
+    
+    //If the lock is free, then put the received elements into the queue for the LL.
+    //if(Trylock(sendingQueue.lock) == 0 && EmptyFQ(receivedQueue) == 0) {
+    if(routersendingQueue.used == false && EmptyFQ(receivedQueue) == 0) {
+      logLine(succes, "NL: Transfering between queues\n");
+      //Lock(sendingQueue.lock); //Nothing else uses it, but for good measure since it's easy here.
+      
+      //Transfer from one queue to the other.
+      while(EmptyFQ(receivedQueue) == 0) {
+        EnqueueFQ(DequeueFQ(receivedQueue), routersendingQueue.queue);
+      }
+      
+      //Unlock(sendingQueue.lock);
+    }
+    
+    //If we are allowed to send, then do so.
+    // If the signal was sent in this loop iteration: same as if this was in the case directly
+    // otherwise: we received something to send after getting clearance and would have been stuck if this was directly in the case.
+    if(allowedToSendToLL && EmptyFQ(routersendingQueue.queue) == 0 && routersendingQueue.used == false){//EmptyFQ(receivedQueue) == 0) {
+      //e = DequeueFQ(sendingQueue); //Extract from queue
+      
+      //Signal(network_layer_ready, ValueOfFQE(e)); //Just pass it directly.
+      
+      logLine(succes, "NL: Offering queue to LL\n");
+      
+      if(routersendingQueue.used == true) {
+      //if(Trylock(routersendingQueue.lock) != 0) {
+        logLine(succes, "NL: ERROR: Unable to lock sendingQueue's lock!\n");
+      }
+      
+      LL_OfferSendingQueue(&routersendingQueue);
+      allowedToSendToLL = false;
+    }
+  }
 }
+
+
+
+
 

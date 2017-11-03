@@ -4,7 +4,7 @@
 * Author: Jacob Aae Mikkelsen.
 * co-authors: Patrick Jakobsen(pajak16), Gabriel Jadderson(gajad16)
 */
-
+int lalalala = 0;
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -217,6 +217,7 @@ void selective_repeat()
 	while (true) {
 
 		// Wait for any of these events
+                logLine(info, "LL: Waiting for signals.\n");
 		Wait(&event, events_we_handle);
 		log_event_received(event.type);
 
@@ -318,6 +319,8 @@ void selective_repeat()
                         logLine(info, "LL: Offered a queue by NL\n");
                         offer = (ConcurrentFifoQueue*) event.msg;
                         
+                        offer->used = true;
+                        
                         logLine(trace, "LL: Is offered queue empty?: %d\n", EmptyFQ(offer->queue));
                         
                         while(EmptyFQ(offer->queue) == 0) { //Transfer all elements to own queue.
@@ -332,13 +335,14 @@ void selective_repeat()
                           o->otherHostNeighbourid = ((NL_OfferElement*) ValueOfFQE(e))->otherHostNeighbourid;
                           o->dat = ((NL_OfferElement*) ValueOfFQE(e))->dat;
                           
-                          logLine(trace, "LL: o contains: n=%d\n", o->otherHostNeighbourid);
+                          logLine(info, "LL: o contains: n=%d\n", o->otherHostNeighbourid);
                           
                           EnqueueFQ(NewFQE((void*) o), sendingQueue);
                           logLine(trace, "LL: emptyness of sendingQueue: %d\n", EmptyFQ(sendingQueue));
                         }
                         
-                        Unlock(offer->lock);
+                        offer->used = false;
+                        //Unlock(offer->lock);
                         
                         break;
 		}
@@ -350,7 +354,10 @@ void selective_repeat()
                       && EmptyFQ(sendingQueue) == 0
                       && ((NL_OfferElement*)ValueOfFQE(FirstEntryFQ(sendingQueue)))->otherHostNeighbourid == i
                     ) {
+                    logLine(info, "LL: Queueing a packet in the outgoing buffer for neighbour %d, with oHNid=%d.\n", i, ((NL_OfferElement*)ValueOfFQE(FirstEntryFQ(sendingQueue)))->otherHostNeighbourid);
                     e = DequeueFQ(sendingQueue);
+                    
+                    currentNeighbour = i;
                     
                     neighbourData[currentNeighbour].nbuffered = neighbourData[currentNeighbour].nbuffered + 1; // expand the window
                     neighbourData[currentNeighbour].out_buf[neighbourData[currentNeighbour].next_frame_to_send % NR_BUFS] = ((NL_OfferElement*)ValueOfFQE(e))->dat;
@@ -504,14 +511,16 @@ int from_physical_layer(frame *r)
 	logLine(trace, "Receiving from subnet in station %d\n", ThisStation);
 	FromSubnet(&source, &dest, (char *)r, &length);
 	print_frame(r, "received");
+        logLine(info, "LL: Frame is received from neighbour %d, which is station %d.\n", stationID2neighbourindex(source), source);
 
 	return stationID2neighbourindex(source);
 }
 
 
-void to_physical_layer(frame *s, int neighbour)
+void to_physical_layer(frame *s, neighbourid neighbour)
 {
 	print_frame(s, "sending");
+        logLine(info, "LL: Frame is sent to neighbour %d, which is station %d.\n", neighbour, neighbours[neighbour].stationID);
 	ToSubnet(ThisStation, neighbours[neighbour].stationID, (char *)s, sizeof(frame));
 }
 
@@ -659,13 +668,13 @@ int main(int argc, char *argv[])
 void initialize_linkLayer(int stationID) {
   switch(stationID) {
     case 1: //Host A
-      neighbours[0].stationID = 2;
+      neighbours[0].stationID = 3;
       neighbours[1].stationID = -1;
       neighbours[2].stationID = -1;
       neighbours[3].stationID = -1;
       break;
     case 2: //Host B
-      neighbours[0].stationID = 1;
+      neighbours[0].stationID = 3;
       neighbours[1].stationID = -1;
       neighbours[2].stationID = -1;
       neighbours[3].stationID = -1;

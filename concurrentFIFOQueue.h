@@ -13,7 +13,8 @@
 #define concurrentFIFOQueue_H_
 
 typedef struct {
-  mlock_t *lock;
+  //mlock_t *lock;
+  int used;
   FifoQueue queue;
 } ConcurrentFifoQueue;
 
@@ -24,8 +25,9 @@ typedef struct {
 ConcurrentFifoQueue CFQ_Init() {
   ConcurrentFifoQueue q;
   q.queue = InitializeFQ();
-  q.lock = malloc(sizeof(mlock_t));
-  Init_lock(q.lock);
+  //q.lock = malloc(sizeof(mlock_t));
+  //Init_lock(q.lock);
+  q.used = 0;
   return q;
 }
 
