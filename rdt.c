@@ -349,8 +349,8 @@ void selective_repeat()
                 
                 for(int i = 0; i < NUM_MAX_NEIGHBOURS; i++) {
                   logLine(debug, "LL: bufslots=%d, empty=%d, entrydest=%d\n",
-                    NR_BUFS-neighbourData[currentNeighbour].nbuffered > 0, EmptyFQ(sendingQueue));
-                  if(NR_BUFS-neighbourData[currentNeighbour].nbuffered > 0
+                    NR_BUFS-neighbourData[i].nbuffered > 0, EmptyFQ(sendingQueue));
+                  if(NR_BUFS-neighbourData[i].nbuffered > 0
                       && EmptyFQ(sendingQueue) == 0
                       && ((NL_OfferElement*)ValueOfFQE(FirstEntryFQ(sendingQueue)))->otherHostNeighbourid == i
                     ) {
@@ -381,6 +381,7 @@ void selective_repeat()
 		/*else {
 			disable_network_layer();
 		}*/
+                //logLine(succes, "!!!!! %d\n", neighbourData[currentNeighbour].nbuffered);
 	}
 }
 

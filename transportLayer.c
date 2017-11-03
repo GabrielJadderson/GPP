@@ -93,7 +93,7 @@ void fake_transportLayer() {
   
   
   logLine(trace, "TL: Offering queue.\n");
-  if (ThisStation == 2)
+  //if (ThisStation == 2)
     NL_OfferSendingQueue(q); //We can do this whenever really as it isn't based on a 1:1 signals-handing-out-information thing.
   
   /*wtf = Trylock(q->lock);
@@ -119,7 +119,7 @@ void fake_transportLayer() {
   
   while(true) {
     logLine(trace, "TL: Waiting for signals.\n");
-    logLine(succes, "TL: Lockstatus=%d\n", q->used);
+    //logLine(succes, "TL: Lockstatus=%d\n", q->used);
     Wait(&event, events_we_handle);
     
     switch(event.type) {
