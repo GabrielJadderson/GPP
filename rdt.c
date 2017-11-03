@@ -71,7 +71,8 @@ static boolean between(seq_nr a, seq_nr b, seq_nr c) //ensures that seq_nr b is 
 
 static void send_frame(frame_kind fk, seq_nr frame_nr, seq_nr frame_expected, datagram buffer[], neighbourid recipient)
 {
-	/* Construct and send a data, ack, or nak frame. */
+	logLine(trace, "send_frame: frame_nr=%d\n", frame_nr);
+        /* Construct and send a data, ack, or nak frame. */
 	frame s;        /* scratch variable */
 
 	s.kind = fk;        /* kind == data, ack, or nak */
@@ -147,6 +148,7 @@ void selective_repeat()
 	// Set all the timers to be not set.
 	for (int i = 0; i < NUM_MAX_NEIGHBOURS; i++) {
 		neighbours[i].ack_timer_id = -1;
+                neighbours[i].no_nak = false;
 
 		for (int j = 0; j < NR_BUFS; j++) {
 			neighbours[i].timer_ids[j] = -1;
@@ -183,6 +185,7 @@ void selective_repeat()
 			logLine(trace, "Network layer delivers frame - lets send it\n");
 
 			//currentNeighbour = event.msg;
+                        logLine(trace, "Sending delivered frame: next_frame_to_send=%d\n", neighbourData[currentNeighbour].next_frame_to_send);
 
 			neighbourData[currentNeighbour].nbuffered = neighbourData[currentNeighbour].nbuffered + 1; // expand the window
 			from_network_layer(&neighbourData[currentNeighbour].out_buf[neighbourData[currentNeighbour].next_frame_to_send % NR_BUFS], &currentNeighbour, &event); //fetch new packet
@@ -193,6 +196,7 @@ void selective_repeat()
 		case frame_arrival: // a data or control frame has arrived
 			currentNeighbour = from_physical_layer(&r);  // fetch incoming frame from physical layer
 			if (r.kind == DATA) {
+                                logLine(debug, "Received frame context: seq=%d, expected=%d, too_far=%d, no_nak=%d\n", r.seq, neighbourData[currentNeighbour].frame_expected, neighbourData[currentNeighbour].too_far, neighbours[currentNeighbour].no_nak);
 				// An undamaged frame has arrived.
 				if ((r.seq != neighbourData[currentNeighbour].frame_expected) && neighbours[currentNeighbour].no_nak) {
 					send_frame(NAK, 0, neighbourData[currentNeighbour].frame_expected, neighbourData[currentNeighbour].out_buf, currentNeighbour);
@@ -367,7 +371,7 @@ void print_frame(frame* s, char *direction)
 	case DATA:
 		//packet_to_string(&(s->info), temp); //[PJ] Can no longer do this.
 		//logLine(info, "%s: DATA frame [seq=%d, ack=%d, kind=%d, (%s)] \n", direction, s->seq, s->ack, s->kind, temp);
-		logLine(info, "%s: DATA frame [seq=%d, ack=%d, kind=%d, unknown] \n", direction, s->seq, s->ack, s->kind);
+		logLine(info, "%s: DATA frame [seq=%d, ack=%d, kind=%d, %s] \n", direction, s->seq, s->ack, s->kind, s->info.payload.data);
 		break;
 	}
 }

@@ -17,8 +17,8 @@ void fake_transportLayer() {
   FifoQueueEntry e;
   TL_OfferElement o;
   
-  TL_OfferElement elem;
-  elem.otherHostAddress = 42;
+  TL_OfferElement *elem;
+  /*elem.otherHostAddress = 42;
   if(ThisStation == 1) {
     elem.otherHostAddress = 212;
   } else if(ThisStation == 2) {
@@ -36,10 +36,56 @@ void fake_transportLayer() {
   
   EnqueueFQ( NewFQE( (void *) &elem ), q.queue );
   
+  Unlock(q.lock);*/
+  
+  Lock (q.lock);
+  #define TL_NUM_HEH 12
+  int i = 1;
+  while(i <= TL_NUM_HEH) {
+    elem = malloc(sizeof(TL_OfferElement));
+    
+    elem->otherHostAddress = 42;
+    if(ThisStation == 1) {
+      elem->otherHostAddress = 212;
+    } else if(ThisStation == 2) {
+      elem->otherHostAddress = 111;
+    }
+    
+    char a = i/100;
+    if(a == 0) {a = ' ';} else {a += 48;}
+    char b = (i%100)/10;
+    if(b == 0) {b = ' ';} else {b += 48;}
+    char c = (i%10)+48;
+    
+    logLine(succes, "11111 TL: Making packet with a, b and c: (i=%d) a@(%d, %c) b@(%d, %c) c@(%d, %c)\n", i, a, a, b, b, c, c);
+    
+    elem->seg.data[0] = 'H';
+    elem->seg.data[1] = 'E';
+    elem->seg.data[2] = 'H';
+    elem->seg.data[3] = ':';
+    elem->seg.data[4] =  a ;
+    elem->seg.data[5] =  b ;
+    elem->seg.data[6] =  c ;
+    elem->seg.data[7] = '\0';
+    
+    /*elem.seg.data[0] = 'A';
+    elem.seg.data[1] = 'S';
+    elem.seg.data[2] = 'D';
+    elem.seg.data[3] = 'F';
+    elem.seg.data[4] = 'G';
+    elem.seg.data[5] = 'H';
+    elem.seg.data[6] = 'I';
+    elem.seg.data[7] = '\0';*/
+    
+    EnqueueFQ( NewFQE( (void *) elem ), q.queue );
+    i++;
+  }
   Unlock(q.lock);
   
+  
   logLine(trace, "TL: Offering queue.\n");
-  NL_OfferSendingQueue(&q); //We can do this whenever really as it isn't based on a 1:1 signals-handing-out-information thing.
+  if (ThisStation == 1)
+    NL_OfferSendingQueue(&q); //We can do this whenever really as it isn't based on a 1:1 signals-handing-out-information thing.
   
   /*while(Trylock(q.lock) != 0) {
     logLine(trace, "TL: Waiting for unlocking of queue.\n");
@@ -49,6 +95,8 @@ void fake_transportLayer() {
   logLine(succes, "TL: NL Released the sending queue.\n");
   
   Stop();*/
+  
+  int numReceivedPackets = 0;
   
   while(true) {
     logLine(trace, "TL: Waiting for signals.\n");
@@ -72,42 +120,26 @@ void fake_transportLayer() {
         
         logLine(trace, "TL: Releasing locks.\n");
         Unlock(offer->lock);
-        sleep(2); //TEMPORARY!!!
-        Stop();
+        //sleep(2); //TEMPORARY!!!
+        //Stop();
+        
+        numReceivedPackets++;
         
         break;
-      /*case NL_SendingQueueOffer://NL_OfferSendingQueue:
-        logLine(debug, "NL: Received signal NL_SendingQueueOffer.\n");
-        offer = (ConcurrentFifoQueue*) event.msg;
-        logLine(trace, "NL: Received offer queue.\n");
-        //Assumes that the queue has already been locked by the offerer. The offerer intends only this process to access the queue and renounces its own access.
-        
-        //Turn all segments into datagrams
-        while(EmptyFQ(offer->queue) == 0) {
-          logLine(trace, "NL: Handling element.\n");
-          e = DequeueFQ(offer->queue);
-          o = *((TL_OfferElement*) (e->val));
-          
-          d.type = DATAGRAM;
-          d.reserved = 0;
-          d.payloadsize = MAX_PAYLOAD;
-          
-          d.src = thisNetworkAddress;
-          d.dest = o.receiver;
-          
-          d.payload = o.seg;
-          
-          logLine(info, "NL: Received from TL: %s\n", d.payload.data);
-        }
-        
-        logLine(trace, "NL: Releasing locks.\n");
-        Unlock(offer->lock); //Done with this queue, allow access to it again.
-        Unlock(sendingQueue.lock);
-        logLine(debug, "NL: Finished handling signal NL_SendingQueueOffer.\n");
-        break;*/
-    
     }
     
+    if(numReceivedPackets >= TL_NUM_HEH) {
+      logLine(succes, "Received all packets.\n");
+      if(ThisStation == 1) {
+        sleep(2);
+        Stop();
+      } else {
+        NL_OfferSendingQueue(&q);
+      }
+      
+      //sleep(2);
+      //Stop();
+    }
     
     
   }
