@@ -1,10 +1,1 @@
 \section{Conclusion}
-A major initial challenge was to fully grasp how to implement the theoretical knowledge into the RDT implementation, as it was difficult for us to understand the interactions at play, especially with regard to the subnet library. This resulted in having to read the project description several times.
-Our initial approach was to expand on the data structures used in place, which proved to be a greater challenge than to organize the data properly with structs, which also provided a clearer perspective of the actual workings at play in the program dynamics.\\
-From that point on, and after further investigation of the underlying systems, it was an almost trivial task to expand the system to support multiple neighbours.\\
-\\~
-Our testing has then verified that the hosts can communicate reliably with each other, which was done by running the simulation multiple times with a 90\% error rate. (-e 900)\\
-\\~
-Based on the perceived reliability of the solution, based on the tests, it is concluded that RDT between multiple hosts on the link level has been correctly implemented.\\
-\\~
-A possible improvement of the system would be to support dynamic establishment of new connections. The current connection requires that the connections are preconfigured, which is only useful when the connections are known beforehand. Dynamically establishing connections would also require dynamic expansion of the number of neighbours and some means of tearing down connections as well.
