@@ -1,1 +1,82 @@
 \section{Testing}
+All testing described in this section is done in the topology described in the project description, which is also included in the introduction as figure \ref{fig:GivenTopology}.\\
+\\
+The hosts A and B send each other a number of messages at the format "HEH:\#\#\#\textbackslash0". The routers these messages are sent to can be determined by choosing the routing table with argument 2.\\
+The numbering starts at 1 and goes up incrementally, so it can be verified that they all arrive in the correct order and without duplicates.\\
+\\
+The actual tests have been made with all four sets of routing tables, and with 100 messages both ways. This means that full-duplex communication has been tried going through both routers, and half-duplex through both routers simultaneously for both "circling" directions. (Refering to the shape of the topology)\\
+\\
+The testing was done with the command './network -pmynetwork -e250 -n4 -a 5 \#', where \# is the set of routing tables to run with. The testing was done for all valid routing tables with 100 messages.\\
+\\
+\subsection{Logs for Routing Table Set 0 Hosts}
+Here are the logs for routing table set 0 for the hosts. The complete log is in the appendix.\\
+\\
+Log for station 1: (Host A)
+\begin{Verbatim}[frame=single]
+Station 1: arg2 = 5
+Starting network simulation
+Station 1: arg3 = 0
+[Station 1 ready]
+GO received! - error freq 0.250
+Starting process (selective_repeat)
+Starting process (networkLayerHost)
+Starting process (fake_transportLayer)
+1 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 212: 'HEH:  1'
+1 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 212: 'HEH:  2'
+1 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 212: 'HEH:  3'
+1 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 212: 'HEH:  4'
+1 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 212: 'HEH:  5'
+1 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 212: 'HEH:  6'
+1 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 212: 'HEH:  7'
+1 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 212: 'HEH:  8'
+1 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 212: 'HEH:  9'
+1 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 212: 'HEH: 10'
+<<stop-signal received.>>
+<<Sending stop-signal>>
+>> Press enter to terminate!
+\end{Verbatim}
+
+Log for station 2: (Host B)
+\begin{Verbatim}[frame=single]
+Station 2: arg2 = 5
+Starting network simulation
+Station 2: arg3 = 0
+[Station 2 ready]
+GO received! - error freq 0.250
+Starting process (networkLayerHost)
+Starting process (fake_transportLayer)
+Starting process (selective_repeat)
+2 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 111: 'HEH:  1'
+2 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 111: 'HEH:  2'
+2 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 111: 'HEH:  3'
+2 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 111: 'HEH:  4'
+2 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 111: 'HEH:  5'
+2 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 111: 'HEH:  6'
+2 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 111: 'HEH:  7'
+2 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 111: 'HEH:  8'
+2 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 111: 'HEH:  9'
+2 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 111: 'HEH: 10'
+<<Sending stop-signal>>
+<<stop-signal received.>>
+>> Press enter to terminate!
+\end{Verbatim}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
