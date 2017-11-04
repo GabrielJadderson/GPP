@@ -181,18 +181,18 @@ void initialize_networkLayer(int stationID, int setup) {
 
 neighbourid NL_TableLookup(networkAddress addr) {
   int i = 0;
-    logLine(succes, "NL_TableLookup: addr=%d, compating to [%d]=%d\n", addr, i, routingTable.addresses[i]);
+    logLine(trace, "NL_TableLookup: addr=%d, compating to [%d]=%d\n", addr, i, routingTable.addresses[i]);
   while (routingTable.addresses[i] != addr) {
     i++;
-    logLine(succes, "NL_TableLookup: addr=%d, compating to [%d]=%d\n", addr, i, routingTable.addresses[i]);
+    logLine(trace, "NL_TableLookup: addr=%d, compating to [%d]=%d\n", addr, i, routingTable.addresses[i]);
     
     if(i >= NL_ROUTING_TABLE_SIZE) {
-      logLine(error, "NL_TableLookup: unable to find neighbourid for address: %d\n", addr);
+      logLine(trace, "NL_TableLookup: unable to find neighbourid for address: %d\n", addr);
       Stop();
     }
   }
   
-  logLine(succes, "NL_TableLookup: addr=%d => neighbourid=%d\n", addr, routingTable.neighbourids[i]);
+  logLine(info, "NL_TableLookup: addr=%d => neighbourid=%d\n", addr, routingTable.neighbourids[i]);
   
   return routingTable.neighbourids[i];
 }
@@ -336,7 +336,7 @@ void networkLayerHost() {
           O = malloc(sizeof(NL_OfferElement));
           O->otherHostNeighbourid = NL_TableLookup(d.dest);
           O->dat = d;
-          logLine(succes, "NL: networkAddresss=%d, neighbourid=%d\n", d.dest, O->otherHostNeighbourid);
+          logLine(trace, "NL: networkAddresss=%d, neighbourid=%d\n", d.dest, O->otherHostNeighbourid);
           
           //logLine(trace, "NL: 55555\n");
           EnqueueFQ(NewFQE((void *)O), sendingQueue.queue);
@@ -475,12 +475,12 @@ void networkLayerRouter() {
   logLine(debug, "NL: Started.\n");
   
   while(true) {
-    logLine(succes/*trace*/, "NL: Waiting for signals.\n");
+    logLine(trace, "NL: Waiting for signals.\n");
     Wait(&event, events_we_handle);
     
     switch(event.type) {
       case network_layer_allowed_to_send:
-        logLine(succes, "NL: Allowed to send by LL.\n");
+        logLine(trace, "NL: Allowed to send by LL.\n");
         allowedToSendToLL = true; //There might not be an element to send right now. Remember that we can send without getting stuck here.
         break;
       case data_for_network_layer:
@@ -496,14 +496,14 @@ void networkLayerRouter() {
           O->otherHostNeighbourid = NL_TableLookup(d.dest);
           O->dat = d;
           
-          logLine(succes, "NL: networkAddresss=%d, neighbourid=%d\n", d.dest, O->otherHostNeighbourid);
+          logLine(trace, "NL: networkAddresss=%d, neighbourid=%d\n", d.dest, O->otherHostNeighbourid);
           
           EnqueueFQ(NewFQE((void *)O), receivedQueue);
           
           break; //Done.
         }
         
-        logLine(succes, "NL: Datagram type (enum): %d.\n", d.type);
+        logLine(trace, "NL: Datagram type (enum): %d.\n", d.type);
         switch(d.type) {
           //case DATAGRAM: //Datagrams are handled above
           case ROUTERINFO:
@@ -519,7 +519,7 @@ void networkLayerRouter() {
     //If the lock is free, then put the received elements into the queue for the LL.
     //if(Trylock(sendingQueue.lock) == 0 && EmptyFQ(receivedQueue) == 0) {
     if(routersendingQueue.used == false && EmptyFQ(receivedQueue) == 0) {
-      logLine(succes, "NL: Transfering between queues\n");
+      logLine(trace, "NL: Transfering between queues\n");
       //Lock(sendingQueue.lock); //Nothing else uses it, but for good measure since it's easy here.
       
       //Transfer from one queue to the other.
@@ -538,7 +538,7 @@ void networkLayerRouter() {
       
       //Signal(network_layer_ready, ValueOfFQE(e)); //Just pass it directly.
       
-      logLine(succes, "NL: Offering queue to LL\n");
+      logLine(trace, "NL: Offering queue to LL\n");
       
       if(routersendingQueue.used == true) {
       //if(Trylock(routersendingQueue.lock) != 0) {

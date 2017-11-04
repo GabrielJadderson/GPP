@@ -48,7 +48,7 @@ void fake_transportLayer() {
   Unlock(q.lock);*/
   
   //Lock (q->lock);
-  #define TL_NUM_HEH 100
+  #define TL_NUM_HEH 10
   int i = 1;
   while(i <= TL_NUM_HEH) {
     elem = malloc(sizeof(TL_OfferElement));
