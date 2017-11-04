@@ -129,7 +129,6 @@ void log_event_received(long int event)
 void selective_repeat()
 {
 	frame r; // scratch variable
-        datagram *d; //scratch variable
         NL_OfferElement *o;
 
 	neighbourid currentNeighbour = 0; //Each time this is used, it should be set.
@@ -590,7 +589,7 @@ int main(int argc, char *argv[])
 	StationName = argv[0];
 	ThisStation = atoi(argv[1]);
 
-	if (argc == 3) {
+	if (argc >= 3) {
 		printf("Station %d: arg2 = %s\n", ThisStation, argv[2]);
 		global_log_level_limit = atoi(argv[2]);
 	}
@@ -641,7 +640,19 @@ int main(int argc, char *argv[])
         //printf("\nInitializing link layer?\n\n");
         initialize_linkLayer(ThisStation);
         //printf("\nInitializing network layer?\n\n");
-        initialize_networkLayer(ThisStation);
+        //initialize_networkLayer(ThisStation, 0);
+        
+        int networkLayerInit = 0;
+        
+        
+	if (argc >= 4) {
+		printf("Station %d: arg3 = %s\n", ThisStation, argv[3]);
+                networkLayerInit = atoi(argv[3]);
+		//initialize_networkLayer(ThisStation, atoi(argv[3]));
+	}
+	//else {
+		initialize_networkLayer(ThisStation, networkLayerInit);
+	//}
         
         //Host A
         //printf("\nActivating station 1?\n\n");
@@ -660,6 +671,12 @@ int main(int argc, char *argv[])
         ACTIVATE(3, selective_repeat);
         ACTIVATE(3, networkLayerRouter);
         
+        //Router 2
+        //printf("\nActivating station 4?\n\n");
+        ACTIVATE(4, selective_repeat);
+        ACTIVATE(4, networkLayerRouter);
+        
+        
 	/* simuleringen starter */
         //printf("\nStarting simulation?\n\n");
 	Start();
@@ -670,13 +687,13 @@ void initialize_linkLayer(int stationID) {
   switch(stationID) {
     case 1: //Host A
       neighbours[0].stationID = 3;
-      neighbours[1].stationID = -1;
+      neighbours[1].stationID = 4;
       neighbours[2].stationID = -1;
       neighbours[3].stationID = -1;
       break;
     case 2: //Host B
       neighbours[0].stationID = 3;
-      neighbours[1].stationID = -1;
+      neighbours[1].stationID = 4;
       neighbours[2].stationID = -1;
       neighbours[3].stationID = -1;
       break;
@@ -687,8 +704,11 @@ void initialize_linkLayer(int stationID) {
       neighbours[3].stationID = -1;
       break;
     case 4: //Router 2
-      
-      //break;
+      neighbours[0].stationID = 2;
+      neighbours[1].stationID = 1;
+      neighbours[2].stationID = -1;
+      neighbours[3].stationID = -1;
+      break;
     default:
       logLine(error, "LL: Link layer initialized for station without a case (%d) - Sending Stop Signal.\n", stationID);
       Stop();

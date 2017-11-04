@@ -18,7 +18,9 @@ networkAddress thisNetworkAddress;
 NL_RoutingTable routingTable;
 
 #define ROUTINGTABLEADD(i, a, n) routingTable.addresses[i] = a; routingTable.neighbourids[i] = n;
-void initialize_networkLayer(int stationID) {
+void initialize_networkLayer(int stationID, int setup) {
+  switch (setup) {
+  case 0:
   switch(stationID) {
     case 1: //Host A
       thisNetworkAddress = 111;
@@ -42,11 +44,136 @@ void initialize_networkLayer(int stationID) {
       ROUTINGTABLEADD(3, -1, -1);
       break;
     case 4: //Router 2
-      
-      //break;
+      thisNetworkAddress = 414;
+      ROUTINGTABLEADD(0, 212, 0);
+      ROUTINGTABLEADD(1, 111, 1);
+      ROUTINGTABLEADD(2, -1, -1);
+      ROUTINGTABLEADD(3, -1, -1);
+      break;
     default:
-      logLine(error, "NL: Network layer initialized for station without a case (%d) - Sending Stop Signal.\n", stationID);
+      //logLine(error, "NL: Network layer initialized for station without a case (%d) - Sending Stop Signal.\n", stationID);
+      printf("NL: Network layer initialized for station without a case (%d) - Sending Stop Signal.\n", stationID);
       Stop();
+  }
+  break;
+  
+  case 1:
+  switch(stationID) {
+    case 1: //Host A
+      thisNetworkAddress = 111;
+      ROUTINGTABLEADD(0, 212, 1);
+      ROUTINGTABLEADD(1, -1, -1);
+      ROUTINGTABLEADD(2, -1, -1);
+      ROUTINGTABLEADD(3, -1, -1);
+      break;
+    case 2: //Host B
+      thisNetworkAddress = 212;
+      ROUTINGTABLEADD(0, 111, 0);
+      ROUTINGTABLEADD(1, -1, -1);
+      ROUTINGTABLEADD(2, -1, -1);
+      ROUTINGTABLEADD(3, -1, -1);
+      break;
+    case 3: //Router 1
+      thisNetworkAddress = 313;
+      ROUTINGTABLEADD(0, 111, 0);
+      ROUTINGTABLEADD(1, 212, 1);
+      ROUTINGTABLEADD(2, -1, -1);
+      ROUTINGTABLEADD(3, -1, -1);
+      break;
+    case 4: //Router 2
+      thisNetworkAddress = 414;
+      ROUTINGTABLEADD(0, 212, 0);
+      ROUTINGTABLEADD(1, 111, 1);
+      ROUTINGTABLEADD(2, -1, -1);
+      ROUTINGTABLEADD(3, -1, -1);
+      break;
+    default:
+      //logLine(error, "NL: Network layer initialized for station without a case (%d) - Sending Stop Signal.\n", stationID);
+      printf("NL: Network layer initialized for station without a case (%d) - Sending Stop Signal.\n", stationID);
+      Stop();
+  }
+  break;
+  
+  case 2:
+  switch(stationID) {
+    case 1: //Host A
+      thisNetworkAddress = 111;
+      ROUTINGTABLEADD(0, 212, 0);
+      ROUTINGTABLEADD(1, -1, -1);
+      ROUTINGTABLEADD(2, -1, -1);
+      ROUTINGTABLEADD(3, -1, -1);
+      break;
+    case 2: //Host B
+      thisNetworkAddress = 212;
+      ROUTINGTABLEADD(0, 111, 1);
+      ROUTINGTABLEADD(1, -1, -1);
+      ROUTINGTABLEADD(2, -1, -1);
+      ROUTINGTABLEADD(3, -1, -1);
+      break;
+    case 3: //Router 1
+      thisNetworkAddress = 313;
+      ROUTINGTABLEADD(0, 111, 0);
+      ROUTINGTABLEADD(1, 212, 1);
+      ROUTINGTABLEADD(2, -1, -1);
+      ROUTINGTABLEADD(3, -1, -1);
+      break;
+    case 4: //Router 2
+      thisNetworkAddress = 414;
+      ROUTINGTABLEADD(0, 212, 0);
+      ROUTINGTABLEADD(1, 111, 1);
+      ROUTINGTABLEADD(2, -1, -1);
+      ROUTINGTABLEADD(3, -1, -1);
+      break;
+    default:
+      //logLine(error, "NL: Network layer initialized for station without a case (%d) - Sending Stop Signal.\n", stationID);
+      printf("NL: Network layer initialized for station without a case (%d) - Sending Stop Signal.\n", stationID);
+      Stop();
+  }
+  break;
+  
+  case 3:
+  switch(stationID) {
+    case 1: //Host A
+      thisNetworkAddress = 111;
+      ROUTINGTABLEADD(0, 212, 1);
+      ROUTINGTABLEADD(1, -1, -1);
+      ROUTINGTABLEADD(2, -1, -1);
+      ROUTINGTABLEADD(3, -1, -1);
+      break;
+    case 2: //Host B
+      thisNetworkAddress = 212;
+      ROUTINGTABLEADD(0, 111, 1);
+      ROUTINGTABLEADD(1, -1, -1);
+      ROUTINGTABLEADD(2, -1, -1);
+      ROUTINGTABLEADD(3, -1, -1);
+      break;
+    case 3: //Router 1
+      thisNetworkAddress = 313;
+      ROUTINGTABLEADD(0, 111, 0);
+      ROUTINGTABLEADD(1, 212, 1);
+      ROUTINGTABLEADD(2, -1, -1);
+      ROUTINGTABLEADD(3, -1, -1);
+      break;
+    case 4: //Router 2
+      thisNetworkAddress = 414;
+      ROUTINGTABLEADD(0, 212, 0);
+      ROUTINGTABLEADD(1, 111, 1);
+      ROUTINGTABLEADD(2, -1, -1);
+      ROUTINGTABLEADD(3, -1, -1);
+      break;
+    default:
+      //logLine(error, "NL: Network layer initialized for station without a case (%d) - Sending Stop Signal.\n", stationID);
+      printf("NL: Network layer initialized for station without a case (%d) - Sending Stop Signal.\n", stationID);
+      Stop();
+  }
+  break;
+  
+  default:
+    //logLine(error, "NL: Please choose a valid network layer initialization.\n");
+    printf("NL: Please choose a valid network layer initialization.\n");
+    Wait(NULL, 0);
+    Stop();
+    break;
   }
 }
 
@@ -54,8 +181,10 @@ void initialize_networkLayer(int stationID) {
 
 neighbourid NL_TableLookup(networkAddress addr) {
   int i = 0;
+    logLine(succes, "NL_TableLookup: addr=%d, compating to [%d]=%d\n", addr, i, routingTable.addresses[i]);
   while (routingTable.addresses[i] != addr) {
     i++;
+    logLine(succes, "NL_TableLookup: addr=%d, compating to [%d]=%d\n", addr, i, routingTable.addresses[i]);
     
     if(i >= NL_ROUTING_TABLE_SIZE) {
       logLine(error, "NL_TableLookup: unable to find neighbourid for address: %d\n", addr);
@@ -63,7 +192,9 @@ neighbourid NL_TableLookup(networkAddress addr) {
     }
   }
   
-  return i;
+  logLine(succes, "NL_TableLookup: addr=%d => neighbourid=%d\n", addr, routingTable.neighbourids[i]);
+  
+  return routingTable.neighbourids[i];
 }
   
 //Offer the queue 'offer' to the network layer.
@@ -205,6 +336,7 @@ void networkLayerHost() {
           O = malloc(sizeof(NL_OfferElement));
           O->otherHostNeighbourid = NL_TableLookup(d.dest);
           O->dat = d;
+          logLine(succes, "NL: networkAddresss=%d, neighbourid=%d\n", d.dest, O->otherHostNeighbourid);
           
           //logLine(trace, "NL: 55555\n");
           EnqueueFQ(NewFQE((void *)O), sendingQueue.queue);
@@ -334,7 +466,7 @@ void networkLayerRouter() {
   FifoQueue receivedQueue = InitializeFQ();
   ConcurrentFifoQueue routersendingQueue = CFQ_Init();
   //ConcurrentFifoQueue *offer;
-  FifoQueueEntry e;
+  //FifoQueueEntry e;
   //TL_OfferElement *o;
   NL_OfferElement *O; //Using a pointer to create a new one every time.
   
