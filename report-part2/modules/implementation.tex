@@ -24,8 +24,8 @@ We've added the following two signals/events to the $Events.h$
 
 \subsection{ConcurrentFifoQueue}
 
-We've implemented a concurrent FIFO queue, the idea is to have a shared queue between TL and the NL.
-The concurrency is provided via a simple lock in our case an integer value.
+We've implemented a concurrent FIFO queue, the idea is to have a shared queue between the layers, such as between TL and NL.
+The concurrency is provided via a simple true/false value. The purpose of the queues is to be offered to another layer, and as such should be "locked" by setting the used value to a non-zero value and then signaling the layer with a pointer to this whole structure. The receiver of the offer must then "unlock" the queue by setting the used value to 0. With this set of use rules, it is a concurrently safe implementation.
 \begin{lstlisting}
 typedef struct {
   int used;
@@ -48,7 +48,7 @@ ROUTERINFO: Router information request, if own addres == dest, send a DATAGRAM t
 
 
 \subsubsection{Payload}
-The following is the implementation of the payload, we've chosen a static variable to define the \texttt{MAX\_PAYLOAD} size (8 bytes)
+The following is the implementation of the payload, we've chosen a compile-time value to define the \texttt{MAX\_PAYLOAD} size (8 bytes)
 \begin{lstlisting}
 #define MAX_PAYLOAD 8
 typedef struct { char data[MAX_PAYLOAD]; } payload;
@@ -82,7 +82,8 @@ typedef struct  {
 \subsection{Network Layer}
 
 The following is the implmenetation of \texttt{NL\_RoutingTable}, the routing table is used to look up hosts and routers in the network.
-Here we've defined a static variable, in the real world the \texttt{NL\_ROUTING\_TABLE\_SIZE} should be incremented and decremented dynamically.
+Here a compile-time value is used, but in the real world a completely different implementation would be used. This one is used for the sake of simplicity as the network is of minimal size.
+%Here we've defined a static variable, in the real world the \texttt{NL\_ROUTING\_TABLE\_SIZE} should be incremented and decremented dynamically. %This would be done in a completely different fashion in the real world.
 \begin{lstlisting}
 //Routing table. There can be more elements in this table than there are neighbours and multiple entries can point to the same neighbour.
 #define NL_ROUTING_TABLE_SIZE 4
@@ -93,7 +94,8 @@ typedef struct {
 \end{lstlisting}
 
 
-Similarly \texttt{NL\_OfferElement} is used in the communication between LL and NL.
+%Similarly \texttt{NL\_OfferElement} is used in the communication between LL and NL.
+In the communication between NL and LL, \texttt{NL\_OfferElement} data elements are used. This allows NL to specify outbound neighbour for the datagram.
 \begin{lstlisting}
 typedef struct {
   neighbourid otherHostNeighbourid;
@@ -105,7 +107,8 @@ typedef struct {
 
 \subsection{Network Layer: Hosts}
 
-The following is the implementation of \texttt{networkLayerHost()} with all unimportant parts ommited.
+%The following is the implementation of \texttt{networkLayerHost()} with all unimportant parts ommited.
+The following are the most significant parts of  \texttt{networkLayerHost()}, which is the implementation of the network layer for the hosts.
 
 \begin{lstlisting}
   TL_OfferElement *o;
@@ -154,7 +157,7 @@ The following is the implementation of \texttt{networkLayerHost()} with all unim
 
 \subsubsection{Network Layer: Routers}
 
-The following is the implementation of \texttt{networkLayerRouter()} which \ref{design}
+The following is the implementation of \texttt{networkLayerRouter()}% which \ref{design} %???
 \begin{lstlisting}
 void networkLayerRouter() {
   event_t event;
@@ -215,16 +218,17 @@ void networkLayerRouter() {
 
 \subsection{Transport Layer}
 
-\texttt{TL\_OfferElement} is used by the TL to figure out where to process the segment
+%\texttt{TL\_OfferElement} is used by the TL to figure out where to process the segment %Wot
+\texttt{TL\_OfferElement} is used in the communication between TL and NL, where TL sets the otherHostAddress value to be the address of the receiving host and NL sets this value to be the address of the sending host.
 \begin{lstlisting}
 typedef struct {
-  networkAddress receiver;  //This contains ``fake'' ip address of the reciever
-  payload seg;              //our payload is the msg
+  networkAddress otherHostAddress;
+  payload seg;
 } TL_OfferElement;
 \end{lstlisting}
 \break
 
-our implmenetation of the transportlayer is as follows:
+The implmenetation of the fake transportlayer for testing the network layer is as follows:
 
 \begin{lstlisting}
 void fake_transportLayer() {
