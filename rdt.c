@@ -52,6 +52,8 @@ neighbour neighbours[NUM_MAX_NEIGHBOURS]; //this array is global and contains al
 extern networkAddress thisNetworkAddress;
 extern NL_RoutingTable routingTable;
 
+//This function checks if b is within a cyclic window.
+//This means that if c < a, then c has wrapped around the end of an array and continued at the beginning.
 static boolean between(seq_nr a, seq_nr b, seq_nr c) //ensures that seq_nr b is within a and b
 {
 	boolean x = (a <= b) && (b < c);
