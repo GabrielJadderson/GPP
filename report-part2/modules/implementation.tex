@@ -31,6 +31,67 @@ typedef struct {
 } TL_OfferElement;
 \end{lstlisting}
 
+Similarly $NL_OfferElement$ is used by the TL to resolve where to process the datagram.
+\begin{lstlisting}
+typedef struct {
+  neighbourid otherHostNeighbourid;
+  datagram dat;
+} NL_OfferElement;
+\end{lstlisting}
+
+The following is the implementation of $networkLayerHost()$ with all the important parts.
+
+\begin{lstlisting}
+  ConcurrentFifoQueue receivingQueue = CFQ_Init(); //This is concurrent because it is used for communication with the transport layer. The queue is also used for consistence and expandability.
+  ConcurrentFifoQueue sendingQueue = CFQ_Init();
+  ConcurrentFifoQueue *offer;
+  FifoQueue sendingBuffQueue = InitializeFQ();
+  FifoQueue receivingBuffQueue = InitializeFQ();
+  FifoQueueEntry e;
+  TL_OfferElement *o;
+  NL_OfferElement *O; //Using a pointer to create a new one every time.
+  datagram d;
+  ...
+  switch(event.type) {
+    ...
+    case data_for_network_layer:
+      d = *((datagram*) (event.msg));
+      ...
+      switch(d.type) {
+        case DATAGRAM:
+          o = malloc(sizeof(TL_OfferElement));     //assign little o as TL_OfferElement
+          o->otherHostAddress = d.src;             //assign address
+          o->seg = d.payload;                      //assign payload
+
+      }
+      ...
+    case NL_SendingQueueOffer:    //NL_OfferSendingQueue:
+      ...
+      while(EmptyFQ(offer->queue) == 0) {         //while not empty
+        e = DequeueFQ(offer->queue);              //pop an element
+        o = ((TL_OfferElement*) ValueOfFQE(e));   //assign it to TL_OfferElement
+
+        d.src = thisNetworkAddress;               //resolve source address
+        d.dest = o->otherHostAddress;             //resolve destination address
+
+        d.payload = o->seg;                       //get the segment from TL_OfferElement as our payload for the datagram.
+
+
+
+        O = malloc(sizeof(NL_OfferElement));      //assign big O as NL_OfferElement
+        O->otherHostNeighbourid = NL_TableLookup(d.dest); //lookup the datagram destination and assign it to otherHostNeighbourid
+        O->dat = d;                               //store out datagram in NL_OfferElement
+        EnqueueFQ(NewFQE((void *)O), sendingBuffQueue); //send NL_OfferElement to the assembly line
+      }
+  }
+
+
+
+
+  ...
+
+\end{lstlisting}
+
 our implmenetation of the transportlayer is as follows:
 
 \begin{lstlisting}
