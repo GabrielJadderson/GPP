@@ -230,6 +230,8 @@ void networkLayerHost() {
   //FifoQueue sendingQueue = InitializeFQ(); //Doesn't need to be concurrent because elements are given with signals.
   ConcurrentFifoQueue sendingQueue = CFQ_Init();
   ConcurrentFifoQueue *offer;
+  FifoQueue sendingBuffQueue = InitializeFQ();
+  FifoQueue receivingBuffQueue = InitializeFQ();
   FifoQueueEntry e;
   TL_OfferElement *o;
   NL_OfferElement *O; //Using a pointer to create a new one every time.
@@ -294,10 +296,11 @@ void networkLayerHost() {
             
             logLine(trace, "NL: Locking and enqueueing segment for TL.\n");
             //Lock(receivingQueue.lock); //TODO: If queue is locked, then use a secondary queue instead. Will also prevent blocking if the upper layer is stalled for some reason.
-            EnqueueFQ( NewFQE( (void *) o ), receivingQueue.queue );
+            //EnqueueFQ( NewFQE( (void *) o ), receivingQueue.queue );
+            EnqueueFQ( NewFQE( (void *) o ), receivingBuffQueue );
             //Unlock(receivingQueue.lock);
-            logLine(trace, "NL: Offering receiving queue to TL.\n");
-            TL_OfferReceivingQueue(&receivingQueue);
+            //logLine(trace, "NL: Offering receiving queue to TL.\n");
+            //TL_OfferReceivingQueue(&receivingQueue);
             break;
           case ROUTERINFO:
             break; //Currently unused. Dropping.
@@ -339,7 +342,8 @@ void networkLayerHost() {
           logLine(trace, "NL: networkAddresss=%d, neighbourid=%d\n", d.dest, O->otherHostNeighbourid);
           
           //logLine(trace, "NL: 55555\n");
-          EnqueueFQ(NewFQE((void *)O), sendingQueue.queue);
+          //EnqueueFQ(NewFQE((void *)O), sendingQueue.queue);
+          EnqueueFQ(NewFQE((void *)O), sendingBuffQueue);
           
           logLine(info, "NL: Received from TL: %s\n", d.payload.data);
         }
@@ -366,6 +370,36 @@ void networkLayerHost() {
       
     }
     
+    //If the lock is free, then put the received elements into the queue for the LL.
+    //if(Trylock(sendingQueue.lock) == 0 && EmptyFQ(receivedQueue) == 0) {
+    if(sendingQueue.used == false && EmptyFQ(sendingBuffQueue) == 0) {
+      logLine(trace, "NL: Transfering between sending queues\n");
+      //Lock(sendingQueue.lock); //Nothing else uses it, but for good measure since it's easy here.
+      
+      //Transfer from one queue to the other.
+      while(EmptyFQ(sendingBuffQueue) == 0) {
+        EnqueueFQ(DequeueFQ(sendingBuffQueue), sendingQueue.queue);
+      }
+      
+      //Unlock(sendingQueue.lock);
+    }
+    
+    if(receivingQueue.used == false && EmptyFQ(receivingBuffQueue) == 0) {
+      logLine(trace, "NL: Transfering between receiving queues\n");
+      //Lock(sendingQueue.lock); //Nothing else uses it, but for good measure since it's easy here.
+      
+      //Transfer from one queue to the other.
+      while(EmptyFQ(receivingBuffQueue) == 0) {
+        EnqueueFQ(DequeueFQ(receivingBuffQueue), receivingQueue.queue);
+      }
+      
+      logLine(trace, "NL: Offering receiving queue to TL.\n");
+      TL_OfferReceivingQueue(&receivingQueue);
+      
+      //Unlock(sendingQueue.lock);
+    }
+    
+    
     //If we are allowed to send, then do so.
     // If the signal was sent in this loop iteration: same as if this was in the case directly
     // otherwise: we received something to send after getting clearance and would have been stuck if this was directly in the case.
@@ -380,10 +414,26 @@ void networkLayerHost() {
       allowedToSendToLL[i] = false;
     }
     }*/
-    if(allowedToSendToLL && EmptyFQ(sendingQueue.queue) == 0) {
+    /*if(allowedToSendToLL && EmptyFQ(sendingQueue.queue) == 0) {
+      LL_OfferSendingQueue(&sendingQueue);
+      allowedToSendToLL = false;
+    }*/
+    if(allowedToSendToLL && EmptyFQ(sendingQueue.queue) == 0 && sendingQueue.used == false){//EmptyFQ(receivedQueue) == 0) {
+      //e = DequeueFQ(sendingQueue); //Extract from queue
+      
+      //Signal(network_layer_ready, ValueOfFQE(e)); //Just pass it directly.
+      
+      logLine(trace, "NL: Offering queue to LL\n");
+      
+      if(sendingQueue.used == true) {
+      //if(Trylock(routersendingQueue.lock) != 0) {
+        logLine(succes, "NL: ERROR: Unable to lock sendingQueue's lock!\n");
+      }
+      
       LL_OfferSendingQueue(&sendingQueue);
       allowedToSendToLL = false;
     }
+    
   }
 }
 
