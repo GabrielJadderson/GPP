@@ -1,10 +1,10 @@
 \section{Testing}
 All testing described in this section is done in the topology described in the project description, which is also included in the introduction as figure \ref{fig:GivenTopology}.\\
 \\
-The hosts A and B send each other a number of messages at the format "HEH:\#\#\#\textbackslash0". The routers these messages are sent to can be determined by choosing the routing table with argument 2.\\
+The hosts A and B send each other a number of messages in the format "HEH:\#\#\#\textbackslash0". The routers these messages are sent to can be determined by choosing the routing table with argument 2.\\
 The numbering starts at 1 and goes up incrementally, so it can be verified that they all arrive in the correct order and without duplicates.\\
 \\
-The actual tests have been made with all four sets of routing tables, and with 100 messages both ways. This means that full-duplex communication has been tried going through both routers, and half-duplex through both routers simultaneously for both "circling" directions. (Refering to the shape of the topology)\\
+The actual tests have been made with all four sets of routing tables and with 100 messages both ways. This means that full-duplex communication has been tried going through both routers, and half-duplex through both routers simultaneously for both "circling" directions. (Referring to the shape of the topology)\\
 \\
 The testing was done with the command './network -pmynetwork -e250 -n4 -a 5 \#', where \# is the set of routing tables to run with. The testing was done for all valid routing tables with 100 messages.\\
 \\
@@ -60,23 +60,3 @@ Starting process (selective_repeat)
 <<stop-signal received.>>
 >> Press enter to terminate!
 \end{lstlisting}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
