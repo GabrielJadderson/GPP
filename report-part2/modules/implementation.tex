@@ -22,7 +22,7 @@ furtheremore, we've removed some locks and unified them under a single lock
 
 
 
-$TL_OfferElement$ is used by the NL to figure out where to process the segment
+$TL_OfferElement$ is used by the TL to figure out where to process the segment
 
 \begin{lstlisting}
 typedef struct {
@@ -31,7 +31,7 @@ typedef struct {
 } TL_OfferElement;
 \end{lstlisting}
 
-Similarly $NL_OfferElement$ is used by the TL to resolve where to process the datagram.
+Similarly $NL_OfferElement$ is used by in the communication between LL and NL.
 \begin{lstlisting}
 typedef struct {
   neighbourid otherHostNeighbourid;
@@ -84,13 +84,123 @@ The following is the implementation of $networkLayerHost()$ with all the importa
         EnqueueFQ(NewFQE((void *)O), sendingBuffQueue); //send NL_OfferElement to the assembly line
       }
   }
+  ...
 
-
-
+  TL_OfferReceivingQueue(&receivingQueue);        //NL sends the element in the queue to TL
 
   ...
 
+  LL_OfferSendingQueue(&sendingQueue);            //NL sends
 \end{lstlisting}
+
+
+$TL_OfferReceivingQueue$ is implemented in the following way:
+
+\begin{lstlisting}
+void TL_OfferReceivingQueue(ConcurrentFifoQueue *offer) {
+  Signal(TL_ReceivingQueueOffer, (void*) offer);
+}
+\end{lstlisting}
+
+
+
+
+
+
+
+
+
+The following is the implementation of $networkLayerRouter$
+
+
+\begin{lstlisting}
+void networkLayerRouter() {
+  //Since this network layer isn't 'fake', it has no condition to stop and relies on the above layer to handle this.
+  long int events_we_handle = network_layer_allowed_to_send | data_for_network_layer;
+  event_t event;
+
+  boolean allowedToSendToLL = false;
+
+  FifoQueue receivedQueue = InitializeFQ();
+  ConcurrentFifoQueue routersendingQueue = CFQ_Init();
+
+  NL_OfferElement *O;
+
+  datagram d;
+
+  while(true) {
+    Wait(&event, events_we_handle);
+
+    switch(event.type) {
+      case network_layer_allowed_to_send:
+        logLine(trace, "NL: Allowed to send by LL.\n");
+        allowedToSendToLL = true; //There might not be an element to send right now. Remember that we can send without getting stuck here.
+        break;
+      case data_for_network_layer:
+        logLine(succes, "NL: Received datagram from LL.\n");
+
+        //We're a host. We don't route packets, we receive them.
+
+        d = *((datagram*) (event.msg));
+
+        if(d.dest != thisNetworkAddress) {
+          logLine(succes, "NL: Packet was not addressed for this Router. Forwarding.\n");
+
+          O = malloc(sizeof(NL_OfferElement));
+          O->otherHostNeighbourid = NL_TableLookup(d.dest);
+          O->dat = d;
+
+          logLine(trace, "NL: networkAddresss=%d, neighbourid=%d\n", d.dest, O->otherHostNeighbourid);
+
+          EnqueueFQ(NewFQE((void *)O), receivedQueue);
+
+          break; //Done.
+        }
+
+        logLine(trace, "NL: Datagram type (enum): %d.\n", d.type);
+
+        break;
+    }
+
+    //logLine(succes, "NL: Trylock of sendingQueue and emptyness of receivedQueue: %d, %d\n", Trylock(routersendingQueue.lock), EmptyFQ(receivedQueue));
+
+    //If the lock is free, then put the received elements into the queue for the LL.
+    //if(Trylock(sendingQueue.lock) == 0 && EmptyFQ(receivedQueue) == 0) {
+    if(routersendingQueue.used == false && EmptyFQ(receivedQueue) == 0) {
+      logLine(trace, "NL: Transfering between queues\n");
+      //Lock(sendingQueue.lock); //Nothing else uses it, but for good measure since it's easy here.
+
+      //Transfer from one queue to the other.
+      while(EmptyFQ(receivedQueue) == 0) {
+        EnqueueFQ(DequeueFQ(receivedQueue), routersendingQueue.queue);
+      }
+
+      //Unlock(sendingQueue.lock);
+    }
+
+    //If we are allowed to send, then do so.
+    // If the signal was sent in this loop iteration: same as if this was in the case directly
+    // otherwise: we received something to send after getting clearance and would have been stuck if this was directly in the case.
+    if(allowedToSendToLL && EmptyFQ(routersendingQueue.queue) == 0 && routersendingQueue.used == false){//EmptyFQ(receivedQueue) == 0) {
+      //e = DequeueFQ(sendingQueue); //Extract from queue
+
+      //Signal(network_layer_ready, ValueOfFQE(e)); //Just pass it directly.
+
+      logLine(trace, "NL: Offering queue to LL\n");
+
+      if(routersendingQueue.used == true) {
+      //if(Trylock(routersendingQueue.lock) != 0) {
+        logLine(succes, "NL: ERROR: Unable to lock sendingQueue's lock!\n");
+      }
+
+      LL_OfferSendingQueue(&routersendingQueue);
+      allowedToSendToLL = false;
+    }
+  }
+}
+\end{lstlisting}
+
+
 
 our implmenetation of the transportlayer is as follows:
 
