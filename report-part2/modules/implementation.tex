@@ -1,15 +1,18 @@
 \section{Implementation}
-\subsection{Information restructuring}
 
-We've cleaned and refactored the code, events have been placed in their consecutive class.
+\subsection{Refactoring}
+
+We've cleaned and refactored the code from the previous project and we've removed most of the locks as they can only be accessed by their context thread.
+Furtheremore, events have been placed in their consecutive class.
 The following elements have been moved to $Events.h$
+\break
 \\
 \texttt{network\_layer\_allowed\_to\_send}
 \break
 \texttt{network\_layer\_ready}
 \break
 \texttt{data\_for\_network\_layer}
-\break
+\\
 
 We've added the following two signals/events to the $Events.h$
 
@@ -18,20 +21,79 @@ We've added the following two signals/events to the $Events.h$
 #define TL_ReceivingQueueOffer  0x00000040 //NL->TL: Offer TL a queue of elements for it to receive. The offered concurrentFifoQueue is assumed locked.
 \end{lstlisting}
 
-furtheremore, we've removed some locks and unified them under a single lock
 
+\subsection{ConcurrentFifoQueue}
 
-
-$TL_OfferElement$ is used by the TL to figure out where to process the segment
-
+We've implemented a concurrent FIFO queue, the idea is to have a shared queue between TL and the NL.
+The concurrency is provided via a simple lock in our case an integer value.
 \begin{lstlisting}
 typedef struct {
-  networkAddress receiver;  //This contains ``fake'' ip address of the reciever
-  payload seg;              //our payload is the msg
-} TL_OfferElement;
+  int used;
+  FifoQueue queue;
+} ConcurrentFifoQueue;
 \end{lstlisting}
 
-Similarly $NL_OfferElement$ is used by in the communication between LL and NL.
+
+
+\subsection{Datagram and Payload}
+
+\begin{lstlisting}
+// Datagram type. Explicitly not typedeffed. More can be added.
+enum {DATAGRAM, ROUTERINFO};
+/* Documentation:
+DATAGRAM: A packet to be delivered to the transport layer.
+ROUTERINFO: Router information request, if own addres == dest, send a DATAGRAM to src with information based on the contents of the payload. Unimplemented.
+*/
+\end{lstlisting}
+
+
+\subsubsection{Payload}
+The following is the implementation of the payload, we've chosen a static variable to define the \texttt{MAX\_PAYLOAD} size (8 bytes)
+\begin{lstlisting}
+#define MAX_PAYLOAD 8
+typedef struct { char data[MAX_PAYLOAD]; } payload;
+\end{lstlisting}
+
+\subsubsection{Datagram}
+
+Our networkAddress is defined as a 32-bit address similarly to IPv4
+\begin{lstlisting}
+typedef signed long networkAddress;
+\end{lstlisting}
+
+
+Our datagram as specified in the \ref{sec:DATAGRAM} Design section.
+
+\begin{lstlisting}
+typedef struct  {
+  //First 32bit word
+  unsigned char type;         //8-bit
+  unsigned char reserved;     //Currently unused. Exists for expandability and to pad to 32-bit word. Considering a next-header value with additional options as in IPv6.
+  unsigned short payloadsize; //16-bit
+
+  //Two next 32-bit words
+  networkAddress src;         //source address
+  networkAddress dest;        //destination address
+
+  payload payload;            //Payload
+} datagram;
+\end{lstlisting}
+
+\subsection{Network Layer}
+
+The following is the implmenetation of \texttt{NL\_RoutingTable}, the routing table is used to look up hosts and routers in the network.
+Here we've defined a static variable, in the real world the \texttt{NL\_ROUTING\_TABLE\_SIZE} should be incremented and decremented dynamically.
+\begin{lstlisting}
+//Routing table. There can be more elements in this table than there are neighbours and multiple entries can point to the same neighbour.
+#define NL_ROUTING_TABLE_SIZE 4
+typedef struct {
+  networkAddress addresses[NL_ROUTING_TABLE_SIZE];
+  neighbourid    neighbourids[NL_ROUTING_TABLE_SIZE];
+} NL_RoutingTable;
+\end{lstlisting}
+
+
+Similarly \texttt{NL\_OfferElement} is used in the communication between LL and NL.
 \begin{lstlisting}
 typedef struct {
   neighbourid otherHostNeighbourid;
@@ -39,15 +101,13 @@ typedef struct {
 } NL_OfferElement;
 \end{lstlisting}
 
-The following is the implementation of $networkLayerHost()$ with all the important parts.
+%\linebreak
+
+\subsection{Network Layer: Hosts}
+
+The following is the implementation of \texttt{networkLayerHost()} with all unimportant parts ommited.
 
 \begin{lstlisting}
-  ConcurrentFifoQueue receivingQueue = CFQ_Init(); //This is concurrent because it is used for communication with the transport layer. The queue is also used for consistence and expandability.
-  ConcurrentFifoQueue sendingQueue = CFQ_Init();
-  ConcurrentFifoQueue *offer;
-  FifoQueue sendingBuffQueue = InitializeFQ();
-  FifoQueue receivingBuffQueue = InitializeFQ();
-  FifoQueueEntry e;
   TL_OfferElement *o;
   NL_OfferElement *O; //Using a pointer to create a new one every time.
   datagram d;
@@ -55,7 +115,7 @@ The following is the implementation of $networkLayerHost()$ with all the importa
   switch(event.type) {
     ...
     case data_for_network_layer:
-      d = *((datagram*) (event.msg));
+      d = *((datagram*) (event.msg));              //retrieve our datagram
       ...
       switch(d.type) {
         case DATAGRAM:
@@ -74,58 +134,34 @@ The following is the implementation of $networkLayerHost()$ with all the importa
         d.src = thisNetworkAddress;               //resolve source address
         d.dest = o->otherHostAddress;             //resolve destination address
 
-        d.payload = o->seg;                       //get the segment from TL_OfferElement as our payload for the datagram.
+        d.payload = o->seg;  //get the segment from TL_OfferElement as our payload.
 
 
 
         O = malloc(sizeof(NL_OfferElement));      //assign big O as NL_OfferElement
-        O->otherHostNeighbourid = NL_TableLookup(d.dest); //lookup the datagram destination and assign it to otherHostNeighbourid
-        O->dat = d;                               //store out datagram in NL_OfferElement
-        EnqueueFQ(NewFQE((void *)O), sendingBuffQueue); //send NL_OfferElement to the assembly line
+        O->otherHostNeighbourid = NL_TableLookup(d.dest); //get address from lookup table.
+        O->dat = d;                        //store out datagram in NL_OfferElement
+        EnqueueFQ(NewFQE((void *)O), sendingBuffQueue); //send NL_OfferElement
       }
+
+      ...
+
+      ...
   }
-  ...
-
-  TL_OfferReceivingQueue(&receivingQueue);        //NL sends the element in the queue to TL
-
-  ...
-
-  LL_OfferSendingQueue(&sendingQueue);            //NL sends
-\end{lstlisting}
-
-
-$TL_OfferReceivingQueue$ is implemented in the following way:
-
-\begin{lstlisting}
-void TL_OfferReceivingQueue(ConcurrentFifoQueue *offer) {
-  Signal(TL_ReceivingQueueOffer, (void*) offer);
-}
 \end{lstlisting}
 
 
 
+\subsubsection{Network Layer: Routers}
 
-
-
-
-
-
-The following is the implementation of $networkLayerRouter$
-
-
+The following is the implementation of \texttt{networkLayerRouter()} which \ref{design}
 \begin{lstlisting}
 void networkLayerRouter() {
-  //Since this network layer isn't 'fake', it has no condition to stop and relies on the above layer to handle this.
-  long int events_we_handle = network_layer_allowed_to_send | data_for_network_layer;
   event_t event;
-
   boolean allowedToSendToLL = false;
-
   FifoQueue receivedQueue = InitializeFQ();
   ConcurrentFifoQueue routersendingQueue = CFQ_Init();
-
   NL_OfferElement *O;
-
   datagram d;
 
   while(true) {
@@ -133,13 +169,10 @@ void networkLayerRouter() {
 
     switch(event.type) {
       case network_layer_allowed_to_send:
-        logLine(trace, "NL: Allowed to send by LL.\n");
-        allowedToSendToLL = true; //There might not be an element to send right now. Remember that we can send without getting stuck here.
+        allowedToSendToLL = true;
         break;
       case data_for_network_layer:
         logLine(succes, "NL: Received datagram from LL.\n");
-
-        //We're a host. We don't route packets, we receive them.
 
         d = *((datagram*) (event.msg));
 
@@ -147,51 +180,29 @@ void networkLayerRouter() {
           logLine(succes, "NL: Packet was not addressed for this Router. Forwarding.\n");
 
           O = malloc(sizeof(NL_OfferElement));
-          O->otherHostNeighbourid = NL_TableLookup(d.dest);
+          O->otherHostNeighbourid = NL_TableLookup(d.dest); //Lookup the destination
           O->dat = d;
 
-          logLine(trace, "NL: networkAddresss=%d, neighbourid=%d\n", d.dest, O->otherHostNeighbourid);
-
           EnqueueFQ(NewFQE((void *)O), receivedQueue);
-
           break; //Done.
         }
-
-        logLine(trace, "NL: Datagram type (enum): %d.\n", d.type);
-
         break;
     }
 
-    //logLine(succes, "NL: Trylock of sendingQueue and emptyness of receivedQueue: %d, %d\n", Trylock(routersendingQueue.lock), EmptyFQ(receivedQueue));
-
-    //If the lock is free, then put the received elements into the queue for the LL.
-    //if(Trylock(sendingQueue.lock) == 0 && EmptyFQ(receivedQueue) == 0) {
     if(routersendingQueue.used == false && EmptyFQ(receivedQueue) == 0) {
       logLine(trace, "NL: Transfering between queues\n");
-      //Lock(sendingQueue.lock); //Nothing else uses it, but for good measure since it's easy here.
-
       //Transfer from one queue to the other.
       while(EmptyFQ(receivedQueue) == 0) {
         EnqueueFQ(DequeueFQ(receivedQueue), routersendingQueue.queue);
       }
-
-      //Unlock(sendingQueue.lock);
     }
 
     //If we are allowed to send, then do so.
     // If the signal was sent in this loop iteration: same as if this was in the case directly
     // otherwise: we received something to send after getting clearance and would have been stuck if this was directly in the case.
-    if(allowedToSendToLL && EmptyFQ(routersendingQueue.queue) == 0 && routersendingQueue.used == false){//EmptyFQ(receivedQueue) == 0) {
-      //e = DequeueFQ(sendingQueue); //Extract from queue
-
-      //Signal(network_layer_ready, ValueOfFQE(e)); //Just pass it directly.
+    if(allowedToSendToLL && EmptyFQ(routersendingQueue.queue) == 0 && routersendingQueue.used == false) {
 
       logLine(trace, "NL: Offering queue to LL\n");
-
-      if(routersendingQueue.used == true) {
-      //if(Trylock(routersendingQueue.lock) != 0) {
-        logLine(succes, "NL: ERROR: Unable to lock sendingQueue's lock!\n");
-      }
 
       LL_OfferSendingQueue(&routersendingQueue);
       allowedToSendToLL = false;
@@ -202,119 +213,103 @@ void networkLayerRouter() {
 
 
 
+\subsection{Transport Layer}
+
+\texttt{TL\_OfferElement} is used by the TL to figure out where to process the segment
+\begin{lstlisting}
+typedef struct {
+  networkAddress receiver;  //This contains ``fake'' ip address of the reciever
+  payload seg;              //our payload is the msg
+} TL_OfferElement;
+\end{lstlisting}
+\break
+
 our implmenetation of the transportlayer is as follows:
 
 \begin{lstlisting}
+void fake_transportLayer() {
+  ConcurrentFifoQueue *offer;
+  ConcurrentFifoQueue *q = malloc(sizeof(ConcurrentFifoQueue));
+  *q = CFQ_Init();
+
+  long int events_we_handle = TL_ReceivingQueueOffer;
+  event_t event;
+
+  FifoQueueEntry e;
+  TL_OfferElement o;
+
+  TL_OfferElement *elem;
+
+  #define TL_NUM_HEH 10
+  int i = 1;
+  while(i <= TL_NUM_HEH) {
+    elem = malloc(sizeof(TL_OfferElement));
+
+    elem->otherHostAddress = 42;
+    if(ThisStation == 1) {
+      elem->otherHostAddress = 212;
+    } else if(ThisStation == 2) {
+      elem->otherHostAddress = 111;
+    }
+
+    char a = i/100;
+    if(i < 100) {a = ' ';} else {a += 48;}
+    char b = (i%100)/10;
+    if(i < 10) {b = ' ';} else {b += 48;}
+    char c = (i%10)+48;
+
+    elem->seg.data[0] = 'H';
+    elem->seg.data[1] = 'E';
+    elem->seg.data[2] = 'H';
+    elem->seg.data[3] = ':';
+    elem->seg.data[4] =  a ;
+    elem->seg.data[5] =  b ;
+    elem->seg.data[6] =  c ;
+    elem->seg.data[7] = '\0';
+
+    EnqueueFQ( NewFQE( (void *) elem ), q->queue );
+    i++;
+  }
+
+
+  logLine(trace, "TL: Offering queue.\n");
+  NL_OfferSendingQueue(q); //We can do this whenever really as it isn't based on a 1:1 signals-handing-out-information thing.
+  int numReceivedPackets = 0;
+
+  while(true) {
+    logLine(trace, "TL: Waiting for signals.\n");
+    Wait(&event, events_we_handle);
+
+    switch(event.type) {
+      case TL_ReceivingQueueOffer:
+        logLine(debug, "TL: Received signal TL_ReceivingQueueOffer.\n");
+        offer = (ConcurrentFifoQueue*) event.msg;
+        logLine(trace, "TL: Received offer queue.\n");
+        //Assumes that the queue has already been locked by the offerer. The offerer intends only this process to access the queue and renounces its own access.
+
+        //Handle incoming messages
+        while(EmptyFQ(offer->queue) == 0) {
+          logLine(trace, "TL: Handling element.\n");
+          e = DequeueFQ(offer->queue);
+          o = *((TL_OfferElement*) (e->val));
+
+          logLine(succes, "TL: Received from host with address %d: '%s'\n", o.otherHostAddress, o.seg.data);
+        }
+
+        logLine(trace, "TL: Releasing locks.\n");
+        numReceivedPackets++;
+        break;
+    }
+
+    if(numReceivedPackets >= TL_NUM_HEH) {
+      sleep(2);
+      Stop();
+    }
+  }
+}
+
 \end{lstlisting}
 
-the goal is to make the network layer and transport layer communicate with each other, this is done by TODO:
-
-
-to achieve this/to make this possible a routing table has been implemented with the goal of routing hosts across the network.
-
-TODO: put routing table implementation here
-
-We've implemented a FIFO queue, the idea is to have two queue one for the reciving end and one for the sending end.
-We've chosen to make the receivingQueue concurrent because it is shared between TL and the NL.
-The concurrency is provided via a simple lock.
-
-\begin{lstlisting}
-ConcurrentFifoQueue receivingQueue = CFQ_Init(); //This is concurrent because it is used for communication with the transport layer. The queue is also used for consistence and expandability.
-FifoQueue sendingQueue = InitializeFQ(); //Doesn't need to be concurrent because elements are given with signals.
-\end{lstlisting}
-
-\\
-
-
-
-
-The NL routing table is implemented the following way.
-Here we've defined a static variable, in the real world the $NL_ROUTING_TABLE_SIZE$ should be incremented and decremented dynamically.
-\begin{lstlisting}
-//Routing table. There can be more elements in this table than there are neighbours and multiple entries can point to the same neighbour.
-#define NL_ROUTING_TABLE_SIZE 4
-typedef struct {
-  networkAddress addresses[NL_ROUTING_TABLE_SIZE];
-  neighbourid    neighbourids[NL_ROUTING_TABLE_SIZE];
-} NL_RoutingTable;
-\end{lstlisting}
-
-\break
-
-
-The NL offer Element
-\begin{lstlisting}
-typedef struct {
-  neighbourid otherHostNeighbourid;
-  datagram dat;
-} NL_OfferElement;
-\end{lstlisting}
-
-\break
-
-\begin{lstlisting}
-typedef struct {
-  neighbourid neighbour;
-  unsigned int bufferSlotsAvailable;
-} NL_RequestFromLL;
-
-\end{lstlisting}
-
-
-
-Under the $send_frame(...)$ function we've updated our neighbour addressing to recieve an address instead of a static value.
-\begin{lstlisting}
-neighbours[recipient].no_nak = false;        /* one nak per frame, please */
-\end{lstlisting}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-we initialize our networklayer in the following manner.
-Each host/station is assigned an address
-
-\begin{lstlisting}
-void initialize_networkLayer(int stationID) {
-   switch(stationID) {
-     case 1: //Host A
-      thisNetworkAddress = 111;
-       ROUTINGTABLEADD(0, 212, 0);
-       ROUTINGTABLEADD(1, -1, -1);
-       ROUTINGTABLEADD(2, -1, -1);
-       ROUTINGTABLEADD(3, -1, -1);
-       break;
-     case 2: //Host B
-       thisNetworkAddress = 212;
-      ROUTINGTABLEADD(0, 111, 0);
-       ROUTINGTABLEADD(1, -1, -1);
-       ROUTINGTABLEADD(2, -1, -1);
-       ROUTINGTABLEADD(3, -1, -1);
-       break;
-     case 3: //Router 1
-
-      thisNetworkAddress = 313;
-      ROUTINGTABLEADD(0, 111, 0);
-      ROUTINGTABLEADD(1, 212, 1);
-      ROUTINGTABLEADD(2, -1, -1);
-      ROUTINGTABLEADD(3, -1, -1);
-      break;
-     case 4: //Router 2
-
-       //break;
-@@ -46,6 +50,22 @@ void initialize_networkLayer(int stationID) {
-   }
- }
-\end{lstlisting}
 
 
 

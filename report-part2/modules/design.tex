@@ -49,6 +49,7 @@ When it receives from the TL, it packs the received data into a datagram. When t
 When it receives from the LL, it unpacks the datagram and examines the packet to determine if it is addressed for itself and acts accordingly. If it a datagram for this host it places the datagram's payload in the receiving queue for the TL.\\
 
 \subsection{Network Layer: Routers}
+\label{sec:NLRouters}
 The network layer for the routers has one job: Receive a packet, determine direction of the destination host, and send the packet in that direction.\\
 \\
 The NL of the router receives a datagram and examines it. If the datagram isn't addressed to this router, then it forwards the packet, otherwise it receives the packet itself.\\
@@ -56,8 +57,3 @@ Currently all packets received for itself are just dropped, but this functionali
 
 \subsection{Fake Transport Layer}
 The fake TL used for testing generates a series of messages, stores them in an offering queue and offers the queue to NL. It then listens for deliveries by NL until it has received as many messages as it has sent.
-
-
-
-
-
