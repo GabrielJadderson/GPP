@@ -1,1 +1,63 @@
 \section{Design}
+\subsection{Datagrams}
+The datagrams have a header with the following fields, in 32bit words:
+\begin{itemize}
+\item Word 1: 8bit Type; 8bit Reserved; 16bit Payload size
+\item Word 2: 32bit source address
+\item Word 3: 32bit destination address
+\end{itemize}
+
+After this header comes the payload.\\
+\\
+The type field distinguishes between datagrams sent between hosts with application data and packets transferred to routers to perform various router tasks.\\
+The reserved field is currently unused, but exists to possibly implement more functionality in the future, such as a next header field.\\
+The payload size is currently not of any effect, but exists to possibly implement dynamic payload size.\\
+The address fields are the network addresses for the sender and the receiver.
+
+\subsection{Events}
+Deprecated signals:
+\begin{itemize}
+\item network\_layer\_ready: This signal is related to a bug in the implementation of rdt, preventing reliable data transfer in full duplex, stemming from early buffer overwrites. Replacement explained in section~\ref{sec:NLHosts} 'Network Layer: Hosts'
+\end{itemize}
+
+New signals:
+\begin{itemize}
+\item LL\_SendingQueueOffer: LL is being offered a queue with datagrams to send.
+\item NL\_SendingQueueOffer: NL is being offered a queue with segments to forward.
+\item TL\_ReceivingQueueOffer: TL is being offered a queue with segments to receive.
+\end{itemize}
+
+\subsection{ConcurrentFifoQueue}
+This is a data type that consits of a FifoQueue and a boolean. When the boolean is set to true, then the queue is "blocked", and an accessor has to either wait till the value has been set to false by the user of the queue or do something else. This queue is intended to be given by a thread A to thread B in the blocked state in a scenario where thread B can assume that no other threads have access to it. Thread B then releases the queue again by setting the boolean to false when it is done with it and thread A can then re-use the queue.\\
+This approach is used instead of the locks because they are implemented with pthread mutexes and can't be unlocked by another thread than the one that initially locked it, and with how these queues have to be passed around, this is not an option.\\
+The queue, if used as described above, is completely safe regardless, as there exists no instance where a race condition can occur. For a variable shared between threads that any thread can access at an arbitrary time, a lock should be used instead of this type, as a race condition can occur and two or more threads can so happen to modify the queue at the same time.
+
+\subsection{Routing Table}
+The routing table consists of two arrays, one containing addresses and one containing the neighbourids corresponding to those addresses. More than one address can be lookup to the be the same neighbour id, and all packets with any of those addresses would be routed the same direction.\\
+Lookups are done in linear time by doing a linear search through the routing table.
+
+\subsection{Network Layer: Hosts}
+\label{sec:NLHosts}
+The network layer for the hosts has three jobs; determine if a packet that has arrived is adressed for this host, determine which neighbour to send an outgoing segment to and exchange messages with the two other layers.\\
+\\
+It determines if the packet is addressed for itself by comparing it with its own address. If it not addressed for itself, then it simply drops the packet as it isn't a router and hence doesn't route packets. Otherwise it exchanges data with TL.\\
+
+\subsubsection{Data exchange with other layers}
+The data exchange with the other layers have been changed to exchange ConcurrentFifoQueues.\\
+When NL receives a data element from either LL or TL, it moves those elements to their respective intermediate queues and waits until its concurrent queues are not in use. Then those elements are moved into those queues and NL can then offer the queues to the layer the queue has elements for.\\
+When it receives from the TL, it packs the received data into a datagram. When the datagram is moved into the queue, it is done so paired with the id of the neighbour the destination address based on a routing table lookup. This neighbourid is then used by the LL to determine outgoing connection for the packet. The reason queue passing was implemented for the communication from NL to LL was because of a bug in the given implementation, which proved more difficult to fix than to replace.\\
+When it receives from the LL, it unpacks the datagram and examines the packet to determine if it is addressed for itself and acts accordingly. If it a datagram for this host it places the datagram's payload in the receiving queue for the TL.\\
+
+\subsection{Network Layer: Routers}
+The network layer for the routers has one job: Receive a packet, determine direction of the destination host, and send the packet in that direction.\\
+\\
+The NL of the router receives a datagram and examines it. If the datagram isn't addressed to this router, then it forwards the packet, otherwise it receives the packet itself.\\
+Currently all packets received for itself are just dropped, but this functionality could be used for implementing router information queries, router configuration and dynamic routing tables.
+
+\subsection{Fake Transport Layer}
+The fake TL used for testing generates a series of messages, stores them in an offering queue and offers the queue to NL. It then listens for deliveries by NL until it has received as many messages as it has sent.
+
+
+
+
+
