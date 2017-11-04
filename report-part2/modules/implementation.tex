@@ -21,8 +21,8 @@ We've added the following two signals/events to the $Events.h$
 furtheremore, we've removed some locks and unified them under a single lock
 
 
-we've also created a transportlayer, for this we've first created a struct that acts as our transportlayer header.
 
+$TL_OfferElement$ is used by the NL to figure out where to process the segment
 
 \begin{lstlisting}
 typedef struct {
@@ -43,12 +43,69 @@ to achieve this/to make this possible a routing table has been implemented with 
 
 TODO: put routing table implementation here
 
-We've implemented a FIFO queue, the idea is to have two queue one for the reciving end and one for the sending end. We've chosen to make the receivingQueue concurrent because the transport layer needs to append stuff into it?
+We've implemented a FIFO queue, the idea is to have two queue one for the reciving end and one for the sending end.
+We've chosen to make the receivingQueue concurrent because it is shared between TL and the NL.
+The concurrency is provided via a simple lock.
 
 \begin{lstlisting}
 ConcurrentFifoQueue receivingQueue = CFQ_Init(); //This is concurrent because it is used for communication with the transport layer. The queue is also used for consistence and expandability.
 FifoQueue sendingQueue = InitializeFQ(); //Doesn't need to be concurrent because elements are given with signals.
 \end{lstlisting}
+
+\\
+
+
+
+
+The NL routing table is implemented the following way.
+Here we've defined a static variable, in the real world the $NL_ROUTING_TABLE_SIZE$ should be incremented and decremented dynamically.
+\begin{lstlisting}
+//Routing table. There can be more elements in this table than there are neighbours and multiple entries can point to the same neighbour.
+#define NL_ROUTING_TABLE_SIZE 4
+typedef struct {
+  networkAddress addresses[NL_ROUTING_TABLE_SIZE];
+  neighbourid    neighbourids[NL_ROUTING_TABLE_SIZE];
+} NL_RoutingTable;
+\end{lstlisting}
+
+\break
+
+
+The NL offer Element
+\begin{lstlisting}
+typedef struct {
+  neighbourid otherHostNeighbourid;
+  datagram dat;
+} NL_OfferElement;
+\end{lstlisting}
+
+\break
+
+\begin{lstlisting}
+typedef struct {
+  neighbourid neighbour;
+  unsigned int bufferSlotsAvailable;
+} NL_RequestFromLL;
+
+\end{lstlisting}
+
+
+
+Under the $send_frame(...)$ function we've updated our neighbour addressing to recieve an address instead of a static value.
+\begin{lstlisting}
+neighbours[recipient].no_nak = false;        /* one nak per frame, please */
+\end{lstlisting}
+
+
+
+
+
+
+
+
+
+
+
 
 
 
