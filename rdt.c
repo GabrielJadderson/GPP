@@ -4,7 +4,6 @@
 * Author: Jacob Aae Mikkelsen.
 * co-authors: Patrick Jakobsen(pajak16), Gabriel Jadderson(gajad16)
 */
-int lalalala = 0;
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
