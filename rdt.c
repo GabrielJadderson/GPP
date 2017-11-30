@@ -659,13 +659,13 @@ int main(int argc, char *argv[])
         //printf("\nActivating station 1?\n\n");
         ACTIVATE(1, selective_repeat);
         ACTIVATE(1, networkLayerHost);
-        ACTIVATE(1, fake_transportLayer);
+        //ACTIVATE(1, fake_transportLayer);
         
         //Host B
         //printf("\nActivating station 2?\n\n");
         ACTIVATE(2, selective_repeat);
         ACTIVATE(2, networkLayerHost);
-        ACTIVATE(2, fake_transportLayer);
+        //ACTIVATE(2, fake_transportLayer);
         
         //Router 1
         //printf("\nActivating station 3?\n\n");

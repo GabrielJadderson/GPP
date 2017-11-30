@@ -5,7 +5,7 @@
 #include "transportLayer.h"
 #include "networkLayer.h"
 
-void transportLayer() {
+void fake_transportLayer() {
   
   //char* buffer = "HEH.\n";
   ConcurrentFifoQueue *offer;
@@ -147,19 +147,6 @@ void transportLayer() {
         numReceivedPackets++;
         
         break;
-      /*case TL_SocketRequest:
-        
-        TLSocket** socket;
-        socket = (TLSocket**) event.msg;
-        
-        (*socket) = malloc(sizeof(TLSocket));
-        
-        (*socket)->ownPort = 42;
-        
-        
-        /* stuff */
-        
-        //break;
     }
     
     if(numReceivedPackets >= TL_NUM_HEH) {
@@ -196,13 +183,5 @@ void TL_OfferReceivingQueue(ConcurrentFifoQueue *offer) {
   //Lock(offer->lock);
   
   Signal(TL_ReceivingQueueOffer, (void*) offer);
-}
-
-TLSocket* TL_RequestSocket(transPORT port) {
-  TLSocket** socketpp = NULL;
-  
-  Signal(TL_SocketRequest, socketpp);
-  
-  logLine(succes, "POOOOOORT: &d\n", (*socketpp)->ownPort);
 }
 

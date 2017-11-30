@@ -17,16 +17,6 @@ typedef struct {
 } TL_OfferElement;
 
 
-/*
-*   Function Predeclarations
-*/
-
-void TL_OfferReceivingQueue(ConcurrentFifoQueue *queue);
-
-//Socket request. Returns NULL on failure.
-//TLSocket* TL_RequestSocket(transPORT port);
-//Function to signal to the TL that the socket is no longer used so it can dispose of the socket.
-//void discardSocket();
 
 /*
 *   AL Interface Types
@@ -35,12 +25,12 @@ void TL_OfferReceivingQueue(ConcurrentFifoQueue *queue);
 typedef struct {
   unsigned int connectionState;
   FifoQueue messageQueue;
-} Connection;
+} TLConnection;
 
 #define MAX_CONNECTIONS 4
 typedef struct {
   transPORT ownPort;
-  Connection connections[MAX_CONNECTIONS];
+  TLConnection connections[MAX_CONNECTIONS];
 } TLSocket;
 
 typedef struct {
@@ -50,5 +40,15 @@ typedef struct {
   
 } TL_Segment;
 
+/*
+*   Function Predeclarations
+*/
+
+void TL_OfferReceivingQueue(ConcurrentFifoQueue *queue);
+
+//Socket request. Returns NULL on failure.
+TLSocket* TL_RequestSocket(transPORT port);
+//Function to signal to the TL that the socket is no longer used so it can dispose of the socket.
+void discardSocket();
 
 #endif /* include guard: TL_H_ */

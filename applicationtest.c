@@ -1,8 +1,8 @@
 
 //TODO: Add includes and the author header.
 
-#include "applicationLayer.h"
 #include "transportLayer.h"
+#include "applicationLayer.h"
 
 void textChatStatic1(void) {
   
