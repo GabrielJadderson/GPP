@@ -37,6 +37,8 @@ boolean network_layer_enabled;
 
 //[PJ] This should be moved back when no longer messing with a fake transport layer.
 #include "transportLayer.c"
+#include "applicationtest.c"
+
 
 LogBuf mylog;                /* logbufferen                                     */
 
@@ -657,26 +659,29 @@ int main(int argc, char *argv[])
         
         //Host A
         //printf("\nActivating station 1?\n\n");
-        ACTIVATE(1, selective_repeat);
-        ACTIVATE(1, networkLayerHost);
+        //ACTIVATE(1, selective_repeat);
+        //ACTIVATE(1, networkLayerHost);
         //ACTIVATE(1, fake_transportLayer);
         
         //Host B
         //printf("\nActivating station 2?\n\n");
-        ACTIVATE(2, selective_repeat);
-        ACTIVATE(2, networkLayerHost);
+        //ACTIVATE(2, selective_repeat);
+        //ACTIVATE(2, networkLayerHost);
         //ACTIVATE(2, fake_transportLayer);
         
         //Router 1
         //printf("\nActivating station 3?\n\n");
-        ACTIVATE(3, selective_repeat);
-        ACTIVATE(3, networkLayerRouter);
+        //ACTIVATE(3, selective_repeat);
+        //ACTIVATE(3, networkLayerRouter);
         
         //Router 2
         //printf("\nActivating station 4?\n\n");
-        ACTIVATE(4, selective_repeat);
-        ACTIVATE(4, networkLayerRouter);
+        //ACTIVATE(4, selective_repeat);
+        //ACTIVATE(4, networkLayerRouter);
         
+        
+        ACTIVATE(1, transportLayer);
+        ACTIVATE(1, textChatStatic1);
         
 	/* simuleringen starter */
         //printf("\nStarting simulation?\n\n");

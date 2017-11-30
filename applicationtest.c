@@ -7,6 +7,9 @@
 void textChatStatic1(void) {
   
   
+  logLine(succes, "WEE.\n");
+  TL_RequestSocket(999);
+  
   
   
   

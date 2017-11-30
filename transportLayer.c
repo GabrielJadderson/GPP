@@ -20,7 +20,7 @@ void transportLayer() {
   logLine(succes, "TL: Trylock=%d\n", wtf);
   Unlock(q->lock);*/
   
-  long int events_we_handle = TL_ReceivingQueueOffer;
+  long int events_we_handle = TL_ReceivingQueueOffer | TL_SocketRequest;
   event_t event;
   
   FifoQueueEntry e;
@@ -115,6 +115,8 @@ void transportLayer() {
   
   Stop();*/
   
+  TLSocket** socket;
+  
   int numReceivedPackets = 0;
   
   while(true) {
@@ -147,19 +149,23 @@ void transportLayer() {
         numReceivedPackets++;
         
         break;
-      /*case TL_SocketRequest:
+      case TL_SocketRequest:
+        logLine(succes, "TL: start");
         
-        TLSocket** socket;
         socket = (TLSocket**) event.msg;
         
+        logLine(succes, "**: %p\n", socket);
+        
         (*socket) = malloc(sizeof(TLSocket));
+        
+        logLine(succes, "*: %p\n", (*socket));
         
         (*socket)->ownPort = 42;
         
         
         /* stuff */
         
-        //break;
+        break;
     }
     
     if(numReceivedPackets >= TL_NUM_HEH) {
@@ -199,10 +205,17 @@ void TL_OfferReceivingQueue(ConcurrentFifoQueue *offer) {
 }
 
 TLSocket* TL_RequestSocket(transPORT port) {
-  TLSocket** socketpp = NULL;
+  logLine(succes, "TLRS: start\n");
+  TLSocket** socketpp = malloc(sizeof(TLSocket*));
+  
+  logLine(succes, "TLRS: **: %p\n", socketpp);
   
   Signal(TL_SocketRequest, socketpp);
   
-  logLine(succes, "POOOOOORT: &d\n", (*socketpp)->ownPort);
+  while((*socketpp) == NULL) {}
+  
+  logLine(succes, "POOOOOORT: %d\n", (*socketpp)->ownPort);
+  
+  return (*socketpp);
 }
 

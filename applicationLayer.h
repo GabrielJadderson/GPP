@@ -21,14 +21,14 @@
 
 //Block until the application has a connection on this port to another host.
 //Returns 0 on succes, other on error.
-TLSocket* listen(transPORT listenPort);
+int listen(transPORT listenPort);
 
-//Connects to a 
-int connect(networkAddress addr, );
+//Connects to a remote host on address addr on port port.
+int connect(networkAddress addr, transPORT port);
 
-int disconnect();
+int disconnect(transPORT ownport, unsigned int connectionid);
 
-int send();
+int send(connectionid);
 
 int receive();
 
