@@ -22,7 +22,8 @@ typedef struct {
 
 #define MAX_CONNECTIONS 4
 typedef struct {
-  transPORT ownPort;
+  unsigned int valid:1;
+  transPORT port;
   TLConnection connections[MAX_CONNECTIONS];
 } TLSocket;
 
@@ -32,6 +33,9 @@ typedef struct {
 } TLSockReq;
 
 typedef struct {
+  unsigned int is_first:1;
+  int seqMsg;
+  int seqPayload;
   transPORT senderport;
   transPORT receiverport;
   

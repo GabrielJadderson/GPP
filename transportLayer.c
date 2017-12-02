@@ -6,48 +6,15 @@
 #include "networkLayer.h"
 
 void transportLayer() {
-  
-  //char* buffer = "HEH.\n";
   ConcurrentFifoQueue *offer;
   ConcurrentFifoQueue *q = malloc(sizeof(ConcurrentFifoQueue));
   *q = CFQ_Init();
-  
-  /*int wtf = Trylock(q->lock);
-  logLine(succes, "TL: Trylock=%d\n", wtf);
-  
-  Unlock(q->lock);
-  wtf = Trylock(q->lock);
-  logLine(succes, "TL: Trylock=%d\n", wtf);
-  Unlock(q->lock);*/
-  
-  long int events_we_handle = TL_ReceivingQueueOffer | TL_SocketRequest;
-  event_t event;
   
   FifoQueueEntry e;
   TL_OfferElement o;
   
   TL_OfferElement *elem;
-  /*elem.otherHostAddress = 42;
-  if(ThisStation == 1) {
-    elem.otherHostAddress = 212;
-  } else if(ThisStation == 2) {
-    elem.otherHostAddress = 111;
-  }
   
-  //elem.seg = "HEH.\n";
-  elem.seg.data[0] = 'H';
-  elem.seg.data[1] = 'E';
-  elem.seg.data[2] = 'H';
-  elem.seg.data[3] = '.';
-  elem.seg.data[4] = '\0';
-  
-  Lock(q.lock);
-  
-  EnqueueFQ( NewFQE( (void *) &elem ), q.queue );
-  
-  Unlock(q.lock);*/
-  
-  //Lock (q->lock);
   #define TL_NUM_HEH 10
   int i = 1;
   while(i <= TL_NUM_HEH) {
@@ -77,49 +44,41 @@ void transportLayer() {
     elem->seg.data[6] =  c ;
     elem->seg.data[7] = '\0';
     
-    /*elem.seg.data[0] = 'A';
-    elem.seg.data[1] = 'S';
-    elem.seg.data[2] = 'D';
-    elem.seg.data[3] = 'F';
-    elem.seg.data[4] = 'G';
-    elem.seg.data[5] = 'H';
-    elem.seg.data[6] = 'I';
-    elem.seg.data[7] = '\0';*/
-    
     EnqueueFQ( NewFQE( (void *) elem ), q->queue );
     i++;
   }
-  //Unlock(q->lock);
   
   
   logLine(trace, "TL: Offering queue.\n");
   //if (ThisStation == 2)
     NL_OfferSendingQueue(q); //We can do this whenever really as it isn't based on a 1:1 signals-handing-out-information thing.
   
-  /*wtf = Trylock(q->lock);
-  logLine(succes, "TL: Trylock2=%d\n", wtf);
-
-  Unlock(q->lock);
-  wtf = Trylock(q->lock);
-  logLine(succes, "TL: Trylock2=%d\n", wtf);
-  Unlock(q->lock);*/
   
-  //Lock(q->lock); //Should no longer be used.
+  //----------------------------------------------------------------------------------------------------------------------------------------------------------
   
-  /*while(Trylock(q.lock) != 0) {
-    logLine(trace, "TL: Waiting for unlocking of queue.\n");
-    sleep(1);
+  #define NUM_MAX_SOCKETS 4
+  #define SOCKET_ANY NUM_MAX_SOCKETS
+  TLSocket *sockets[NUM_MAX_SOCKETS]; //the transPORT values correspond to indices in this array. SOCKET_ANY is any socket.
+  
+  for (int i = 0; i < NUM_MAX_SOCKETS; i++) {
+    sockets[i] = NULL;
   }
   
-  logLine(succes, "TL: NL Released the sending queue.\n");
   
-  Stop();*/
+  
+  
+  
+  
+  
+  
   
   TLSocket** socket;
   TLSockReq* req;
   
   int numReceivedPackets = 0;
   
+  event_t event;
+  long int events_we_handle = TL_ReceivingQueueOffer | TL_SocketRequest;
   while(true) {
     logLine(trace, "TL: Waiting for signals.\n");
     //logLine(succes, "TL: Lockstatus=%d\n", q->used);
@@ -151,19 +110,47 @@ void transportLayer() {
         
         break;
       case TL_SocketRequest:
-        logLine(succes, "TL: start");
+        //logLine(succes, "TL: start\n");
         
         req = (TLSockReq*) event.msg;
         
         //TODO: [PJ] Should first check if the port is available.
+        
+        if(req->port == SOCKET_ANY) {
+          for(int i = 0; i < NUM_MAX_SOCKETS; i++) {
+            if(sockets[i] == NULL) {
+              req->port = i;
+              break;
+            }
+          }
+        } else {
+          if(sockets[req->port] != NULL || req->port >= NUM_MAX_SOCKETS) { // [PJ] Port taken/port invalid. Return an invalid port. Everything else than the valid field can be anything.
+            socket = malloc(sizeof(TLSocket*));
+            (*socket) = malloc(sizeof(TLSocket));
+            (*socket)->valid = 0;
+            req->sock = (*socket);
+            break;
+          }
+        }
+        
+        sockets[req->port] = malloc(sizeof(TLSocket*));
+        
+        (sockets[req->port])->port = req->port; //Because the information being shared with the application.
+        (sockets[req->port])->valid = 1; //The port is valid.
+        
+        req->sock = sockets[req->port];
+        
+        /*
         socket = malloc(sizeof(TLSocket*));
         (*socket) = malloc(sizeof(TLSocket));
         
         logLine(succes, "TL: Requested port: %d\n", req->port);
-        (*socket)->ownPort = req->port;
+        (*socket)->port = req->port;
+        (*socket)->valid = 1;
         
-        logLine(succes, "TL: assigned port: %d\n", (*socket)->ownPort);
+        logLine(succes, "TL: assigned port: %d\n", (*socket)->port);
         req->sock = (*socket);
+        */
         
         break;
     }
@@ -205,20 +192,20 @@ void TL_OfferReceivingQueue(ConcurrentFifoQueue *offer) {
 }
 
 TLSocket* TL_RequestSocket(transPORT port) {
-  logLine(succes, "TLRS: start\n");
+  //logLine(succes, "TLRS: start\n");
   TLSockReq* reqp = malloc(sizeof(TLSockReq));
   reqp->port = port;
   reqp->sock = NULL;
   
-  logLine(succes, "TLRS: Request*: %p\n", reqp);
+  //logLine(succes, "TLRS: Request*: %p\n", reqp);
   Signal(TL_SocketRequest, reqp);
   
-  logLine(succes, "TLRS: Beginning loop.\n");
+  //logLine(succes, "TLRS: Beginning loop.\n");
   // [PJ] For some reason it needs to perform an action in here. Must be due to some optimization at compiletime with socketpp->sock being initialized as NULL.
   // Make sure to choose something that can't be optimized away, like a statement with no effect or anything like that.
   while(reqp->sock==NULL) {logLine(trace, "waitin'\n");} 
   
-  logLine(succes, "POOOOOORT: %d\n", (reqp->sock)->ownPort);
+  //logLine(succes, "POOOOOORT: %d\n", (reqp->sock)->port);
   
   TLSocket* ret = reqp->sock;
   free(reqp);
