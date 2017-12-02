@@ -116,6 +116,7 @@ void transportLayer() {
   Stop();*/
   
   TLSocket** socket;
+  TLSockReq* req;
   
   int numReceivedPackets = 0;
   
@@ -152,18 +153,17 @@ void transportLayer() {
       case TL_SocketRequest:
         logLine(succes, "TL: start");
         
-        socket = (TLSocket**) event.msg;
+        req = (TLSockReq*) event.msg;
         
-        logLine(succes, "**: %p\n", socket);
-        
+        //TODO: [PJ] Should first check if the port is available.
+        socket = malloc(sizeof(TLSocket*));
         (*socket) = malloc(sizeof(TLSocket));
         
-        logLine(succes, "*: %p\n", (*socket));
+        logLine(succes, "TL: Requested port: %d\n", req->port);
+        (*socket)->ownPort = req->port;
         
-        (*socket)->ownPort = 42;
-        
-        
-        /* stuff */
+        logLine(succes, "TL: assigned port: %d\n", (*socket)->ownPort);
+        req->sock = (*socket);
         
         break;
     }
@@ -206,16 +206,22 @@ void TL_OfferReceivingQueue(ConcurrentFifoQueue *offer) {
 
 TLSocket* TL_RequestSocket(transPORT port) {
   logLine(succes, "TLRS: start\n");
-  TLSocket** socketpp = malloc(sizeof(TLSocket*));
+  TLSockReq* reqp = malloc(sizeof(TLSockReq));
+  reqp->port = port;
+  reqp->sock = NULL;
   
-  logLine(succes, "TLRS: **: %p\n", socketpp);
+  logLine(succes, "TLRS: Request*: %p\n", reqp);
+  Signal(TL_SocketRequest, reqp);
   
-  Signal(TL_SocketRequest, socketpp);
+  logLine(succes, "TLRS: Beginning loop.\n");
+  // [PJ] For some reason it needs to perform an action in here. Must be due to some optimization at compiletime with socketpp->sock being initialized as NULL.
+  // Make sure to choose something that can't be optimized away, like a statement with no effect or anything like that.
+  while(reqp->sock==NULL) {logLine(trace, "waitin'\n");} 
   
-  while((*socketpp) == NULL) {}
+  logLine(succes, "POOOOOORT: %d\n", (reqp->sock)->ownPort);
   
-  logLine(succes, "POOOOOORT: %d\n", (*socketpp)->ownPort);
-  
-  return (*socketpp);
+  TLSocket* ret = reqp->sock;
+  free(reqp);
+  return ret;
 }
 

@@ -9,18 +9,11 @@
 #ifndef TL_H_
 #define TL_H_
 
-typedef unsigned int transPORT;
-
-typedef struct {
-  networkAddress otherHostAddress;
-  payload seg;
-} TL_OfferElement;
-
-
-
 /*
-*   AL Interface Types
+*   Types
 */
+
+typedef unsigned int transPORT;
 
 typedef struct {
   unsigned int connectionState;
@@ -34,11 +27,22 @@ typedef struct {
 } TLSocket;
 
 typedef struct {
+  transPORT port;
+  TLSocket *sock;
+} TLSockReq;
+
+typedef struct {
   transPORT senderport;
   transPORT receiverport;
   
-  
+  payload msg;
 } TL_Segment;
+
+typedef struct {
+  networkAddress otherHostAddress;
+  payload seg;
+} TL_OfferElement;
+
 
 /*
 *   Function Predeclarations
