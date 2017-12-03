@@ -28,7 +28,7 @@ int connect(networkAddress addr, transPORT port);
 
 int disconnect(transPORT ownport, unsigned int connectionid);
 
-int send(connectionid);
+int send();
 
 int receive();
 

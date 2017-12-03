@@ -15,6 +15,7 @@
 #include "subnet.h"
 #include "fifoqueue.h"
 #include "debug.h"
+extern void initialize_debug(void);
 
 #define NUM_MAX_NEIGHBOURS 4
 
