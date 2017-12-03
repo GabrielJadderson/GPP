@@ -21,16 +21,20 @@
 
 //Block until the application has a connection on this port to another host.
 //Returns 0 on succes, other on error.
-int listen(transPORT listenPort);
+int listen(TLSocket *socket);
 
 //Connects to a remote host on address addr on port port.
-int connect(networkAddress addr, transPORT port);
+//Gives back the id of the connection.
+unsigned int connect(TLSocket *socket, networkAddress addr, transPORT port);
 
-int disconnect(transPORT ownport, unsigned int connectionid);
+int disconnect(TLSocket *socket, unsigned int connectionid);
 
-int send();
+int send(TLSocket *socket, unsigned int connectionid, unsigned char *data, unsigned int length);
 
-int receive();
+//On succes, gives a pointer to a byte array.
+//On failure, gives NULL. This means that there are current haven't arrived any more messages.
+//Can be used in an assign-and-check-NULL loop.
+unsigned char* receive(TLSocket *socket, unsigned int connectionid);
 
 
 
