@@ -65,7 +65,7 @@ typedef struct {
 typedef struct {
   networkAddress otherHostAddress;
   TL_Segment segment;
-  payload seg;
+  payload seg; //[PJ] DEPRECATED.
 } TL_OfferElement;
 
 

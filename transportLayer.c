@@ -64,18 +64,126 @@ void transportLayer() {
     sockets[i] = NULL;
   }
   
+  /*
+  *   TEST CODE FOR RECEIVING FRAGMENTED MESSAGES.
+  */
+  /*
+  //Register dummy variables.
+  TL_OfferElement *offerelem;
   
+  ConcurrentFifoQueue *testQueue = malloc(sizeof(ConcurrentFifoQueue));
+  *testQueue = CFQ_Init();
   
+  //EnqueueFQ(NewFQE((void*) offerelem), testQueue.queue);
   
+  //Socket opened on port 0 with connection to 111:2
+  sockets[0] = malloc(sizeof(TLSocket));
+  sockets[0]->valid = 1;
+  sockets[0]->listening = 0;
+  sockets[0]->port = 0; //Because the hypothetical AL can read this field to determine which port it has gotten.
+  sockets[0]->connections[0].valid = 1;
+  sockets[0]->connections[0].remoteAddress = 111;
+  sockets[0]->connections[0].remotePort = 2;
+  sockets[0]->connections[0].msgListHead = NULL;
+  sockets[0]->connections[0].msgListTail = NULL;
   
+  //A simulated message from 111:2 to ???:0.
+  //It's the first message with 0 more fragments.
+  offerelem = (TL_OfferElement*) malloc(sizeof(TL_OfferElement));
+  offerelem->otherHostAddress = 111;
+  offerelem->segment.is_first = 1;
+  offerelem->segment.seqMsg = 0;
+  offerelem->segment.seqPayload = 0;
+  offerelem->segment.senderport = 2;
+  offerelem->segment.receiverport = 0; //This one should correspond to the open connection 
+  //offerelem->segment.msg.data = "TEST.\n";
+  offerelem->segment.aux = 7;
+  offerelem->segment.msg.data[0] = 'T';
+  offerelem->segment.msg.data[1] = 'E';
+  offerelem->segment.msg.data[2] = 'S';
+  offerelem->segment.msg.data[3] = 'T';
+  offerelem->segment.msg.data[4] = '1';
+  offerelem->segment.msg.data[5] = '.';
+  offerelem->segment.msg.data[6] = '\0';
+  offerelem->segment.msg.data[7] = '\0';
+  //Signal(TL_ReceivingQueueOffer, offerelem);
+  EnqueueFQ(NewFQE((void*) offerelem), testQueue->queue);
   
+  //A simulated message from 111:2 to ???:0.
+  //It's the first message with 1 more fragments.
+  offerelem = (TL_OfferElement*) malloc(sizeof(TL_OfferElement));
+  offerelem->otherHostAddress = 111;
+  offerelem->segment.is_first = 1;
+  offerelem->segment.seqMsg = 2;
+  offerelem->segment.seqPayload = 0;
+  offerelem->segment.senderport = 2;
+  offerelem->segment.receiverport = 0; //This one should correspond to the open connection 
+  //offerelem->segment.msg.data = "TEST.\n";
+  offerelem->segment.aux = 7;
+  offerelem->segment.msg.data[0] = 'T';
+  offerelem->segment.msg.data[1] = 'E';
+  offerelem->segment.msg.data[2] = 'S';
+  offerelem->segment.msg.data[3] = 'T';
+  offerelem->segment.msg.data[4] = '2';
+  offerelem->segment.msg.data[5] = '.';
+  offerelem->segment.msg.data[6] = '\0';
+  offerelem->segment.msg.data[7] = '\0';
+  //Signal(TL_ReceivingQueueOffer, offerelem);
+  EnqueueFQ(NewFQE((void*) offerelem), testQueue->queue);
+  
+  //A simulated message from 111:2 to ???:0.
+  //It's the first message with 1 more fragments.
+  offerelem = (TL_OfferElement*) malloc(sizeof(TL_OfferElement));
+  offerelem->otherHostAddress = 111;
+  offerelem->segment.is_first = 1;
+  offerelem->segment.seqMsg = 1;
+  offerelem->segment.seqPayload = 1;
+  offerelem->segment.senderport = 2;
+  offerelem->segment.receiverport = 0; //This one should correspond to the open connection 
+  //offerelem->segment.msg.data = "TEST.\n";
+  offerelem->segment.aux = 8+7;
+  offerelem->segment.msg.data[0] = 'P';
+  offerelem->segment.msg.data[1] = 'A';
+  offerelem->segment.msg.data[2] = 'R';
+  offerelem->segment.msg.data[3] = 'T';
+  offerelem->segment.msg.data[4] = '1';
+  offerelem->segment.msg.data[5] = ' ';
+  offerelem->segment.msg.data[6] = '-';
+  offerelem->segment.msg.data[7] = ' ';
+  //Signal(TL_ReceivingQueueOffer, offerelem);
+  EnqueueFQ(NewFQE((void*) offerelem), testQueue->queue);
+  
+  //A simulated message from 111:2 to ???:0.
+  //It's the final message fragment.
+  offerelem = (TL_OfferElement*) malloc(sizeof(TL_OfferElement));
+  offerelem->otherHostAddress = 111;
+  offerelem->segment.is_first = 0;
+  offerelem->segment.seqMsg = 1;
+  offerelem->segment.seqPayload = 1;
+  offerelem->segment.senderport = 2;
+  offerelem->segment.receiverport = 0; //This one should correspond to the open connection 
+  //offerelem->segment.msg.data = "TEST.\n";
+  offerelem->segment.aux = 7;
+  offerelem->segment.msg.data[0] = 'P';
+  offerelem->segment.msg.data[1] = 'A';
+  offerelem->segment.msg.data[2] = 'R';
+  offerelem->segment.msg.data[3] = 'T';
+  offerelem->segment.msg.data[4] = '2';
+  offerelem->segment.msg.data[5] = '.';
+  offerelem->segment.msg.data[6] = '\0';
+  offerelem->segment.msg.data[7] = '\0';
+  //Signal(TL_ReceivingQueueOffer, offerelem);
+  EnqueueFQ(NewFQE((void*) offerelem), testQueue->queue);
+  
+  TL_OfferReceivingQueue(testQueue);
+  */
   
   
   
   TLSocket** socket;
   TLSockReq* req;
   
-  int numReceivedPackets = 0;
+  //int numReceivedPackets = 0;
   
   event_t event;
   long int events_we_handle = TL_ReceivingQueueOffer | TL_SocketRequest;
@@ -97,63 +205,143 @@ void transportLayer() {
           e = DequeueFQ(offer->queue);
           o = *((TL_OfferElement*) (e->val));
           
-          logLine(succes, "TL: Received from host with address %d: '%s'\n", o.otherHostAddress, o.seg.data);
+          //The first debugging line is no longer valid. Messages now come in the segment field instead of the seg field.
+          //logLine(succes, "TL: Received from host with address %d: '%s'\n", o.otherHostAddress, o.seg.data);
           //logLine(succes, "\n                    TL: Received from host with address %d: '%s'\n\n", o.otherHostAddress, o.seg.data);
           
           
           // Socket Part
-          /*
-          for(int i = 0; i < NUM_MAX_SOCKETS; i++) {
-            if(sockets[i] != NULL && socket[i]->port == o.segment.receiverport) {
-              
-            }
+  logLine(succes, "\nStarting Check.\n");
+  
+  //The port this segment is addressed to is actually valid.
+  if(sockets[o.segment.receiverport] != NULL && sockets[o.segment.receiverport]->valid) {
+    logLine(succes, "Socket %d is valid and is receiving a message.\n", o.segment.receiverport);
+    
+    //[PJ] A search is needed for this one because the data order is indeterministic.
+    for(int i = 0; i < MAX_CONNECTIONS; i++) {
+      //If there is a hit, go for it. If not, then the message has to be a failure packet or a fraudulent packet.
+      if(sockets[o.segment.receiverport]->connections[i].valid //Valid connection.
+      && o.otherHostAddress == sockets[o.segment.receiverport]->connections[i].remoteAddress //The sender's address if the address of the connected machine
+      && o.segment.senderport == sockets[o.segment.receiverport]->connections[i].remotePort //The sending application's port is the port of the connected application.
+      ) {
+        logLine(succes, "Connection at index %d matches the segment and is valid.\n", i);
+        //The correct connection has been found. Handle the incoming payload.
+        
+        TLConnection *con = &(sockets[o.segment.receiverport]->connections[i]);
+        
+        logLine(succes, "Connection attributes: addr: %d, port: %d, head: %p, tail: %p\n", con->remoteAddress, con->remotePort, con->msgListHead, con->msgListTail);
+        
+        //New message start
+        if(o.segment.is_first) {
+          logLine(succes, "Message fragment is the first fragment.\n");
+          
+          //Make the new message to be inserted.
+          TLMessageBufferLL *new = (TLMessageBufferLL*) malloc(sizeof(TLMessageBufferLL));
+          new->next = NULL; //The pointers are defaulted to avoid having to remember to do this at all instances later.
+          new->prev = NULL;
+          new->msgLen = o.segment.aux;
+          new->seqMsg = o.segment.seqMsg;
+          new->fragmentsRemaining = o.segment.seqPayload; //See the .h file. Special case for the field is when is_first is enabled.
+          
+          //The message carried by this first fragment.
+          new->msg = malloc(o.segment.aux); //Needs to allocate the message in order to memcpy into it.
+          //The first might also be the last.
+          int copyamount = MAX_PAYLOAD;
+          if(new->msgLen < copyamount) {
+            copyamount = new->msgLen;
           }
-          */
-          /*
-          //The port this segment is addressed to is actually valid.
-          if(sockets[o.segment.receiverport] != NULL && sockets[o.segment.receiverport]->valid) {
-            //[PJ] A search is needed for this one because the data order is indeterministic.
-            for(int i = 0; i < MAX_CONNECTIONS; i++) {
-              //If there is a hit, go for it. If not, then the message has to be a failure packet or a fraudulent packet.
-              if(sockets[o.segment.receiverport]->connections[i].valid //Valid connection.
-              && o.otherHostAddress == sockets[o.segment.receiverport]->connections[i].remoteAddress //The sender's address if the address of the connected machine
-              && o.segment.senderport == sockets[o.segment.receiverport]->connections[i].remotePort //The sending application's port is the port of the connected application.
-              ) {
-                //The correct connection has been found. Handle the incoming payload.
+          logLine(succes, "The number of copied bytes: %d\n", copyamount);
+          memcpy(new->msg, &(o.segment.msg), copyamount);
+          logLine(succes, "Copied message: %s - %s\n", &(o.segment.msg), new->msg);
+          
+          
+          //First case: there are no messages in the list.
+          if(con->msgListHead == NULL) {
+            con->msgListHead = new;
+            con->msgListTail = con->msgListHead; //When there is a head, there should also be a tail. They just happen to be the same.
+            logLine(succes, "Connection msg list head was NULL. Head: %p, Tail: %p\n", con->msgListHead, con->msgListTail);
+            
+          } else if(o.segment.seqMsg > con->msgListTail->seqMsg) {
+            // ... -> Current Tail -> New Tail -> NULL
+            TLMessageBufferLL *tmp = con->msgListTail;
+            con->msgListTail = new;
+            con->msgListTail->prev = tmp; //Old tail the is previous one from the new tail.
+            tmp->next = new; //New tali is the next one from the old tail.
+            logLine(succes, "Connection msg gets appended. Head: %p, Tail: %p\n", con->msgListHead, con->msgListTail);
+            
+          } else { //Gotta search for the correct spot. Going to do this from the tail because new messages will have numbers in the higher end most of the time.
+            logLine(succes, "Connection msg goes somewhere inside the list. Message sequence numbers: new: %d, Tail: %d\n", o.segment.seqMsg, con->msgListTail->seqMsg);
+            
+            TLMessageBufferLL *i = con->msgListTail;
+            while(i != NULL) {
+              if(i->seqMsg < o.segment.seqMsg) {
+                // ... -> i -> new -> i->next -> ...
+                TLMessageBufferLL *inext = i->next;
+                i->next = new; //I now has new as its next element.
+                new->prev = i; // And I is before new.
+                new->next = inext; //New now has i's old next as its next
+                inext->prev = new; // And i's old next has new as its prev instead of i.
                 
-                TLConnection *con = &(sockets[o.segment.receiverport]->connections[i]);
-                
-                //New message entirely.
-                if(o.segment.is_first) {
-                  
-                  boolean notAlreadyRegistered = false;
-                  
-                  for(TLMessageBufferLL* i = con->msgListHead; i != NULL; i = i->next) {
-                    if(
-                  }
-                  
-                  if(con->msgListHead == NULL) {
-                    con->msgListHead = (TLMessageBufferLL*) malloc(sizeof(TLMessageBufferLL));
-                  }
-                }
-                
-                
-                break;
               }
+              
+              i = i->prev;
             }
+            
           }
-          */
+          
+        } else { //Need to insert a fragment into a existing message.
+          logLine(succes, "Message fragment is part of an existing message.\n");
+          
+          //Search from the front based on the assumption that the majority of fragments will be for the messages in the front of the list.
+          //If excess time is available, having a pointer to a point in the list after the last complete message would be an optimization for when many messages queue up.
+          for(TLMessageBufferLL *i = con->msgListHead; i != NULL && i->seqMsg <= o.segment.seqMsg; i = i->next) {
+            if(i->seqMsg == o.segment.seqMsg) {
+              //The element has been found.
+              int copyamount = MAX_PAYLOAD;
+              if((o.segment.seqPayload+1)*MAX_PAYLOAD >= i->msgLen) {
+                copyamount = o.segment.aux;
+              }
+              
+              memcpy((i->msg)+(o.segment.seqPayload*MAX_PAYLOAD), &(o.segment.msg), copyamount);
+              i->fragmentsRemaining--;
+              
+              //Cut. Looping anymore would yield nothing.
+              break;
+            }
+            
+            
+          }
+          
+          
+          
+        }
+        
+        
+        logLine(succes, "\n\n");
+        logLine(succes, "List contents:\n");
+        for(TLMessageBufferLL *i = con->msgListHead; i != NULL; i = i->next) {
+          if(i->fragmentsRemaining == 0) {
+            logLine(succes, "%s\n", i->msg);
+          }
+        }
+        
+        
+        
+        break;
+      }
+    }
+  }
           
           // Endof: Socket Part
           
         }
         
-        logLine(trace, "TL: Releasing locks.\n");
+        //logLine(trace, "TL: Releasing locks.\n");
         //Unlock(offer->lock);
         //sleep(2); //TEMPORARY!!!
         //Stop();
         
-        numReceivedPackets++;
+        //numReceivedPackets++;
         
         break;
       case TL_SocketRequest:
@@ -202,7 +390,9 @@ void transportLayer() {
         break;
     }
     
-    if(numReceivedPackets >= TL_NUM_HEH) {
+    
+    //[PJ] DEPRECATED WITH INTRODUCTION OF APPLICATION LAYER. DELETE WHEN APPROPRIATE.
+    //if(numReceivedPackets >= TL_NUM_HEH) {
       /*logLine(succes, "Received all packets.\n");
       if(ThisStation == 1) {
         sleep(2);
@@ -222,10 +412,10 @@ void transportLayer() {
       if(huh == 0) {
         Unlock(q->lock);
       }*/
-      
+      /*
       sleep(2);
       Stop();
-    }
+    }*/
     
     
   }
