@@ -681,8 +681,9 @@ int main(int argc, char *argv[])
         //ACTIVATE(4, networkLayerRouter);
         
         
-        ACTIVATE(1, transportLayer);
-        ACTIVATE(1, textChatStatic1);
+        //ACTIVATE(1, transportLayer);
+        //ACTIVATE(1, textChatStatic1);
+        ACTIVATE(1, socketCodeTest);
         
 	/* simuleringen starter */
         //printf("\nStarting simulation?\n\n");

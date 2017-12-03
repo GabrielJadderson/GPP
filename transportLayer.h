@@ -55,7 +55,7 @@ typedef struct {
   unsigned int is_first:1;
   unsigned int seqMsg;
   unsigned int seqPayload; //Special case: if is_first is 1, then this value indicates the number of segments the messages is split into, excluding this one.
-  unsigned int aux; //is_first: number of bytes of the total message. Used to allocate buffer size. Security? Nope. For the last message, this is the number of bytes it carries with it.
+  unsigned int aux; //is_first: number of bytes of the total message. Used to allocate buffer size. Security? Nope.  For the last message: this is the number of bytes it carries with it.  Otherwise: reserved.
   transPORT senderport;
   transPORT receiverport;
   
