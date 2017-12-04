@@ -356,24 +356,24 @@ void transportLayer() {
         
         break;
       case TL_SocketRequest:
-        logLine(succes, "TL: Socket Requested\n");
+        logLine(info, "TL: Socket Requested\n");
         
         req = (TLSockReq*) event.msg;
         
         //TODO: [PJ] Should first check if the port is available.
         
         if(req->port == SOCKET_ANY) {
-          logLine(succes, "Request to any port.\n");
+          logLine(info, "Request to any port.\n");
           for(int i = 0; i < NUM_MAX_SOCKETS; i++) {
             if(sockets[i] == NULL) {
               req->port = i;
-              logLine(succes, "Decided on port number %d\n", req->port);
+              logLine(info, "Decided on port number %d\n", req->port);
               break;
             }
           }
         } else {
           if(sockets[req->port] != NULL || req->port >= NUM_MAX_SOCKETS) { // [PJ] Port taken/port invalid. Return an invalid port. Everything else than the valid field can be anything.
-            logLine(succes, "Unable to deliver requested socket.\n");
+            logLine(info, "Unable to deliver requested socket.\n");
             socket = malloc(sizeof(TLSocket*));
             (*socket) = malloc(sizeof(TLSocket));
             (*socket)->valid = 0;
@@ -383,27 +383,27 @@ void transportLayer() {
           }
         }
         
-        logLine(succes, "Allocating socket.\n");
+        logLine(trace, "Allocating socket.\n");
         sockets[req->port] = malloc(sizeof(TLSocket)); //[PJ] Fixed: This was mallocing the size of a pointer, causing an overwrite of a linked list header in the malloc implementation.
         
-        logLine(succes, "Setting socket port and validity.\n");
+        logLine(trace, "Setting socket port and validity.\n");
         (sockets[req->port])->port = req->port; //Because the information being shared with the application.
         (sockets[req->port])->valid = 1; //The port is valid.
         
-        logLine(succes, "Setting conection default values.\n");
+        logLine(trace, "Setting conection default values.\n");
         //Default values that would otherwise contain garbage.
         for(int i = 0; i < MAX_CONNECTIONS; i++) {
-          logLine(succes, "Setting for %d\n", i);
+          logLine(trace, "Setting for %d\n", i);
           sockets[req->port]->connections[i].valid = 0;
           sockets[req->port]->connections[i].remoteAddress = 0;
           sockets[req->port]->connections[i].remotePort = 0;
           sockets[req->port]->connections[i].outboundSeqMsg = 0;
           sockets[req->port]->connections[i].msgListHead = NULL;
           sockets[req->port]->connections[i].msgListTail = NULL;
-          logLine(succes, "Done setting for %d\n", i);
+          logLine(trace, "Done setting for %d\n", i);
         }
         
-        logLine(succes, "Setting request socket pointer to resulting socket.");
+        logLine(trace, "Setting request socket pointer to resulting socket.");
         req->sock = sockets[req->port];
         
         /*
@@ -418,7 +418,7 @@ void transportLayer() {
         req->sock = (*socket);
         */
         
-        logLine(succes, "Socket delivered. Breaking.");
+        logLine(trace, "Socket delivered. Breaking.");
         break;
       
       case AL_Receive:
@@ -429,15 +429,8 @@ void transportLayer() {
         break;
       
       case AL_Send: //Split the message and send the fragments as segments.
-      
-      logLine(succes, "ENTERING AL_SEND!\n");
-      break;
+      ;
       ALMessageSend *MS = (ALMessageSend*) event.msg;
-        logLine(succes, "MS->length?\n");
-      if(MS->length > 4) {
-        logLine(succes, "MS->length?\n");
-      }
-      
       TLSocket *socketToUse = MS->socketToUse;
       unsigned int connectionToUse = MS->connectionid;
       
@@ -461,15 +454,11 @@ void transportLayer() {
   int numFragments = msglen / MAX_PAYLOAD;
   if(numFragments*MAX_PAYLOAD < msglen) {numFragments++;};
   
-  msglen = 9;
-  if(msglen > 4) {logLine(succes, "test.\n");}
-  
-  break;
   if(msglen < cpa) {cpa = msglen;}
   //logLine(succes, "Splitting message %s with msglen %d, cpa %d, numFragments: %d\n", msgToSplit, msglen, cpa, numFragments);
   //logLine(succes, "Splitting message %s with msglen %d, cpa %d, numFragments: %d\n", "HEH", 4, 4, 1);
   //logLine(succes, "test\n");
-  break;
+  
   //First fragment. Set to be the fourth message (3).
   O = (TL_OfferElement*) malloc(sizeof(TL_OfferElement));
   O->otherHostAddress = targetAddress; //111;
