@@ -44,11 +44,6 @@ typedef struct {
   TLConnection connections[MAX_CONNECTIONS]; //Connections
 } TLSocket;
 
-typedef struct {
-  transPORT port; //Port that is requested. Can also be a request for any port.
-  TLSocket *sock; //The pointer to assign to the address of the returned socket.
-} TLSockReq;
-
 //Segment type.
 //Last message is infered from the number of bytes in total from the aux field of the first packet, T.
 //  (seqPayload+1)*MAX_PAYLOAD >= msgLen => last packet
@@ -69,6 +64,21 @@ typedef struct {
   TL_Segment segment; //Segment to send.
   payload seg; //[PJ] DEPRECATED. FIX IN NL.
 } TL_OfferElement;
+
+// AL Interface Structs
+
+typedef struct {
+  transPORT port; //Port that is requested. Can also be a request for any port.
+  TLSocket *sock; //The pointer to assign to the address of the returned socket.
+} TLSockReq;
+
+//This is essentially the function parameters gathered in a struct.
+typedef struct {
+  TLSocket* socketToUse;
+  unsigned int connectionid;
+  char* message;
+  unsigned int length;
+} ALMessageSend;
 
 
 /*

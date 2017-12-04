@@ -6,17 +6,20 @@
 #include "networkLayer.h"
 
 void transportLayer() {
+  FifoQueue sendingBuffQueue = InitializeFQ();
+  ConcurrentFifoQueue sendingQueue = CFQ_Init();
   ConcurrentFifoQueue *offer;
   ConcurrentFifoQueue *q = malloc(sizeof(ConcurrentFifoQueue));
   *q = CFQ_Init();
   
   FifoQueueEntry e;
   TL_OfferElement o;
+  TL_OfferElement *O;
   
-  TL_OfferElement *elem;
+  //TL_OfferElement *elem;
   
   #define TL_NUM_HEH 10
-  int i = 1;
+  /*int i = 1;
   while(i <= TL_NUM_HEH) {
     elem = malloc(sizeof(TL_OfferElement));
     
@@ -52,7 +55,7 @@ void transportLayer() {
   logLine(trace, "TL: Offering queue.\n");
   //if (ThisStation == 2)
     NL_OfferSendingQueue(q); //We can do this whenever really as it isn't based on a 1:1 signals-handing-out-information thing.
-  
+  */
   
   //----------------------------------------------------------------------------------------------------------------------------------------------------------
   
@@ -381,6 +384,16 @@ void transportLayer() {
         (sockets[req->port])->port = req->port; //Because the information being shared with the application.
         (sockets[req->port])->valid = 1; //The port is valid.
         
+        //Default values that would otherwise contain garbage.
+        for(int i = 0; i < MAX_CONNECTIONS; i++) {
+          sockets[req->port]->connections[i].valid = 0;
+          sockets[req->port]->connections[i].remoteAddress = 0;
+          sockets[req->port]->connections[i].remotePort = 0;
+          sockets[req->port]->connections[i].outboundSeqMsg = 0;
+          sockets[req->port]->connections[i].msgListHead = NULL;
+          sockets[req->port]->connections[i].msgListTail = NULL;
+        }
+        
         req->sock = sockets[req->port];
         
         /*
@@ -396,6 +409,128 @@ void transportLayer() {
         */
         
         break;
+      
+      case AL_Send: //Split the message and send the fragments as segments.
+      ;
+      ALMessageSend *MS = (ALMessageSend*) event.msg;
+      
+      TLSocket *socketToUse = MS->socketToUse;
+      unsigned int connectionToUse = MS->connectionid;
+      
+  //TLSocket *socketToUse = sockets[1];
+  //unsigned int connectionToUse = 0;
+  networkAddress targetAddress = socketToUse->connections[connectionToUse].remoteAddress;
+  transPORT targetPort = socketToUse->connections[connectionToUse].remotePort;
+  unsigned int seqMsg = socketToUse->connections[connectionToUse].outboundSeqMsg;
+  
+  char* msgToSplit = "SPLIT ME PLEASE!!!!"; //"12345678abcdefghYNYNYNYN"; //"ASDFasdf"; //"ASDF\n";
+  unsigned int msglen = 20;
+  int cpa = MAX_PAYLOAD;
+  
+  int numFragments = msglen / MAX_PAYLOAD;
+  if(numFragments*MAX_PAYLOAD < msglen) {numFragments++;};
+  
+  if(msglen < cpa) {cpa = msglen;}
+  logLine(succes, "Splitting message %s with msglen %d, cpa %d, numFragments: %d\n", msgToSplit, msglen, cpa, numFragments);
+  
+  //First fragment. Set to be the fourth message (3).
+  O = (TL_OfferElement*) malloc(sizeof(TL_OfferElement));
+  O->otherHostAddress = targetAddress; //111;
+  O->segment.is_first = 1;
+  O->segment.seqMsg = seqMsg; //4;
+  O->segment.seqPayload = numFragments-1;
+  O->segment.senderport = socketToUse->port; //2;
+  O->segment.receiverport = targetPort; //0; //This one should correspond to the open connection 
+  //O->segment.msg.data = "TEST.\n";
+  O->segment.aux = msglen;
+  memcpy(&(O->segment.msg.data), msgToSplit, cpa);
+  /*O->segment.msg.data[0] = 'P';
+  O->segment.msg.data[1] = 'A';
+  O->segment.msg.data[2] = 'R';
+  O->segment.msg.data[3] = 'T';
+  O->segment.msg.data[4] = '1';
+  O->segment.msg.data[5] = ' ';
+  O->segment.msg.data[6] = '-';
+  O->segment.msg.data[7] = ' ';*/
+  //Signal(TL_ReceivingQueueOffer, O);
+  
+  int i = 0;
+  logLine(succes, "   %p, %p\n", &(O->segment.msg)+(i), msgToSplit+(i*MAX_PAYLOAD));
+  while(true) {
+  //for(int i = MAX_PAYLOAD; i < msglen; i += MAX_PAYLOAD) {
+    //Submit the previous one.
+    //Signal(TL_ReceivingQueueOffer, O); //Is used in the testing version.
+    EnqueueFQ( NewFQE( (void *) O ), sendingBuffQueue);
+    
+    i++; //Important that this comes first.
+    
+    if(i >= numFragments) {
+      break;
+    }
+    
+    logLine(succes, "Building additional fragment with seqPayload: %d\n", i);
+    
+    O = (TL_OfferElement*) malloc(sizeof(TL_OfferElement));
+    O->otherHostAddress = targetAddress; //111;
+    O->segment.is_first = 0;
+    O->segment.seqMsg = seqMsg; //4;
+    O->segment.seqPayload = i;
+    O->segment.senderport = socketToUse->port; //2;
+    O->segment.receiverport = targetPort; //0; //This one should correspond to the open connection 
+    //O->segment.msg.data = "TEST.\n";
+    O->segment.aux = 0;
+    
+              /*int copyamount = MAX_PAYLOAD;
+              if((o.segment.seqPayload+1)*MAX_PAYLOAD >= i->msgLen) {
+                copyamount = o.segment.aux;
+              }
+              
+              memcpy((i->msg)+(o.segment.seqPayload*MAX_PAYLOAD), &(o.segment.msg), copyamount);*/
+    
+    cpa = MAX_PAYLOAD;
+    //Is this the last fragment?
+    if((i+1)*MAX_PAYLOAD > msglen) {
+      O->segment.aux = msglen % MAX_PAYLOAD;
+      cpa = msglen % MAX_PAYLOAD;
+    }
+    
+  logLine(succes, "   %p, %p\n", &(O->segment.msg)+(i*MAX_PAYLOAD), msgToSplit+(i*MAX_PAYLOAD));
+    memcpy(&(O->segment.msg.data), msgToSplit+(i*MAX_PAYLOAD), MAX_PAYLOAD);
+    /*O->segment.msg.data[0] = 'P';
+    O->segment.msg.data[1] = 'A';
+    O->segment.msg.data[2] = 'R';
+    O->segment.msg.data[3] = 'T';
+    O->segment.msg.data[4] = '1';
+    O->segment.msg.data[5] = ' ';
+    O->segment.msg.data[6] = '-';
+    O->segment.msg.data[7] = ' ';*/
+    //Signal(TL_ReceivingQueueOffer, O);
+    
+    logLine(succes, "frag bilt wit: %d, %d, %d\n", O->segment.seqMsg, O->segment.seqPayload, cpa);
+    
+  }
+  
+  //The next msg seq nr should be 1 larger.
+  socketToUse->connections[connectionToUse].outboundSeqMsg += 1;
+        
+        
+        
+        
+        
+        break;
+    }
+    
+    //If the lock is free, then put the received elements into the queue for the LL.
+    if(sendingQueue.used == false && EmptyFQ(sendingBuffQueue) == 0) {
+      logLine(trace, "TL: Transfering between sending queues\n");
+      //Lock(sendingQueue.lock); //Nothing else uses it, but for good measure since it's easy here.
+      
+      //Transfer from one queue to the other.
+      while(EmptyFQ(sendingBuffQueue) == 0) {
+        EnqueueFQ(DequeueFQ(sendingBuffQueue), sendingQueue.queue);
+      }
+      
+      //Unlock(sendingQueue.lock);
     }
     
     
