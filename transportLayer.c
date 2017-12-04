@@ -440,6 +440,37 @@ void socketCodeTest() {
   for (int i = 0; i < NUM_MAX_SOCKETS; i++) {
     sockets[i] = NULL;
   }
+  //Socket opened on port 0 with connection to 111:2
+  sockets[0] = malloc(sizeof(TLSocket));
+  sockets[0]->valid = 1;
+  sockets[0]->listening = 0;
+  sockets[0]->port = 0; //Because the hypothetical AL can read this field to determine which port it has gotten.
+  sockets[0]->connections[0].valid = 1;
+  sockets[0]->connections[0].remoteAddress = 111;
+  sockets[0]->connections[0].remotePort = 1;
+  sockets[0]->connections[0].msgListHead = NULL;
+  sockets[0]->connections[0].msgListTail = NULL;
+  
+  //Socket opened on port 1 with connection to 111:0 //Pretending that 111 is itself.
+  sockets[1] = malloc(sizeof(TLSocket));
+  sockets[1]->valid = 1;
+  sockets[1]->listening = 0;
+  sockets[1]->port = 1; //Because the hypothetical AL can read this field to determine which port it has gotten.
+  sockets[1]->connections[0].valid = 1;
+  sockets[1]->connections[0].remoteAddress = 111;
+  sockets[1]->connections[0].remotePort = 0;
+  sockets[1]->connections[0].outboundSeqMsg = 4;
+  sockets[1]->connections[0].msgListHead = NULL;
+  sockets[1]->connections[0].msgListTail = NULL;
+  
+  
+  // MESSAGE SPLITTING
+  
+  TLSocket *socketToUse = sockets[1];
+  unsigned int connectionToUse = 0;
+  networkAddress targetAddress = socketToUse->connections[connectionToUse].remoteAddress;
+  transPORT targetPort = socketToUse->connections[connectionToUse].remotePort;
+  unsigned int seqMsg = socketToUse->connections[connectionToUse].outboundSeqMsg;
   
   char* msgToSplit = "SPLIT ME PLEASE!!!!"; //"12345678abcdefghYNYNYNYN"; //"ASDFasdf"; //"ASDF\n";
   unsigned int msglen = 20;
@@ -453,12 +484,12 @@ void socketCodeTest() {
   
   //First fragment. Set to be the fourth message (3).
   offer = (TL_OfferElement*) malloc(sizeof(TL_OfferElement));
-  offer->otherHostAddress = 111;
+  offer->otherHostAddress = targetAddress; //111;
   offer->segment.is_first = 1;
-  offer->segment.seqMsg = 4;
+  offer->segment.seqMsg = seqMsg; //4;
   offer->segment.seqPayload = numFragments-1; //TODO Important: calculate this!
-  offer->segment.senderport = 2;
-  offer->segment.receiverport = 0; //This one should correspond to the open connection 
+  offer->segment.senderport = socketToUse->port; //2;
+  offer->segment.receiverport = targetPort; //0; //This one should correspond to the open connection 
   //offer->segment.msg.data = "TEST.\n";
   offer->segment.aux = msglen;
   memcpy(&(offer->segment.msg.data), msgToSplit, cpa);
@@ -488,12 +519,12 @@ void socketCodeTest() {
     logLine(succes, "Building additional fragment with seqPayload: %d\n", i);
     
     offer = (TL_OfferElement*) malloc(sizeof(TL_OfferElement));
-    offer->otherHostAddress = 111;
+    offer->otherHostAddress = targetAddress; //111;
     offer->segment.is_first = 0;
-    offer->segment.seqMsg = 4;
+    offer->segment.seqMsg = seqMsg; //4;
     offer->segment.seqPayload = i; //TODO Important: calculate this!
-    offer->segment.senderport = 2;
-    offer->segment.receiverport = 0; //This one should correspond to the open connection 
+    offer->segment.senderport = socketToUse->port; //2;
+    offer->segment.receiverport = targetPort; //0; //This one should correspond to the open connection 
     //offer->segment.msg.data = "TEST.\n";
     offer->segment.aux = 0;
     
@@ -527,26 +558,12 @@ void socketCodeTest() {
     
   }
   
-  //The last one hasn't been offered yet.
-  //offer->segment.aux = msglen % MAX_PAYLOAD;
-  //Signal(TL_ReceivingQueueOffer, offer);
+  //The next msg seq nr should be 1 larger.
+  socketToUse->connections[connectionToUse].outboundSeqMsg += 1;
   
   
   
-  
-  
-  //Register dummy variables.
-  
-  //Socket opened on port 0 with connection to 111:2
-  sockets[0] = malloc(sizeof(TLSocket));
-  sockets[0]->valid = 1;
-  sockets[0]->listening = 0;
-  sockets[0]->port = 0; //Because the hypothetical AL can read this field to determine which port it has gotten.
-  sockets[0]->connections[0].valid = 1;
-  sockets[0]->connections[0].remoteAddress = 111;
-  sockets[0]->connections[0].remotePort = 2;
-  sockets[0]->connections[0].msgListHead = NULL;
-  sockets[0]->connections[0].msgListTail = NULL;
+  //PREDETERMINED
   
   //A simulated message from 111:2 to ???:0.
   //It's the first message with 0 more fragments.
@@ -555,7 +572,7 @@ void socketCodeTest() {
   offer->segment.is_first = 1;
   offer->segment.seqMsg = 0;
   offer->segment.seqPayload = 0;
-  offer->segment.senderport = 2;
+  offer->segment.senderport = 1;
   offer->segment.receiverport = 0; //This one should correspond to the open connection 
   //offer->segment.msg.data = "TEST.\n";
   offer->segment.aux = 7;
@@ -576,7 +593,7 @@ void socketCodeTest() {
   offer->segment.is_first = 1;
   offer->segment.seqMsg = 2;
   offer->segment.seqPayload = 0;
-  offer->segment.senderport = 2;
+  offer->segment.senderport = 1;
   offer->segment.receiverport = 0; //This one should correspond to the open connection 
   //offer->segment.msg.data = "TEST.\n";
   offer->segment.aux = 7;
@@ -597,7 +614,7 @@ void socketCodeTest() {
   offer->segment.is_first = 1;
   offer->segment.seqMsg = 1;
   offer->segment.seqPayload = 1;
-  offer->segment.senderport = 2;
+  offer->segment.senderport = 1;
   offer->segment.receiverport = 0; //This one should correspond to the open connection 
   //offer->segment.msg.data = "TEST.\n";
   offer->segment.aux = 8+7;
@@ -618,7 +635,7 @@ void socketCodeTest() {
   offer->segment.is_first = 0;
   offer->segment.seqMsg = 1;
   offer->segment.seqPayload = 1;
-  offer->segment.senderport = 2;
+  offer->segment.senderport = 1;
   offer->segment.receiverport = 0; //This one should correspond to the open connection 
   //offer->segment.msg.data = "TEST.\n";
   offer->segment.aux = 7;
@@ -648,9 +665,12 @@ void socketCodeTest() {
   
   logLine(succes, "\nStarting Check.\n");
   
+  logLine(succes, "Incoming message for socket at port %d\n", o.segment.receiverport);
+  
   //The port this segment is addressed to is actually valid.
   if(sockets[o.segment.receiverport] != NULL && sockets[o.segment.receiverport]->valid) {
     logLine(succes, "Socket %d is valid and is receiving a message.\n", o.segment.receiverport);
+    logLine(succes, "Message addressed for: address %d and port %d\n", o.otherHostAddress, o.segment.receiverport);
     
     //[PJ] A search is needed for this one because the data order is indeterministic.
     for(int i = 0; i < MAX_CONNECTIONS; i++) {

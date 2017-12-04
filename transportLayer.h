@@ -31,6 +31,7 @@ typedef struct {
   unsigned int valid:1; //This is checked before actual access.
   networkAddress remoteAddress; //Address of the other machine
   transPORT remotePort; //Port of the other application
+  unsigned int outboundSeqMsg;
   TLMessageBufferLL *msgListHead; //Head of the linked list of messages. If this one has fragmentsRemaining == 0, then its msg can be received by the application.
   TLMessageBufferLL *msgListTail; //Tail of the linked list of messages
 } TLConnection;
