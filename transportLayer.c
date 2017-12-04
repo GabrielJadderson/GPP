@@ -272,21 +272,29 @@ void transportLayer() {
           } else { //Gotta search for the correct spot. Going to do this from the tail because new messages will have numbers in the higher end most of the time.
             logLine(succes, "Connection msg goes somewhere inside the list. Message sequence numbers: new: %d, Tail: %d\n", o.segment.seqMsg, con->msgListTail->seqMsg);
             
-            TLMessageBufferLL *i = con->msgListTail;
-            while(i != NULL) {
-              if(i->seqMsg < o.segment.seqMsg) {
-                // ... -> i -> new -> i->next -> ...
-                TLMessageBufferLL *inext = i->next;
-                i->next = new; //I now has new as its next element.
-                new->prev = i; // And I is before new.
-                new->next = inext; //New now has i's old next as its next
-                inext->prev = new; // And i's old next has new as its prev instead of i.
+            //Check first if the element goes in front. An easy, constant time solution to prevent complexity arising in the loop below.
+            if(o.segment.seqMsg < con->msgListHead->seqMsg) {
+              new->next = con->msgListHead; //The new head has the old head as its next.
+              con->msgListHead->prev = new; //The old head has the new head as its previous.
+              con->msgListHead = new; //Assign the new head.
+            } else {
+              
+              TLMessageBufferLL *i = con->msgListTail;
+              while(i != NULL) {
+                if(i->seqMsg < o.segment.seqMsg) {
+                  // ... -> i -> new -> i->next -> ...
+                  TLMessageBufferLL *inext = i->next;
+                  i->next = new; //I now has new as its next element.
+                  new->prev = i; // And I is before new.
+                  new->next = inext; //New now has i's old next as its next
+                  inext->prev = new; // And i's old next has new as its prev instead of i.
+                  
+                }
                 
+                i = i->prev;
               }
               
-              i = i->prev;
             }
-            
           }
           
         } else { //Need to insert a fragment into a existing message.
@@ -432,6 +440,75 @@ void socketCodeTest() {
   for (int i = 0; i < NUM_MAX_SOCKETS; i++) {
     sockets[i] = NULL;
   }
+  
+  char* msgToSplit = "ASDF\n"; //"SPLITME!\n";
+  unsigned int msglen = 6;
+  int cpa = MAX_PAYLOAD;
+  
+  if(msglen < cpa) {cpa = msglen;}
+  logLine(succes, "Splitting message %s with msglen %d and cpa %d\n", msgToSplit, msglen, cpa);
+  
+  //First fragment. Set to be the fourth message (3).
+  offer = (TL_OfferElement*) malloc(sizeof(TL_OfferElement));
+  offer->otherHostAddress = 111;
+  offer->segment.is_first = 1;
+  offer->segment.seqMsg = 4;
+  offer->segment.seqPayload = 0; //TODO Important: calculate this!
+  offer->segment.senderport = 2;
+  offer->segment.receiverport = 0; //This one should correspond to the open connection 
+  //offer->segment.msg.data = "TEST.\n";
+  offer->segment.aux = msglen;
+  memcpy(&(offer->segment.msg.data), msgToSplit, cpa);
+  /*offer->segment.msg.data[0] = 'P';
+  offer->segment.msg.data[1] = 'A';
+  offer->segment.msg.data[2] = 'R';
+  offer->segment.msg.data[3] = 'T';
+  offer->segment.msg.data[4] = '1';
+  offer->segment.msg.data[5] = ' ';
+  offer->segment.msg.data[6] = '-';
+  offer->segment.msg.data[7] = ' ';*/
+  //Signal(TL_ReceivingQueueOffer, offer);
+  
+  int i = MAX_PAYLOAD;
+  while(true) {
+  //for(int i = MAX_PAYLOAD; i < msglen; i += MAX_PAYLOAD) {
+    //Submit the previous one.
+    Signal(TL_ReceivingQueueOffer, offer);
+    
+    i += MAX_PAYLOAD;
+    
+    if(i >= msglen) {
+      break;
+    }
+    
+    /*offer = (TL_OfferElement*) malloc(sizeof(TL_OfferElement));
+    offer->otherHostAddress = 111;
+    offer->segment.is_first = 1;
+    offer->segment.seqMsg = 3;
+    offer->segment.seqPayload = 1; //TODO Important: calculate this!
+    offer->segment.senderport = 2;
+    offer->segment.receiverport = 0; //This one should correspond to the open connection 
+    //offer->segment.msg.data = "TEST.\n";
+    offer->segment.aux = msglen;
+    memcpy(&(offer->segment.msg.data)+i, msgToSplit+i, MAX_PAYLOAD);*/
+    /*offer->segment.msg.data[0] = 'P';
+    offer->segment.msg.data[1] = 'A';
+    offer->segment.msg.data[2] = 'R';
+    offer->segment.msg.data[3] = 'T';
+    offer->segment.msg.data[4] = '1';
+    offer->segment.msg.data[5] = ' ';
+    offer->segment.msg.data[6] = '-';
+    offer->segment.msg.data[7] = ' ';*/
+    //Signal(TL_ReceivingQueueOffer, offer);
+    
+  }
+  /*
+  //The last one hasn't been offered yet.
+  offer->segment.aux = msglen % MAX_PAYLOAD;
+  Signal(TL_ReceivingQueueOffer, offer);
+  */
+  
+  
   
   
   //Register dummy variables.
@@ -606,20 +683,35 @@ void socketCodeTest() {
           } else { //Gotta search for the correct spot. Going to do this from the tail because new messages will have numbers in the higher end most of the time.
             logLine(succes, "Connection msg goes somewhere inside the list. Message sequence numbers: new: %d, Tail: %d\n", o.segment.seqMsg, con->msgListTail->seqMsg);
             
+            //Check first if the element goes in front. An easy, constant time solution to prevent complexity arising in the loop below.
+            if(o.segment.seqMsg < con->msgListHead->seqMsg) {
+              new->next = con->msgListHead; //The new head has the old head as its next.
+              con->msgListHead->prev = new; //The old head has the new head as its previous.
+              con->msgListHead = new; //Assign the new head.
+            } else {
+            
             TLMessageBufferLL *i = con->msgListTail;
+            logLine(succes, "   i/Tail: %p\n", i);
             while(i != NULL) {
+              logLine(succes, "   Loop: i/Tail: %p, i->seqMsg: %d, o.segment.seqMsg: %d\n", i, i->seqMsg, o.segment.seqMsg);
               if(i->seqMsg < o.segment.seqMsg) {
                 // ... -> i -> new -> i->next -> ...
                 TLMessageBufferLL *inext = i->next;
+            //logLine(succes, "   Loop vals before: inext: %p, new: %p, new->prev %p, new->next: %p, inext->prev: %p\n", inext, new, new->prev, new->next, inext->prev);
+                
                 i->next = new; //I now has new as its next element.
                 new->prev = i; // And I is before new.
                 new->next = inext; //New now has i's old next as its next
                 inext->prev = new; // And i's old next has new as its prev instead of i.
+            //logLine(succes, "   Loop vals after: inext: %p, new: %p, new->prev %p, new->next: %p, inext->prev: %p\n", inext, new, new->prev, new->next, inext->prev);
                 
+                logLine(succes, "   Moved one forward in the list.");
               }
               
               i = i->prev;
             }
+            }
+            
             
           }
           
