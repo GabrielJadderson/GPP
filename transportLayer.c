@@ -441,19 +441,22 @@ void socketCodeTest() {
     sockets[i] = NULL;
   }
   
-  char* msgToSplit = "ASDF\n"; //"SPLITME!\n";
-  unsigned int msglen = 6;
+  char* msgToSplit = "SPLIT ME PLEASE!!!!"; //"12345678abcdefghYNYNYNYN"; //"ASDFasdf"; //"ASDF\n";
+  unsigned int msglen = 20;
   int cpa = MAX_PAYLOAD;
   
+  int numFragments = msglen / MAX_PAYLOAD;
+  if(numFragments*MAX_PAYLOAD < msglen) {numFragments++;};
+  
   if(msglen < cpa) {cpa = msglen;}
-  logLine(succes, "Splitting message %s with msglen %d and cpa %d\n", msgToSplit, msglen, cpa);
+  logLine(succes, "Splitting message %s with msglen %d, cpa %d, numFragments: %d\n", msgToSplit, msglen, cpa, numFragments);
   
   //First fragment. Set to be the fourth message (3).
   offer = (TL_OfferElement*) malloc(sizeof(TL_OfferElement));
   offer->otherHostAddress = 111;
   offer->segment.is_first = 1;
   offer->segment.seqMsg = 4;
-  offer->segment.seqPayload = 0; //TODO Important: calculate this!
+  offer->segment.seqPayload = numFragments-1; //TODO Important: calculate this!
   offer->segment.senderport = 2;
   offer->segment.receiverport = 0; //This one should correspond to the open connection 
   //offer->segment.msg.data = "TEST.\n";
@@ -469,28 +472,47 @@ void socketCodeTest() {
   offer->segment.msg.data[7] = ' ';*/
   //Signal(TL_ReceivingQueueOffer, offer);
   
-  int i = MAX_PAYLOAD;
+  int i = 0;
+  logLine(succes, "   %p, %p\n", &(offer->segment.msg)+(i), msgToSplit+(i*MAX_PAYLOAD));
   while(true) {
   //for(int i = MAX_PAYLOAD; i < msglen; i += MAX_PAYLOAD) {
     //Submit the previous one.
     Signal(TL_ReceivingQueueOffer, offer);
     
-    i += MAX_PAYLOAD;
+    i++; //Important that this comes first.
     
-    if(i >= msglen) {
+    if(i >= numFragments) {
       break;
     }
     
-    /*offer = (TL_OfferElement*) malloc(sizeof(TL_OfferElement));
+    logLine(succes, "Building additional fragment with seqPayload: %d\n", i);
+    
+    offer = (TL_OfferElement*) malloc(sizeof(TL_OfferElement));
     offer->otherHostAddress = 111;
-    offer->segment.is_first = 1;
-    offer->segment.seqMsg = 3;
-    offer->segment.seqPayload = 1; //TODO Important: calculate this!
+    offer->segment.is_first = 0;
+    offer->segment.seqMsg = 4;
+    offer->segment.seqPayload = i; //TODO Important: calculate this!
     offer->segment.senderport = 2;
     offer->segment.receiverport = 0; //This one should correspond to the open connection 
     //offer->segment.msg.data = "TEST.\n";
-    offer->segment.aux = msglen;
-    memcpy(&(offer->segment.msg.data)+i, msgToSplit+i, MAX_PAYLOAD);*/
+    offer->segment.aux = 0;
+    
+              /*int copyamount = MAX_PAYLOAD;
+              if((o.segment.seqPayload+1)*MAX_PAYLOAD >= i->msgLen) {
+                copyamount = o.segment.aux;
+              }
+              
+              memcpy((i->msg)+(o.segment.seqPayload*MAX_PAYLOAD), &(o.segment.msg), copyamount);*/
+    
+    cpa = MAX_PAYLOAD;
+    //Is this the last fragment?
+    if((i+1)*MAX_PAYLOAD > msglen) {
+      offer->segment.aux = msglen % MAX_PAYLOAD;
+      cpa = msglen % MAX_PAYLOAD;
+    }
+    
+  logLine(succes, "   %p, %p\n", &(offer->segment.msg)+(i*MAX_PAYLOAD), msgToSplit+(i*MAX_PAYLOAD));
+    memcpy(&(offer->segment.msg.data), msgToSplit+(i*MAX_PAYLOAD), MAX_PAYLOAD);
     /*offer->segment.msg.data[0] = 'P';
     offer->segment.msg.data[1] = 'A';
     offer->segment.msg.data[2] = 'R';
@@ -501,12 +523,14 @@ void socketCodeTest() {
     offer->segment.msg.data[7] = ' ';*/
     //Signal(TL_ReceivingQueueOffer, offer);
     
+    logLine(succes, "frag bilt wit: %d, %d, %d\n", offer->segment.seqMsg, offer->segment.seqPayload, cpa);
+    
   }
-  /*
+  
   //The last one hasn't been offered yet.
-  offer->segment.aux = msglen % MAX_PAYLOAD;
-  Signal(TL_ReceivingQueueOffer, offer);
-  */
+  //offer->segment.aux = msglen % MAX_PAYLOAD;
+  //Signal(TL_ReceivingQueueOffer, offer);
+  
   
   
   
@@ -730,6 +754,10 @@ void socketCodeTest() {
               
               memcpy((i->msg)+(o.segment.seqPayload*MAX_PAYLOAD), &(o.segment.msg), copyamount);
               i->fragmentsRemaining--;
+              
+              logLine(succes, "Message fragment is copied into message at address: %p, with %d bytes copied. %d fragments remain. The sequence number of the fragment was: %d\n", i, copyamount, i->fragmentsRemaining, o.segment.seqPayload);
+              
+              logLine(succes, "%c%c%c%c%c%c%c%c\n", o.segment.msg.data[0], o.segment.msg.data[1], o.segment.msg.data[2], o.segment.msg.data[3], o.segment.msg.data[4], o.segment.msg.data[5], o.segment.msg.data[6], o.segment.msg.data[7]);
               
               //Cut. Looping anymore would yield nothing.
               break;
