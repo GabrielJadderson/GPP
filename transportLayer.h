@@ -26,6 +26,7 @@ typedef struct TLMBLL{
   unsigned int fragmentsRemaining; //The number of fragments yet to arrive. Set by the first segment in the seqPayload field. Decrement when receiving fragments. When it hits 0, all fragments have been received. This method is safe because of rdt in the link layer.
 } TLMessageBufferLL;
 
+
 //Connection management struct.
 typedef struct {
   unsigned int valid:1; //This is checked before actual access.
@@ -49,12 +50,13 @@ typedef struct {
 //  (seqPayload+1)*MAX_PAYLOAD >= msgLen => last packet
 typedef struct {
   unsigned int is_first:1; //True iff the segment is the first of the message.
+  unsigned int is_control:1; //true if the segment is a control segment.
   unsigned int seqMsg; //Sequencing number for the messages. No assumptions are made regarding the lower layers and would thereby support random segment arrival order together with seqPayload. (Superficially tested in a closed environment)
   unsigned int seqPayload; //Special case: if is_first is 1, then this value indicates the number of segments the messages is split into, excluding this one.
   unsigned int aux; //is_first: number of bytes of the total message. Used to allocate buffer size. Security? Nope.  For the last message: this is the number of bytes it carries with it.  Otherwise: reserved.
   transPORT senderport; //Port of the application sending the segment.
   transPORT receiverport; //Port of the application receiving the segment.
-  
+
   payload msg; //Actual bytes carried by the segment.
 } TL_Segment;
 
@@ -79,6 +81,13 @@ typedef struct {
   char* message;
   unsigned int length;
 } ALMessageSend;
+
+typedef struct {
+  transPORT port; //Port that is receiving.
+  networkAddress netAddress; //the address to the reciever.
+  TLSocket *sock; //The pointer to assign to the address of the returned socket.
+} ALConnReq;
+
 
 
 /*
