@@ -390,6 +390,17 @@ void transportLayer() {
               break;
             }
           }
+          
+         if(req->port == SOCKET_ANY) { //Copy-paste, WEE!
+            logLine(info, "Unable to deliver requested socket.\n");
+            socket = malloc(sizeof(TLSocket*));
+            (*socket) = malloc(sizeof(TLSocket));
+            (*socket)->valid = 0;
+            req->sock = (*socket);
+            socket = NULL; //For good measure.
+            break;
+          }
+          
         } else {
           if(sockets[req->port] != NULL || req->port >= NUM_MAX_SOCKETS) { // [PJ] Port taken/port invalid. Return an invalid port. Everything else than the valid field can be anything.
             logLine(info, "Unable to deliver requested socket.\n");
