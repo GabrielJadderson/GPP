@@ -19,7 +19,6 @@ extern void initialize_debug(void);
 
 #define NUM_MAX_NEIGHBOURS 4
 
-//#include "transportLayer.c" //[PJ] Doing gross testing stuff because we're using a fake one this time around.
 #include "networkLayer.c"
 
 /* En macro for at lette overførslen af korrekt navn til Activate */
@@ -37,6 +36,8 @@ log_type LogStyle;         /* Hvilken slags log skal systemet føre            *
 boolean network_layer_enabled;
 
 //[PJ] This should be moved back when no longer messing with a fake transport layer.
+#include "faketransportLayer.c" //[PJ] Doing gross testing stuff because we're using a fake one this time around.
+
 #include "transportLayer.c"
 #include "applicationtest.c"
 
@@ -499,8 +500,13 @@ void print_frame(frame* s, char *direction)
 	case DATA:
 		//packet_to_string(&(s->info), temp); //[PJ] Can no longer do this.
 		//logLine(info, "%s: DATA frame [seq=%d, ack=%d, kind=%d, (%s)] \n", direction, s->seq, s->ack, s->kind, temp);
-		logLine(info, "%s: DATA frame [seq=%d, ack=%d, kind=%d, %s] \n", direction, s->seq, s->ack, s->kind, s->info.payload.data);
-		break;
+		//logLine(info, "%s: DATA frame [seq=%d, ack=%d, kind=%d, %s] \n", direction, s->seq, s->ack, s->kind, s->info.payload.data);
+		logLine(info, "%s: DATA frame [seq=%d, ack=%d, kind=%d, d:%s, s:%s] \n", direction, s->seq, s->ack, s->kind, s->info.payload.data, s->info.segment.msg.data); //[PJ] Removed the carried data logging because it might not be NULL terminated.
+		for(int i = 0; i < MAX_PAYLOAD; i++) {
+                  logLine(trace, ">*_*>: %c\n", (s->info.segment.msg.data)[i]);//s->info.payload.data[i]);//
+                }
+                
+                break;
 	}
 }
 
@@ -516,6 +522,7 @@ int from_physical_layer(frame *r)
 	FromSubnet(&source, &dest, (char *)r, &length);
 	print_frame(r, "received");
         logLine(info, "LL: Frame is received from neighbour %d, which is station %d.\n", stationID2neighbourindex(source), source);
+        //logLine(succes, "<*_*<: frame size received: %d\n", length);
 
 	return stationID2neighbourindex(source);
 }
@@ -525,6 +532,7 @@ void to_physical_layer(frame *s, neighbourid neighbour)
 {
 	print_frame(s, "sending");
         logLine(info, "LL: Frame is sent to neighbour %d, which is station %d.\n", neighbour, neighbours[neighbour].stationID);
+        //logLine(succes, ">*_*>: frame size sent: %d\n", sizeof(frame));
 	ToSubnet(ThisStation, neighbours[neighbour].stationID, (char *)s, sizeof(frame));
 }
 
@@ -660,30 +668,41 @@ int main(int argc, char *argv[])
         
         //Host A
         //printf("\nActivating station 1?\n\n");
-        //ACTIVATE(1, selective_repeat);
-        //ACTIVATE(1, networkLayerHost);
+        ACTIVATE(1, selective_repeat);
+        ACTIVATE(1, networkLayerHost);
+        ACTIVATE(1, transportLayer);
+        ACTIVATE(1, textChatStatic1);
         //ACTIVATE(1, fake_transportLayer);
         
         //Host B
         //printf("\nActivating station 2?\n\n");
-        //ACTIVATE(2, selective_repeat);
-        //ACTIVATE(2, networkLayerHost);
+        ACTIVATE(2, selective_repeat);
+        ACTIVATE(2, networkLayerHost);
+        ACTIVATE(2, transportLayer);
+        ACTIVATE(2, textChatStatic2);
         //ACTIVATE(2, fake_transportLayer);
         
         //Router 1
         //printf("\nActivating station 3?\n\n");
-        //ACTIVATE(3, selective_repeat);
-        //ACTIVATE(3, networkLayerRouter);
+        ACTIVATE(3, selective_repeat);
+        ACTIVATE(3, networkLayerRouter);
         
         //Router 2
         //printf("\nActivating station 4?\n\n");
-        //ACTIVATE(4, selective_repeat);
-        //ACTIVATE(4, networkLayerRouter);
+        ACTIVATE(4, selective_repeat);
+        ACTIVATE(4, networkLayerRouter);
         
-        
+        /*ACTIVATE(1, selective_repeat);
+        ACTIVATE(1, networkLayerHost);
         ACTIVATE(1, transportLayer);
         ACTIVATE(1, textChatStatic1);
         //ACTIVATE(1, socketCodeTest);
+        
+        ACTIVATE(2, selective_repeat);
+        ACTIVATE(2, networkLayerHost);
+        ACTIVATE(2, transportLayer);
+        ACTIVATE(2, textChatStatic2);
+        */
         
 	/* simuleringen starter */
         //printf("\nStarting simulation?\n\n");

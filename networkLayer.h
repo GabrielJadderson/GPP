@@ -7,6 +7,7 @@
 */
 
 #include "concurrentFIFOQueue.h"
+#include "transportLayer.h"
 
 #ifndef NL_H_
 #define NL_H_
@@ -17,7 +18,7 @@
 
 // [PJ] Made the following values signed because -1 means unused.
 //Address type for devices on the network implementing the network layer. TODO: MOVE TO TRANSPORT LAYER HEADER FILE
-typedef signed long networkAddress; //[PJ] Considered making this an unsigned char[4]. Individual component access is unnecessary for this though.
+//typedef signed long networkAddress; //[PJ] Considered making this an unsigned char[4]. Individual component access is unnecessary for this though.
 
 //Neighbour ID for neighbouring devices.
 typedef signed int neighbourid;
@@ -30,8 +31,8 @@ ROUTERINFO: Router information request, if own addres == dest, send a DATAGRAM t
 */
 
 // Datagram struct and its associated values.
-#define MAX_PAYLOAD 8
-typedef struct { char data[MAX_PAYLOAD]; } payload;
+//#define MAX_PAYLOAD 8
+//typedef struct { char data[MAX_PAYLOAD]; } payload;
 
 typedef struct  {
   //First 32bit word
@@ -47,6 +48,7 @@ typedef struct  {
   
   //Payload
   payload payload;
+  TL_Segment segment;
 } datagram;
 
 //Routing table. There can be more elements in this table than there are neighbours and multiple entries can point to the same neighbour.

@@ -82,7 +82,7 @@ void to_network_layer(datagram *p);
 int from_physical_layer(frame *r);
 
 /* Pass the frame to the physical layer for transmission. */
-void to_physical_layer(frame *s, int target);
+void to_physical_layer(frame *s, neighbourid target);
 
 /* Start the clock running and enable the timeout event. */
 void start_timer(neighbourid neighbour, seq_nr k);

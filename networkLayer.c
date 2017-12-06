@@ -290,8 +290,9 @@ void networkLayerHost() {
             o = malloc(sizeof(TL_OfferElement));
             o->otherHostAddress = d.src;
             o->seg = d.payload;
+            o->segment = d.segment;
             
-            logLine(info, "NL: Received packet with contents for TL: %s\n", d.payload.data);
+            //logLine(info, "NL: Received packet with contents for TL: %s\n", d.payload.data);
             //d.payload = err;
             
             logLine(trace, "NL: Locking and enqueueing segment for TL.\n");
@@ -323,10 +324,11 @@ void networkLayerHost() {
           e = DequeueFQ(offer->queue);
           o = ((TL_OfferElement*) ValueOfFQE(e));
           
+          
           //logLine(trace, "NL: 11111\n");
           d.type = DATAGRAM;
           d.reserved = 0;
-          d.payloadsize = MAX_PAYLOAD;
+          d.payloadsize = MAX_PAYLOAD; //[PJ] TODO: Actually use this value for something useful.
           
           //logLine(trace, "NL: 22222\n");
           d.src = thisNetworkAddress;
@@ -334,6 +336,9 @@ void networkLayerHost() {
           
           //logLine(trace, "NL: 33333\n");
           d.payload = o->seg;
+          d.segment = o->segment;
+          
+          memcpy(&d.segment.msg, &d.payload, 8);
           
           //logLine(trace, "NL: 44444\n");
           O = malloc(sizeof(NL_OfferElement));
@@ -345,7 +350,9 @@ void networkLayerHost() {
           //EnqueueFQ(NewFQE((void *)O), sendingQueue.queue);
           EnqueueFQ(NewFQE((void *)O), sendingBuffQueue);
           
-          logLine(info, "NL: Received from TL: %s\n", d.payload.data);
+          //logLine(info, "NL: Received from TL: %s\n", d.payload.data);
+          logLine(info, "NL: Received from TL: %s - %s\n", d.payload.data, d.segment.msg.data);
+          //logLine(succes, "NL: Offered element properties: type: %d, reserved: %d, payloadsize: %d, src: %d, dest: %d, payload: %s, segment.seqMsg: %d, segment.seqPayload: %d, segment.aux: %d, segment.senderport: %d, segment.receiverport: %d, segment.payload: %s\n", d.type, d.reserved, d.payloadsize, d.src, d.dest, d.payload.data, d.segment.seqMsg, d.segment.seqPayload, d.segment.aux, d.segment.senderport, d.segment.receiverport, d.segment.msg.data);
         }
         
         logLine(trace, "NL: Releasing locks.\n");
@@ -530,7 +537,7 @@ void networkLayerRouter() {
     
     switch(event.type) {
       case network_layer_allowed_to_send:
-        logLine(trace, "NL: Allowed to send by LL.\n");
+        logLine(debug, "NL: Allowed to send by LL.\n");
         allowedToSendToLL = true; //There might not be an element to send right now. Remember that we can send without getting stuck here.
         break;
       case data_for_network_layer:
@@ -546,14 +553,14 @@ void networkLayerRouter() {
           O->otherHostNeighbourid = NL_TableLookup(d.dest);
           O->dat = d;
           
-          logLine(trace, "NL: networkAddresss=%d, neighbourid=%d\n", d.dest, O->otherHostNeighbourid);
+          logLine(debug, "NL: networkAddresss=%d, neighbourid=%d\n", d.dest, O->otherHostNeighbourid);
           
           EnqueueFQ(NewFQE((void *)O), receivedQueue);
           
           break; //Done.
         }
         
-        logLine(trace, "NL: Datagram type (enum): %d.\n", d.type);
+        logLine(debug, "NL: Datagram type (enum): %d.\n", d.type);
         switch(d.type) {
           //case DATAGRAM: //Datagrams are handled above
           case ROUTERINFO:
@@ -569,7 +576,7 @@ void networkLayerRouter() {
     //If the lock is free, then put the received elements into the queue for the LL.
     //if(Trylock(sendingQueue.lock) == 0 && EmptyFQ(receivedQueue) == 0) {
     if(routersendingQueue.used == false && EmptyFQ(receivedQueue) == 0) {
-      logLine(trace, "NL: Transfering between queues\n");
+      logLine(debug, "NL: Transfering between queues\n");
       //Lock(sendingQueue.lock); //Nothing else uses it, but for good measure since it's easy here.
       
       //Transfer from one queue to the other.
@@ -588,7 +595,7 @@ void networkLayerRouter() {
       
       //Signal(network_layer_ready, ValueOfFQE(e)); //Just pass it directly.
       
-      logLine(trace, "NL: Offering queue to LL\n");
+      logLine(debug, "NL: Offering queue to LL\n");
       
       if(routersendingQueue.used == true) {
       //if(Trylock(routersendingQueue.lock) != 0) {

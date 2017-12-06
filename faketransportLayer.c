@@ -178,10 +178,10 @@ void fake_transportLayer() {
   }
   
 }
-
+/*
 void TL_OfferReceivingQueue(ConcurrentFifoQueue *offer) {
   //Lock(offer->lock);
   
   Signal(TL_ReceivingQueueOffer, (void*) offer);
-}
+}*/
 

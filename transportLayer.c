@@ -2,7 +2,7 @@
 #include "events.h"
 #include "concurrentFIFOQueue.h"
 
-#include "transportLayer.h"
+//#include "transportLayer.h"
 #include "networkLayer.h"
 
 void transportLayer() {
@@ -198,13 +198,13 @@ void transportLayer() {
     switch(event.type) {
       case AL_Connect:
         logLine(debug, "AL: Received signal AL_Connect\n");
-        AL_ConnReq connReq = (AL_ConnReq*) event.msg;
+        ALConnReq *connReq = (ALConnReq*) event.msg;
 
 
         O = (TL_OfferElement*) malloc(sizeof(TL_OfferElement));
         O->otherHostAddress = connReq->netAddress; //111;
         O->segment.is_first = 1;
-        O->Segment.is_control = 1;
+        O->segment.is_control = 1;
         O->segment.seqMsg = 0; //4;
         O->segment.seqPayload = 0;
         O->segment.senderport = connReq->sock->port; //2;
@@ -233,11 +233,12 @@ void transportLayer() {
 
 
           // Socket Part
-  logLine(succes, "\nStarting Check.\n");
+  logLine(trace, "\nStarting Check.\n");
+  logLine(debug, "LALALALALALA *******: receiverport: %d, socket@rcv: %p, is_first: %d, is_control: %d, seqMsg: %d, seqPayload: %d, aux: %d\n", o.segment.receiverport, sockets[o.segment.receiverport], o.segment.is_first, o.segment.is_control, o.segment.seqMsg, o.segment.seqPayload, o.segment.aux);
 
   //The port this segment is addressed to is actually valid.
   if(sockets[o.segment.receiverport] != NULL && sockets[o.segment.receiverport]->valid) {
-    logLine(succes, "Socket %d is valid and is receiving a message.\n", o.segment.receiverport);
+    logLine(debug, "Socket %d is valid and is receiving a message.\n", o.segment.receiverport);
 
     //[PJ] A search is needed for this one because the data order is indeterministic.
     for(int i = 0; i < MAX_CONNECTIONS; i++) {
@@ -246,16 +247,16 @@ void transportLayer() {
       && o.otherHostAddress == sockets[o.segment.receiverport]->connections[i].remoteAddress //The sender's address if the address of the connected machine
       && o.segment.senderport == sockets[o.segment.receiverport]->connections[i].remotePort //The sending application's port is the port of the connected application.
       ) {
-        logLine(succes, "Connection at index %d matches the segment and is valid.\n", i);
+        logLine(debug, "Connection at index %d matches the segment and is valid.\n", i);
         //The correct connection has been found. Handle the incoming payload.
 
         TLConnection *con = &(sockets[o.segment.receiverport]->connections[i]);
 
-        logLine(succes, "Connection attributes: addr: %d, port: %d, head: %p, tail: %p\n", con->remoteAddress, con->remotePort, con->msgListHead, con->msgListTail);
+        logLine(debug, "Connection attributes: addr: %d, port: %d, head: %p, tail: %p\n", con->remoteAddress, con->remotePort, con->msgListHead, con->msgListTail);
 
         //New message start
         if(o.segment.is_first) {
-          logLine(succes, "Message fragment is the first fragment.\n");
+          logLine(debug, "Message fragment is the first fragment.\n");
 
           //Make the new message to be inserted.
           TLMessageBufferLL *new = (TLMessageBufferLL*) malloc(sizeof(TLMessageBufferLL));
@@ -272,16 +273,16 @@ void transportLayer() {
           if(new->msgLen < copyamount) {
             copyamount = new->msgLen;
           }
-          logLine(succes, "The number of copied bytes: %d\n", copyamount);
+          logLine(trace, "The number of copied bytes: %d\n", copyamount);
           memcpy(new->msg, &(o.segment.msg), copyamount);
-          logLine(succes, "Copied message: %s - %s\n", &(o.segment.msg), new->msg);
+          logLine(debug, "Copied message: %s - %s\n", &(o.segment.msg), new->msg);
 
 
           //First case: there are no messages in the list.
           if(con->msgListHead == NULL) {
             con->msgListHead = new;
             con->msgListTail = con->msgListHead; //When there is a head, there should also be a tail. They just happen to be the same.
-            logLine(succes, "Connection msg list head was NULL. Head: %p, Tail: %p\n", con->msgListHead, con->msgListTail);
+            logLine(debug, "Connection msg list head was NULL. Head: %p, Tail: %p\n", con->msgListHead, con->msgListTail);
 
           } else if(o.segment.seqMsg > con->msgListTail->seqMsg) {
             // ... -> Current Tail -> New Tail -> NULL
@@ -289,10 +290,10 @@ void transportLayer() {
             con->msgListTail = new;
             con->msgListTail->prev = tmp; //Old tail the is previous one from the new tail.
             tmp->next = new; //New tali is the next one from the old tail.
-            logLine(succes, "Connection msg gets appended. Head: %p, Tail: %p\n", con->msgListHead, con->msgListTail);
+            logLine(debug, "Connection msg gets appended. Head: %p, Tail: %p\n", con->msgListHead, con->msgListTail);
 
           } else { //Gotta search for the correct spot. Going to do this from the tail because new messages will have numbers in the higher end most of the time.
-            logLine(succes, "Connection msg goes somewhere inside the list. Message sequence numbers: new: %d, Tail: %d\n", o.segment.seqMsg, con->msgListTail->seqMsg);
+            logLine(debug, "Connection msg goes somewhere inside the list. Message sequence numbers: new: %d, Tail: %d\n", o.segment.seqMsg, con->msgListTail->seqMsg);
 
             //Check first if the element goes in front. An easy, constant time solution to prevent complexity arising in the loop below.
             if(o.segment.seqMsg < con->msgListHead->seqMsg) {
@@ -320,7 +321,7 @@ void transportLayer() {
           }
 
         } else { //Need to insert a fragment into a existing message.
-          logLine(succes, "Message fragment is part of an existing message.\n");
+          logLine(debug, "Message fragment is part of an existing message.\n");
 
           //Search from the front based on the assumption that the majority of fragments will be for the messages in the front of the list.
           //If excess time is available, having a pointer to a point in the list after the last complete message would be an optimization for when many messages queue up.
@@ -347,11 +348,27 @@ void transportLayer() {
         }
 
 
-        logLine(succes, "\n\n");
-        logLine(succes, "List contents:\n");
+        logLine(info, "\n\n");
+        logLine(info, "List contents:\n");
         for(TLMessageBufferLL *i = con->msgListHead; i != NULL; i = i->next) {
           if(i->fragmentsRemaining == 0) {
-            logLine(succes, "%s\n", i->msg);
+            logLine(debug, "Msg@%p has msg* %p with string: %s\n", i, i->msg, i->msg);
+            logLine(succes, "%s\n", i->msg); //[PJ] Succes level until the receive function is in place.
+            //logLine(succes, "%s\n", (i->msg)+8);
+            //logLine(succes, "%s\n", (i->msg)+16);
+            /*int asdf = 0; //[PJ] WARNING: THIS LOOP DOESN'T WORK!
+            for(int j = 0; j < 20; j++) {
+              if(i->msg+j != 0) {
+                asdf = 1;
+                logLine(succes, "Byte %d: %c\n", j, i->msg+j);
+              }
+            }
+            
+            if(asdf) {
+              logLine(succes, "Not all bytes 0!\n");
+            } else {
+              logLine(succes, "All bytes 0!\n");
+            }*/
           }
         }
 
@@ -501,6 +518,7 @@ void transportLayer() {
   //O->segment.msg.data = "TEST.\n";
   O->segment.aux = msglen;
   memcpy(&(O->segment.msg.data), msgToSplit, cpa);
+  memcpy(&(O->seg.data), msgToSplit, cpa);
   /*O->segment.msg.data[0] = 'P';
   O->segment.msg.data[1] = 'A';
   O->segment.msg.data[2] = 'R';
@@ -512,7 +530,7 @@ void transportLayer() {
   //Signal(TL_ReceivingQueueOffer, O);
 
   int i = 0;
-  logLine(succes, "   %p, %p\n", &(O->segment.msg)+(i), msgToSplit+(i*MAX_PAYLOAD));
+  logLine(trace, "   %p, %p\n", &(O->segment.msg)+(i), msgToSplit+(i*MAX_PAYLOAD));
   while(true) {
   //for(int i = MAX_PAYLOAD; i < msglen; i += MAX_PAYLOAD) {
     //Submit the previous one.
@@ -525,7 +543,7 @@ void transportLayer() {
       break;
     }
 
-    logLine(succes, "Building additional fragment with seqPayload: %d\n", i);
+    logLine(debug, "Building additional fragment with seqPayload: %d\n", i);
 
     O = (TL_OfferElement*) malloc(sizeof(TL_OfferElement));
     O->otherHostAddress = targetAddress; //111;
@@ -552,8 +570,10 @@ void transportLayer() {
       cpa = msglen % MAX_PAYLOAD;
     }
 
-  logLine(succes, "   %p, %p\n", &(O->segment.msg)+(i*MAX_PAYLOAD), msgToSplit+(i*MAX_PAYLOAD));
+  logLine(trace, "   %p, %p\n", &(O->segment.msg)+(i*MAX_PAYLOAD), msgToSplit+(i*MAX_PAYLOAD));
     memcpy(&(O->segment.msg.data), msgToSplit+(i*MAX_PAYLOAD), MAX_PAYLOAD);
+  memcpy(&(O->seg.data), msgToSplit+(i*MAX_PAYLOAD), MAX_PAYLOAD);
+  logLine(debug, "src: %s, dest: %s\n", msgToSplit+(i*MAX_PAYLOAD), O->segment.msg.data);
     /*O->segment.msg.data[0] = 'P';
     O->segment.msg.data[1] = 'A';
     O->segment.msg.data[2] = 'R';
@@ -564,7 +584,7 @@ void transportLayer() {
     O->segment.msg.data[7] = ' ';*/
     //Signal(TL_ReceivingQueueOffer, O);
 
-    logLine(succes, "frag bilt wit: %d, %d, %d\n", O->segment.seqMsg, O->segment.seqPayload, cpa);
+    logLine(debug, "fragment built with: %d, %d, %d\n", O->segment.seqMsg, O->segment.seqPayload, cpa);
 
   }
 
@@ -588,7 +608,7 @@ void transportLayer() {
         EnqueueFQ(DequeueFQ(sendingBuffQueue), sendingQueue.queue);
       }
 
-      logLine(trace, "NL: Offering receiving queue to TL.\n");
+      logLine(trace, "TL: Offering sending queue to NL.\n");
       NL_OfferSendingQueue(&sendingQueue);
 
       //Unlock(sendingQueue.lock);
@@ -700,7 +720,7 @@ void socketCodeTest() {
   //Signal(TL_ReceivingQueueOffer, offer);
 
   int i = 0;
-  logLine(succes, "   %p, %p\n", &(offer->segment.msg)+(i), msgToSplit+(i*MAX_PAYLOAD));
+  logLine(trace, "   %p, %p\n", &(offer->segment.msg)+(i), msgToSplit+(i*MAX_PAYLOAD));
   while(true) {
   //for(int i = MAX_PAYLOAD; i < msglen; i += MAX_PAYLOAD) {
     //Submit the previous one.
@@ -738,7 +758,7 @@ void socketCodeTest() {
       cpa = msglen % MAX_PAYLOAD;
     }
 
-  logLine(succes, "   %p, %p\n", &(offer->segment.msg)+(i*MAX_PAYLOAD), msgToSplit+(i*MAX_PAYLOAD));
+  logLine(trace, "   %p, %p\n", &(offer->segment.msg)+(i*MAX_PAYLOAD), msgToSplit+(i*MAX_PAYLOAD));
     memcpy(&(offer->segment.msg.data), msgToSplit+(i*MAX_PAYLOAD), MAX_PAYLOAD);
     /*offer->segment.msg.data[0] = 'P';
     offer->segment.msg.data[1] = 'A';
@@ -862,7 +882,8 @@ void socketCodeTest() {
   logLine(succes, "\nStarting Check.\n");
 
   logLine(succes, "Incoming message for socket at port %d\n", o.segment.receiverport);
-
+  
+  
   //The port this segment is addressed to is actually valid.
   if(sockets[o.segment.receiverport] != NULL && sockets[o.segment.receiverport]->valid) {
     logLine(succes, "Socket %d is valid and is receiving a message.\n", o.segment.receiverport);
