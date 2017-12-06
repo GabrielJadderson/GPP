@@ -74,4 +74,3 @@ char* receive(TLSocket *socket, unsigned int connectionid);
 
 
 #endif /* include guard: AL_H_ */
-

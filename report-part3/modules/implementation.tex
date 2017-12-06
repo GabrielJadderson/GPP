@@ -2,6 +2,33 @@
 
 %\texttt{data\_for\_network\_layer}
 
+In part 3 we've extended $events.h$ and included events from $transportLayer.h$ and $appplicationLayer.h$
+below is a list of the newly added events.
+\break
+\texttt{TL\_SocketRequest}
+\break
+\texttt{AL\_Listen}
+\break
+\texttt{AL\_Connect}
+\break
+\texttt{AL\_Disconnect}
+\break
+\texttt{AL\_Send}
+\break
+\texttt{AL\_Receive}
+\break
+
+
+\begin{itemize}
+\item \texttt{TL\_SocketRequest}: 8bit Type; 8bit Reserved; 16bit Payload size
+\item \texttt{AL\_Listen}: 32bit source address
+\item \texttt{AL\_Connect}: 32bit destination address
+\item \texttt{AL\_Disconnect}: 32bit destination address
+\item \texttt{AL\_Send}: 32bit destination address
+\item \texttt{AL\_Receive}: 32bit destination address
+\end{itemize}
+
+
 \begin{lstlisting}
 \end{lstlisting}
 

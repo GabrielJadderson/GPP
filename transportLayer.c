@@ -202,18 +202,30 @@ void transportLayer() {
 
 
         O = (TL_OfferElement*) malloc(sizeof(TL_OfferElement));
-        O->otherHostAddress = connReq->netAddress; //111;
+        O->otherHostAddress = connReq->netAddress;
         O->segment.is_first = 1;
         O->segment.is_control = 1;
-        O->segment.seqMsg = 0; //4;
+        O->segment.seqMsg = 0;
         O->segment.seqPayload = 0;
-        O->segment.senderport = connReq->sock->port; //2;
-        O->segment.receiverport = connReq->port; //0; //This one should correspond to the open connection
+        O->segment.senderport = connReq->sock->port;
+        O->segment.receiverport = connReq->port; //This one should correspond to the open connection
         O->segment.aux = 0;
         memset(&(O->segment.msg.data), 0, 8);
 
+        //TODO: assign unused connection id
+
         EnqueueFQ( NewFQE( (void *) O ), sendingBuffQueue);
         logLine(debug, "AL: SENDING TO THE BUFFER QUEUE\n");
+        break;
+
+      case AL_Disconnect:
+        logLine(debug, "AL: Received signal AL_Disconnect\n");
+
+        ALDisconnectReq* disconnectReq = (ALDisconnectReq*) event.msg;
+
+
+
+        logLine(debug, "AL: DISCONNECTED CONNECTION ID \n");
         break;
       case TL_ReceivingQueueOffer:
         logLine(debug, "TL: Received signal TL_ReceivingQueueOffer.\n");
@@ -363,7 +375,7 @@ void transportLayer() {
                 logLine(succes, "Byte %d: %c\n", j, i->msg+j);
               }
             }
-            
+
             if(asdf) {
               logLine(succes, "Not all bytes 0!\n");
             } else {
@@ -407,7 +419,7 @@ void transportLayer() {
               break;
             }
           }
-          
+
          if(req->port == SOCKET_ANY) { //Copy-paste, WEE!
             logLine(info, "Unable to deliver requested socket.\n");
             socket = malloc(sizeof(TLSocket*));
@@ -417,7 +429,7 @@ void transportLayer() {
             socket = NULL; //For good measure.
             break;
           }
-          
+
         } else {
           if(sockets[req->port] != NULL || req->port >= NUM_MAX_SOCKETS) { // [PJ] Port taken/port invalid. Return an invalid port. Everything else than the valid field can be anything.
             logLine(info, "Unable to deliver requested socket.\n");
@@ -471,17 +483,17 @@ void transportLayer() {
 
       case AL_Receive:
         logLine(trace, "AL_RECEIVE!\n");
-        
+
         ALMessageSend *MR = (ALMessageSend*) event.msg;
-        
+
         TLSocket *socket = MR->socketToUse;
-        
+
         //logLine(succes, "%d %p %d %d %d\n", socket->connections[MR->connectionid].valid, socket->connections[MR->connectionid].msgListHead != NULL, socket->connections[MR->connectionid].inboundSeqMsg, (socket->connections[MR->connectionid].msgListHead)->seqMsg, (socket->connections[MR->connectionid].msgListHead)->fragmentsRemaining);
         logLine(debug, "%d %p \n", socket->connections[MR->connectionid].valid, socket->connections[MR->connectionid].msgListHead);
         if(socket->connections[MR->connectionid].msgListHead != NULL){
           logLine(debug, "sequence ids: %d, %d, %d\n", socket->connections[MR->connectionid].inboundSeqMsg, (socket->connections[MR->connectionid].msgListHead)->seqMsg, (socket->connections[MR->connectionid].msgListHead)->fragmentsRemaining);
         }
-        
+
         if(socket->valid //Socket is valid
           && socket->connections[MR->connectionid].valid //Connection is valid
           && socket->connections[MR->connectionid].msgListHead != NULL //There is a message
@@ -492,13 +504,13 @@ void transportLayer() {
           TLMessageBufferLL *tmp = socket->connections[MR->connectionid].msgListHead;
           MR->length = tmp->msgLen;
           MR->message = tmp->msg;
-          
+
           socket->connections[MR->connectionid].msgListHead = tmp->next;
           free(tmp);
-          
+
           socket->connections[MR->connectionid].inboundSeqMsg++;
         }
-        
+
         MR->aux = 0;
         //Intentionally leaving message as NULL if the conditions aren't true.
         break;
@@ -910,8 +922,8 @@ void socketCodeTest() {
   logLine(succes, "\nStarting Check.\n");
 
   logLine(succes, "Incoming message for socket at port %d\n", o.segment.receiverport);
-  
-  
+
+
   //The port this segment is addressed to is actually valid.
   if(sockets[o.segment.receiverport] != NULL && sockets[o.segment.receiverport]->valid) {
     logLine(succes, "Socket %d is valid and is receiving a message.\n", o.segment.receiverport);

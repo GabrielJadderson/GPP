@@ -9,9 +9,14 @@
 #ifndef TL_H_
 #define TL_H_
 
+
+
+
 /*
 *   Types
 */
+
+
 
 //[PJ] Moved this from networkLayer.h because it is extensively needed in here.
 typedef signed short networkAddress; //[PJ] Considered making this an unsigned char[4]. Individual component access is unnecessary for this though.
@@ -56,7 +61,7 @@ typedef struct {
 //  (seqPayload+1)*MAX_PAYLOAD >= msgLen => last packet
 typedef struct {
   payload msg; //Actual bytes carried by the segment.
-  
+
   unsigned int is_first:1; //True iff the segment is the first of the message.
   unsigned int is_control:1; //true if the segment is a control segment.
   unsigned int seqMsg; //Sequencing number for the messages. No assumptions are made regarding the lower layers and would thereby support random segment arrival order together with seqPayload. (Superficially tested in a closed environment)
@@ -96,6 +101,12 @@ typedef struct {
   networkAddress netAddress; //the address to the reciever.
   TLSocket *sock; //The pointer to assign to the address of the returned socket.
 } ALConnReq;
+
+
+typedef struct {
+     TLSocket* sock; //The pointer to assign to the address of the returned socket.
+     unsigned int* con_id;
+} ALDisconnectReq;
 
 
 
