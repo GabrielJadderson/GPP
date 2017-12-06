@@ -1,0 +1,153 @@
+\documentclass[a4paper,12pt]{article}
+
+%cmap has to be loaded before any font package (such as cfr-lm)
+\usepackage{cmap}
+
+%\usepackage{geometry}
+%\geometry{ a4paper,  left=19mm,   right=19mm,  top=19mm,  bottom=19mm  }
+%\newgeometry{  top=1in,bottom=1in,outer=1in,inner=2in,}
+
+
+%\usepackage{scrextend} %big package used for custom item listings
+\usepackage{enumitem} %small, used for custom item listings
+
+%\usepackage[parfill]{parskip} %nyt shit her
+\usepackage{float}
+\usepackage{fancyvrb}
+\usepackage{comment}
+\usepackage{hyperref}
+\usepackage[nottoc]{tocbibind}
+
+
+
+%\usepackage[T1]{fontenc}
+%\renewcommand*\familydefault{\sfdefault}
+%\usepackage[utf8]{inputenc}
+%\usepackage{lmodern}
+
+
+
+\usepackage[T1]{fontenc}        % euro quality fonts [T1] (togeth. w/ textcomp)
+\usepackage{textcomp, amssymb}  % additional symbols (there are more packages)
+\usepackage{setspace}           % doublespacing
+
+\usepackage{anysize}            % margin package
+\marginsize{0.8in}{0.8in}{0.27in}{1.27in} % review version with 1 in margins
+%\usepackage[english]{babel}
+
+
+
+
+
+\setlength{\parindent}{0pt}
+\usepackage{float}
+\usepackage{fancyvrb}
+
+\usepackage{amssymb}
+\usepackage{amsmath}
+
+\usepackage{booktabs}
+\usepackage{mdframed}
+\usepackage{fixltx2e}
+
+\usepackage{graphicx}
+\graphicspath{{./figs/}}
+\DeclareGraphicsExtensions{.png}
+
+\usepackage{import}
+
+\usepackage{titletoc}
+
+\usepackage{minitoc}
+\usepackage{wrapfig}
+\usepackage{array}
+
+\usepackage{tikz}
+
+
+
+%listings
+\usepackage{listings}
+\usepackage{color}
+%------ Code Formatting settings ------
+
+\definecolor{codegreen}{rgb}{0.50,0.50,0.50}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{keywordColour}{rgb}{0.489, 0, 0,33}
+\definecolor{backgroundColor}{HTML}{F9F9F9}
+\definecolor{Maroon}{HTML}{DD2700}
+\definecolor{Black}{HTML}{000000}
+
+\lstdefinestyle{mystyle}{
+    frame = tb,
+    language=C,
+    backgroundcolor=\color{backgroundColor},
+    commentstyle=\footnotesize\color{codegreen},
+    keywordstyle=\footnotesize\color{Maroon},
+    stringstyle=\footnotesize\color{codepurple},
+    basicstyle={\footnotesize\ttfamily\color{Black}},
+    numberstyle=\footnotesize\color{codegray},
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    %frame=lines,
+    frame= none,
+    tabsize=2,
+    rulecolor=\color{codegray},
+    aboveskip=3mm,
+    belowskip=3mm,
+    columns=flexible,
+    numbersep=3pt,
+    xleftmargin=1.6em,
+    xrightmargin=0em,
+    literate={\$}{{\textcolor{blue}{\$}}}1
+}
+\lstset{style=mystyle}
+
+
+
+\begin{document}
+
+
+%------ title ------
+\import{./modules/}{title.tex}
+
+\newpage
+
+
+
+\newpage
+\vfill
+\tableofcontents
+\vfill
+\newpage
+\listoffigures
+
+\newpage
+\pagenumbering{arabic}
+
+
+
+%------ title ------
+\import{./modules/}{introduction.tex}
+
+
+\import{./modules/}{design.tex}
+
+\import{./modules/}{implementation.tex}
+
+\import{./modules/}{testing.tex}
+
+\import{./modules/}{conclusion.tex}
+
+\import {./modules/}{appendix.tex}
+
+
+\end{document}
