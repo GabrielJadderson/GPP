@@ -25,7 +25,7 @@ typedef unsigned short transPORT;
 typedef struct TLMBLL{
   struct TLMBLL *next;
   struct TLMBLL *prev; //Searching will start from this end. It is simply more likely to hit a correct spot faster.
-  unsigned char* msg;
+  char* msg;
   unsigned int msgLen; //The length of msg. Allocated based on the aux field of the first segment.
   unsigned int seqMsg; //The sequence number of the message.
   unsigned int fragmentsRemaining; //The number of fragments yet to arrive. Set by the first segment in the seqPayload field. Decrement when receiving fragments. When it hits 0, all fragments have been received. This method is safe because of rdt in the link layer.
@@ -37,7 +37,8 @@ typedef struct {
   unsigned int valid:1; //This is checked before actual access.
   networkAddress remoteAddress; //Address of the other machine
   transPORT remotePort; //Port of the other application
-  unsigned int outboundSeqMsg;
+  unsigned int outboundSeqMsg; //seqMsg of next message to send.
+  unsigned int inboundSeqMsg;  //seqMsg of next message to receive.
   TLMessageBufferLL *msgListHead; //Head of the linked list of messages. If this one has fragmentsRemaining == 0, then its msg can be received by the application.
   TLMessageBufferLL *msgListTail; //Tail of the linked list of messages
 } TLConnection;
@@ -87,6 +88,7 @@ typedef struct {
   unsigned int connectionid;
   char* message;
   unsigned int length;
+  char aux; //Used by the receive call. The transport layer sets this to 0 when it breaks.
 } ALMessageSend;
 
 typedef struct {

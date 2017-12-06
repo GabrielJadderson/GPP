@@ -39,6 +39,7 @@ boolean network_layer_enabled;
 #include "faketransportLayer.c" //[PJ] Doing gross testing stuff because we're using a fake one this time around.
 
 #include "transportLayer.c"
+#include "applicationLayer.c"
 #include "applicationtest.c"
 
 

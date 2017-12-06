@@ -347,7 +347,7 @@ void transportLayer() {
 
         }
 
-
+        /*
         logLine(info, "\n\n");
         logLine(info, "List contents:\n");
         for(TLMessageBufferLL *i = con->msgListHead; i != NULL; i = i->next) {
@@ -356,7 +356,7 @@ void transportLayer() {
             logLine(succes, "%s\n", i->msg); //[PJ] Succes level until the receive function is in place.
             //logLine(succes, "%s\n", (i->msg)+8);
             //logLine(succes, "%s\n", (i->msg)+16);
-            /*int asdf = 0; //[PJ] WARNING: THIS LOOP DOESN'T WORK!
+            int asdf = 0; //[PJ] WARNING: THIS LOOP DOESN'T WORK!
             for(int j = 0; j < 20; j++) {
               if(i->msg+j != 0) {
                 asdf = 1;
@@ -368,9 +368,9 @@ void transportLayer() {
               logLine(succes, "Not all bytes 0!\n");
             } else {
               logLine(succes, "All bytes 0!\n");
-            }*/
+            }
           }
-        }
+        }*/
 
 
 
@@ -445,6 +445,7 @@ void transportLayer() {
           sockets[req->port]->connections[i].remoteAddress = 0;
           sockets[req->port]->connections[i].remotePort = 0;
           sockets[req->port]->connections[i].outboundSeqMsg = 0;
+          sockets[req->port]->connections[i].inboundSeqMsg = 0;
           sockets[req->port]->connections[i].msgListHead = NULL;
           sockets[req->port]->connections[i].msgListTail = NULL;
           logLine(trace, "Done setting for %d\n", i);
@@ -469,10 +470,37 @@ void transportLayer() {
         break;
 
       case AL_Receive:
-        logLine(succes, "AL_RECEIVE!\n");
-
-
-
+        logLine(trace, "AL_RECEIVE!\n");
+        
+        ALMessageSend *MR = (ALMessageSend*) event.msg;
+        
+        TLSocket *socket = MR->socketToUse;
+        
+        //logLine(succes, "%d %p %d %d %d\n", socket->connections[MR->connectionid].valid, socket->connections[MR->connectionid].msgListHead != NULL, socket->connections[MR->connectionid].inboundSeqMsg, (socket->connections[MR->connectionid].msgListHead)->seqMsg, (socket->connections[MR->connectionid].msgListHead)->fragmentsRemaining);
+        logLine(debug, "%d %p \n", socket->connections[MR->connectionid].valid, socket->connections[MR->connectionid].msgListHead);
+        if(socket->connections[MR->connectionid].msgListHead != NULL){
+          logLine(debug, "sequence ids: %d, %d, %d\n", socket->connections[MR->connectionid].inboundSeqMsg, (socket->connections[MR->connectionid].msgListHead)->seqMsg, (socket->connections[MR->connectionid].msgListHead)->fragmentsRemaining);
+        }
+        
+        if(socket->valid //Socket is valid
+          && socket->connections[MR->connectionid].valid //Connection is valid
+          && socket->connections[MR->connectionid].msgListHead != NULL //There is a message
+          && socket->connections[MR->connectionid].inboundSeqMsg == (socket->connections[MR->connectionid].msgListHead)->seqMsg //The message is the one we want
+          && (socket->connections[MR->connectionid].msgListHead)->fragmentsRemaining == 0 //The whole message has arrived.
+          ) {
+          //Time to give the inbound message to the application.
+          TLMessageBufferLL *tmp = socket->connections[MR->connectionid].msgListHead;
+          MR->length = tmp->msgLen;
+          MR->message = tmp->msg;
+          
+          socket->connections[MR->connectionid].msgListHead = tmp->next;
+          free(tmp);
+          
+          socket->connections[MR->connectionid].inboundSeqMsg++;
+        }
+        
+        MR->aux = 0;
+        //Intentionally leaving message as NULL if the conditions aren't true.
         break;
 
       case AL_Send: //Split the message and send the fragments as segments.

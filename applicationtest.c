@@ -5,6 +5,8 @@
 #include "applicationLayer.h"
 
 void textChatStatic1(void) {
+  //[PJ] As good a place as any to check this.
+  //logLine(succes, "framekind size: %d\n", sizeof(frame_kind));
   
   
   logLine(succes, "WEE.\n");
@@ -31,14 +33,25 @@ void textChatStatic1(void) {
   sleep(1);
   
   //Try sending a message to see the debugging messages.
-  ALMessageSend *MS = (ALMessageSend*) malloc(sizeof(ALMessageSend));
+  /*ALMessageSend *MS = (ALMessageSend*) malloc(sizeof(ALMessageSend));
   MS->socketToUse = socket;
   MS->connectionid = 0;
   MS->message = "SPLIT ME PLEASE!!!!";
   MS->length = 20;
   
-  Signal(AL_Send, MS);
+  Signal(AL_Send, MS);*/
   //Signal(AL_Receive, NULL);
+  
+  send(socket, 0, "SPLIT ME PLEASE #01", 20);
+  send(socket, 0, "SPLIT ME PLEASE #02", 20);
+  send(socket, 0, "SPLIT ME PLEASE #03", 20);
+  send(socket, 0, "SPLIT ME PLEASE #04", 20);
+  send(socket, 0, "SPLIT ME PLEASE #05", 20);
+  send(socket, 0, "SPLIT ME PLEASE #06", 20);
+  send(socket, 0, "SPLIT ME PLEASE #07", 20);
+  send(socket, 0, "SPLIT ME PLEASE #08", 20);
+  send(socket, 0, "SPLIT ME PLEASE #09", 20);
+  send(socket, 0, "SPLIT ME PLEASE #10", 20);
   
   
   //sleep(5); //Give some time to finish.
@@ -74,18 +87,51 @@ void textChatStatic2(void) {
   sleep(1);
   
   //Try sending a message to see the debugging messages.
-  ALMessageSend *MS = (ALMessageSend*) malloc(sizeof(ALMessageSend));
+  /*ALMessageSend *MS = (ALMessageSend*) malloc(sizeof(ALMessageSend));
   MS->socketToUse = socket;
   MS->connectionid = 0;
   MS->message = "SPLIT YOU PLEASE!!!";
   MS->length = 20;
   
-  Signal(AL_Send, MS);
+  Signal(AL_Send, MS);*/
   //Signal(AL_Receive, NULL);
   
+  send(socket, 0, "SPLIT YOU PLEASE!!!", 20);
+  
+  /*
+  char* othermessage = receive(socket, 0);
+  
+  while(othermessage == NULL) {
+    sleep(1);
+    othermessage = receive(socket, 0);
+  }
+  
+  logLine(succes, "Received from other host: %s\n", othermessage);
+  */
+  
+  
+  char* othermessage = NULL;
+  int numreceived = 0;
+  
+  while(numreceived < 10) {
+    
+    othermessage = receive(socket, 0);
+    while(othermessage == NULL) {
+      sleep(1);
+      othermessage = receive(socket, 0);
+    }
+    
+    logLine(succes, "Received from other host %s\n", othermessage);
+    numreceived++;
+    othermessage = NULL; //Just to be sure
+    
+  }
+  
+  
+  logLine(succes, "APPLICATION: RECEIVED ALL MESSAGES FROM OTHER HOST.\n");
   
   //sleep(5); //Give some time to finish.
-  //Stop();
+  Stop();
   
 }
 
