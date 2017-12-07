@@ -25,7 +25,7 @@ int listen(TLSocket *socket);
 
 //Connects to a remote host on address addr on port port.
 //Gives back the id of the connection.
-unsigned int connect(TLSocket *socket, networkAddress addr, transPORT port);
+int connect(TLSocket *socket, networkAddress addr, transPORT port);
 
 int disconnect(TLSocket *socket, unsigned int connectionid);
 

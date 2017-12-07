@@ -14,7 +14,7 @@ int listen(TLSocket *socket) {
 /*Connects to a remote host on address addr on port port.
  * Gives back the id of the connection. In case of an error returns -1;
  */
-unsigned int connect(TLSocket *socket, networkAddress addr, transPORT port) {
+int connect(TLSocket *socket, networkAddress addr, transPORT port) {
   ALConnReq* connReq = malloc(sizeof(ALConnReq));
 
   connReq->port = port;
@@ -25,17 +25,19 @@ unsigned int connect(TLSocket *socket, networkAddress addr, transPORT port) {
 
   return connReq->connectionid;
 }
-/*
- * Tries to disconnect the connection specified by the socket and the connection id.
- * returns 0 if sucessfully disconnected otherwise, -1
- */
+
+
+ //Tries to disconnect the connection specified by the socket and the connection id.
+ // returns 0 if sucessfully disconnected otherwise, -1
 int disconnect(TLSocket *socket, unsigned int connectionid) {
+  /*
   if (!socket || connectionid < 0) {
       logLine(error, "ApplicationLayer: Failed to disconnect. socket null");
       return -1;
   }
-  if (socket->connections[connectionid]->valid != 1)
+  if (socket->connections[connectionid]->valid != 1) {
       return -1;
+    }
 
   //register the connection disabled.
   socket->connections[connectionid]->valid = 0;
@@ -57,6 +59,7 @@ int send(TLSocket *socket, unsigned int connectionid, char *data, unsigned int l
   MS->length = length;
 
   Signal(AL_Send, MS);
+  */
   return 0;
 }
 
