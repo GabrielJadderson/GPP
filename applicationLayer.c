@@ -9,7 +9,7 @@ int listen(TLSocket *socket) {
       logLine(trace,"Application is listening\n");
   }
   return 0;
-
+}
 
 /*Connects to a remote host on address addr on port port.
  * Gives back the id of the connection. In case of an error returns -1;
