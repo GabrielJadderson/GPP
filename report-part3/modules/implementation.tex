@@ -1,36 +1,175 @@
 \section{Implementation}
-
-%\texttt{data\_for\_network\_layer}
+\subsection{Part 1}
+TODO: implement
+\subsection{Part 2}
+TODO: implement
+\subsection{Part 3}
 
 In part 3 we've extended $events.h$ and included events from $transportLayer.h$ and $appplicationLayer.h$
 below is a list of the newly added events.
-\break
-\texttt{TL\_SocketRequest}
-\break
-\texttt{AL\_Listen}
-\break
-\texttt{AL\_Connect}
-\break
-\texttt{AL\_Disconnect}
-\break
-\texttt{AL\_Send}
-\break
-\texttt{AL\_Receive}
-\break
-
-
 \begin{itemize}
-\item \texttt{TL\_SocketRequest}: 8bit Type; 8bit Reserved; 16bit Payload size
-\item \texttt{AL\_Listen}: 32bit source address
-\item \texttt{AL\_Connect}: 32bit destination address
-\item \texttt{AL\_Disconnect}: 32bit destination address
-\item \texttt{AL\_Send}: 32bit destination address
-\item \texttt{AL\_Receive}: 32bit destination address
+\item \texttt{TL\_SocketRequest}: Used to assign a new unique socket, TL handles this.
+
+\item \texttt{AL\_Connect}: Called from AL to TL.
+We check if the connections array isn't fully occupied and try to open a connection and assign a connection id.
+
+\item \texttt{AL\_Disconnect}: Called from AL to TL. First we make sure that the connection is active, then we de-register the connection in our $connections$ array.
+a signal is sent to the recieving host that the connection has been terminated.
+
+\item \texttt{AL\_Send}: Called from AL to TL.
+
+\item \texttt{AL\_Receive}: Called from AL to TL.
+
 \end{itemize}
 
-
+\subsubsection{TL\_SocketRequest}
 \begin{lstlisting}
 \end{lstlisting}
+
+\subsubsection{AL\_Connect}
+The following is the implementation of $connect$ in AL.
+As function arguments, we require a socket and reciever address along with port.
+We create the $ALConnReq$ header and send it to the TL for processing,
+this also means that the TL is responsible for error handling for this function.
+We use $AL\_Connect$ for sending the signal and an implementation of the signal processing is given down below.
+\begin{lstlisting}
+/* Connects to a remote host on address addr on port port.
+ * Gives back the id of the connection. In case of an error returns -1;
+ */
+int connect(TLSocket *socket, networkAddress addr, transPORT port) {
+  ALConnReq* connReq = malloc(sizeof(ALConnReq));
+
+  connReq->port = port;
+  connReq->sock = socket;
+  connReq->netAddress = addr;
+
+  Signal(AL_Connect, connReq);
+
+  return connReq->connectionid;
+}
+\end{lstlisting}
+
+The following is the connection request header.
+\begin{lstlisting}
+typedef struct {
+  transPORT port; //Port that is receiving.
+  networkAddress netAddress; //the address to the reciever.
+  TLSocket *sock; //The pointer to assign to the address of the returned socket.
+  unsigned int connectionid;
+} ALConnReq;
+\end{lstlisting}
+
+Below is the implementation of the signal $AL\_Connect$.
+First we retrieve the msg, cast to our ALConnReq, afterwards, we check and make sure that
+there is an available free slot for our connection.
+We then construct a $TL\_OfferElement$ with the required information and send it to the NL.
+\begin{lstlisting}
+...
+case AL_Connect:
+  logLine(debug, "AL: Received signal AL_Connect\n");
+  ALConnReq *connReq = (ALConnReq*) event.msg;
+
+  boolean gotAssigned = false;
+  for (int i = 0; i < MAX_CONNECTIONS; i++) {
+    if (connReq->sock->connections[i].valid == 0) { //check for unused connection.
+        connReq->sock->connections[i].valid = 1; //assign that unused connection is used
+        connReq->connectionid = i; //update the connReq to return in AL.
+        gotAssigned = true; //indicate that the connection was assigned sucessfully.
+    }
+  }
+  if (gotAssigned == false) {
+    logLine(error, "AL_Connect: Failed to assign connection NO SPACE/AVAILABLE CONNECTIONS\n");
+    connReq->connectionid = -1; //update the connReq to return in AL
+    break;
+  }
+
+  O = (TL_OfferElement*) malloc(sizeof(TL_OfferElement));
+  O->otherHostAddress = connReq->netAddress;
+  O->segment.is_first = 1;
+  O->segment.is_control = 1;
+  O->segment.seqMsg = 0;
+  O->segment.seqPayload = 0;
+  O->segment.senderport = connReq->sock->port;
+  O->segment.receiverport = connReq->port;
+  O->segment.aux = 0;
+  memset(&(O->segment.msg.data), 0, 8);
+
+  EnqueueFQ( NewFQE( (void *) O ), sendingBuffQueue);
+  logLine(debug, "AL: SENDING TO THE BUFFER QUEUE\n");
+break;
+...
+\end{lstlisting}
+
+
+
+\subsubsection{AL\_Disconnect}
+
+Below is the implementation of the $disconnect$ function, recieved parameters are the socket and the connection id that needs to be terminated.
+first we make sure that the connection hasn't already terminated and that the socket is still a valid socket.
+We then set the connection to not valid and create a struct $disconnectReq$ which holds our socket and connection id, this is then sent to the TL.
+the TL layer then processes the request.
+\begin{lstlisting}
+//Tries to disconnect the connection specified by the socket and the connection id. returns 0 if sucessfully disconnected otherwise, -1
+int disconnect(TLSocket *socket, unsigned int connectionid) {
+  ...
+ if (socket->connections[connectionid].valid != 1) {
+     return -1;
+ }
+ socket->connections[connectionid].valid = 0;  //register the connection disabled.
+
+ ALDisconnectReq* disconnectReq = malloc(sizeof(ALDisconnectReq));
+ disconnectReq->sock = socket;
+ disconnectReq->connectionid = connectionid;
+
+ Signal(AL_Disconnect, disconnectReq);
+ return 0;
+}
+\end{lstlisting}
+
+
+Below is the implementation of the signal $AL\_Disconnect$.
+First our ALDisconnectReq is created and derived from the AL via $event.msg$
+To disconnect the connection we send to the connected reciever that the connection is no longer valid, to archieve this
+we utilize again our $TL\_OfferElement$ to send a control segment to the NL, which passes it on.
+\begin{lstlisting}
+...
+case AL_Disconnect:
+  logLine(debug, "AL: Received signal AL_Disconnect\n");
+
+  ALDisconnectReq* disconnectReq = (ALDisconnectReq*) event.msg;
+
+  O = (TL_OfferElement*) malloc(sizeof(TL_OfferElement));
+  O->otherHostAddress = disconnectReq->sock->connections[disconnectReq->connectionid].remoteAddress;
+  O->segment.is_first = 1;
+  O->segment.is_control = 1;
+  O->segment.seqMsg = 0;
+  O->segment.seqPayload = 0;
+  O->segment.senderport = disconnectReq->sock->port;
+  O->segment.receiverport = disconnectReq->sock->connections[disconnectReq->connectionid].remotePort; //This one should correspond to the open connection
+  O->segment.aux = 0;
+  memset(&(O->segment.msg.data), 0, 8);
+
+  EnqueueFQ( NewFQE( (void *) O ), sendingBuffQueue);
+
+
+
+  logLine(debug, "AL: DISCONNECTED CONNECTION ID \n");
+break;
+...
+\end{lstlisting}
+
+\subsubsection{AL\_Send}
+TODO: implement
+\begin{lstlisting}
+\end{lstlisting}
+
+\subsubsection{AL\_Receive}
+TODO: implement
+\begin{lstlisting}
+\end{lstlisting}
+
+
+
 
 
 
