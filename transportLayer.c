@@ -189,7 +189,7 @@ void transportLayer() {
   //int numReceivedPackets = 0;
 
   event_t event;
-  long int events_we_handle = TL_ReceivingQueueOffer | TL_SocketRequest | AL_Send | AL_Receive | AL_Listen;
+  long int events_we_handle = TL_ReceivingQueueOffer | TL_SocketRequest | AL_Send | AL_Receive | AL_Listen | AL_Disconnect;
   while(true) {
     logLine(trace, "TL: Waiting for signals.\n");
     //logLine(succes, "TL: Lockstatus=%d\n", q->used);
@@ -199,6 +199,20 @@ void transportLayer() {
       case AL_Connect:
         logLine(debug, "AL: Received signal AL_Connect\n");
         ALConnReq *connReq = (ALConnReq*) event.msg;
+
+        bool gotAssigned = false;
+        for (int i = 0; i < MAX_CONNECTIONS; i++) {
+          if (connReq->sock->connections[i].valid == 0) { //check for unused connection
+              connReq->sock->connections[i].valid = 1; //assign that unused connection to used.
+              connReq->connectionid = i; //update the connReq to return in AL
+              gotAssigned = true; //indicate that the connection was assigned sucessfully.
+          }
+        }
+        if (gotAssigned == false) {
+          logLine(error, "AL_Connect: Failed to assign connection NO SPACE/AVAILABLE CONNECTIONS\n");
+          connReq->connectionid = -1; //update the connReq to return in AL
+          break;
+        }
 
 
         O = (TL_OfferElement*) malloc(sizeof(TL_OfferElement));
@@ -222,6 +236,19 @@ void transportLayer() {
         logLine(debug, "AL: Received signal AL_Disconnect\n");
 
         ALDisconnectReq* disconnectReq = (ALDisconnectReq*) event.msg;
+
+        O = (TL_OfferElement*) malloc(sizeof(TL_OfferElement));
+        O->otherHostAddress = disconnectReq->sock->connections[disconnectReq->connectionid]->remoteAddress;
+        O->segment.is_first = 1;
+        O->segment.is_control = 1;
+        O->segment.seqMsg = 0;
+        O->segment.seqPayload = 0;
+        O->segment.senderport = disconnectReq->sock->port;
+        O->segment.receiverport = disconnectReq->sock->connections[disconnectReq->connectionid]->remotePort; //This one should correspond to the open connection
+        O->segment.aux = 0;
+        memset(&(O->segment.msg.data), 0, 8);
+
+        EnqueueFQ( NewFQE( (void *) O ), sendingBuffQueue);
 
 
 
@@ -527,6 +554,7 @@ void transportLayer() {
 
       char* msgToSplit = MS->message;
       unsigned int msglen = MS->length;
+
 
   //TLSocket *socketToUse = sockets[1];
   //unsigned int connectionToUse = 0;

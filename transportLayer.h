@@ -100,12 +100,13 @@ typedef struct {
   transPORT port; //Port that is receiving.
   networkAddress netAddress; //the address to the reciever.
   TLSocket *sock; //The pointer to assign to the address of the returned socket.
+  unsigned int connectionid;
 } ALConnReq;
 
 
 typedef struct {
      TLSocket* sock; //The pointer to assign to the address of the returned socket.
-     unsigned int* con_id;
+     unsigned int connectionid;
 } ALDisconnectReq;
 
 
