@@ -189,7 +189,7 @@ void transportLayer() {
   //int numReceivedPackets = 0;
 
   event_t event;
-  long int events_we_handle = TL_ReceivingQueueOffer | TL_SocketRequest | AL_Send | AL_Receive | AL_Listen | AL_Disconnect | AL_Connect;
+  long int events_we_handle = TL_ReceivingQueueOffer | TL_SocketRequest | AL_Send | AL_Receive | AL_Disconnect | AL_Connect;
   while(true) {
     logLine(trace, "TL: Waiting for signals.\n");
     //logLine(succes, "TL: Lockstatus=%d\n", q->used);

@@ -32,11 +32,10 @@
 
 // TL <-> AL
 #define TL_SocketRequest               0x00000100 //AL->TL: Application in AL signals to TL that it requests a socket.
-#define AL_Listen                      0x00000200 //AL->TL: Application in AL signals to TL that it is waiting for an incoming connection. Should block the application.
+//#define AL_Listen                      0x00000200 //AL->TL: Application in AL signals to TL that it is waiting for an incoming connection. Should block the application.
 #define AL_Connect                     0x00000400 //AL->TL: Application sends a connection request to another application on another host.
 #define AL_Disconnect                  0x00000800 //AL->TL: Application sends a disconnect notice to another application on another host.
 #define AL_Send                        0x00001000 //AL->TL: Application sends data to TL for sending to an application on another host.
 #define AL_Receive                     0x00002000 //AL->TL: Application receives data from TL.
 
 #endif /* include guard: EVENTS_H_ */
-
