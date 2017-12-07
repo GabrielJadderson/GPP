@@ -30,17 +30,17 @@ int connect(TLSocket *socket, networkAddress addr, transPORT port) {
  //Tries to disconnect the connection specified by the socket and the connection id.
  // returns 0 if sucessfully disconnected otherwise, -1
 int disconnect(TLSocket *socket, unsigned int connectionid) {
-  /*
+  
   if (!socket || connectionid < 0) {
       logLine(error, "ApplicationLayer: Failed to disconnect. socket null");
       return -1;
   }
-  if (socket->connections[connectionid]->valid != 1) {
+  if (socket->connections[connectionid].valid != 1) {
       return -1;
     }
 
   //register the connection disabled.
-  socket->connections[connectionid]->valid = 0;
+  socket->connections[connectionid].valid = 0;
 
   //just make a struct and pass it to the TL
   ALDisconnectReq* disconnectReq = malloc(sizeof(ALDisconnectReq));
@@ -59,7 +59,7 @@ int send(TLSocket *socket, unsigned int connectionid, char *data, unsigned int l
   MS->length = length;
 
   Signal(AL_Send, MS);
-  */
+  
   return 0;
 }
 
