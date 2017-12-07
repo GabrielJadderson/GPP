@@ -9,10 +9,11 @@ int listen(TLSocket *socket) {
       logLine(trace,"Application is listening\n");
   }
   return 0;
-}
 
-//Connects to a remote host on address addr on port port.
-//Gives back the id of the connection.
+
+/*Connects to a remote host on address addr on port port.
+ * Gives back the id of the connection. In case of an error returns -1;
+ */
 unsigned int connect(TLSocket *socket, networkAddress addr, transPORT port) {
   ALConnReq* connReq = malloc(sizeof(ALConnReq));
 
@@ -22,9 +23,7 @@ unsigned int connect(TLSocket *socket, networkAddress addr, transPORT port) {
 
   Signal(AL_Connect, connReq);
 
-
-
-  return 0; //TODO: get connection id
+  return connReq->connectionid;
 }
 /*
  * Tries to disconnect the connection specified by the socket and the connection id.
@@ -44,7 +43,7 @@ int disconnect(TLSocket *socket, unsigned int connectionid) {
   //just make a struct and pass it to the TL
   ALDisconnectReq* disconnectReq = malloc(sizeof(ALDisconnectReq));
   disconnectReq->sock = socket;
-  disconnectReq->con_id = &connectionid;
+  disconnectReq->connectionid = connectionid;
 
   Signal(AL_Disconnect, disconnectReq);
   return 0;
