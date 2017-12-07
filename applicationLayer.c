@@ -19,15 +19,26 @@ int listen(TLSocket *socket) {
  * Gives back the id of the connection. In case of an error returns -1;
  */
 int connect(TLSocket *socket, networkAddress addr, transPORT port) {
+  if(!socket->valid) {
+    return -1;
+  }
+  
   ALConnReq* connReq = malloc(sizeof(ALConnReq));
 
   connReq->port = port;
   connReq->sock = socket;
   connReq->netAddress = addr;
-
+  connReq->connectionid = CONNECTION_PENDING;
+  
+  while(connReq->connectionid == CONNECTION_PENDING) {
+    logLine(trace,"Application is waiting for connection to be established.\n");
+  }
+  
   Signal(AL_Connect, connReq);
 
-  return connReq->connectionid;
+  int res = connReq->connectionid;
+  free(connReq);
+  return res;
 }
 
 

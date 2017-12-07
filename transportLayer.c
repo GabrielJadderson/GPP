@@ -181,6 +181,7 @@ void transportLayer() {
   TL_OfferReceivingQueue(testQueue);
   */
 
+  int conid;
 
 
   TLSocket** socket;
@@ -201,16 +202,16 @@ void transportLayer() {
         ALConnReq *connReq = (ALConnReq*) event.msg;
 
         boolean gotAssigned = false;
-        for (int i = 0; i < MAX_CONNECTIONS; i++) {
-          if (connReq->sock->connections[i].valid == 0) { //check for unused connection
-              connReq->sock->connections[i].valid = 1; //assign that unused connection to used.
+        for (int i = 0; i < MAX_CONNECTIONS && gotAssigned == false; i++) {
+          if (connReq->sock->connections[i].valid == 0 && connReq->sock->connections[i].pending == 0) { //check for unused connection
+              connReq->sock->connections[i].pending = 1; //assign that unused connection to used.
               connReq->connectionid = i; //update the connReq to return in AL
               gotAssigned = true; //indicate that the connection was assigned sucessfully.
           }
         }
         if (gotAssigned == false) {
           logLine(error, "AL_Connect: Failed to assign connection NO SPACE/AVAILABLE CONNECTIONS\n");
-          connReq->connectionid = -1; //update the connReq to return in AL
+          connReq->connectionid = CONNECTION_FAILURE; //update the connReq to return in AL
           break;
         }
 
@@ -225,8 +226,6 @@ void transportLayer() {
         O->segment.receiverport = connReq->port; //This one should correspond to the open connection
         O->segment.aux = 0;
         memset(&(O->segment.msg.data), 0, 8);
-
-        //TODO: assign unused connection id
 
         EnqueueFQ( NewFQE( (void *) O ), sendingBuffQueue);
         logLine(debug, "AL: SENDING TO THE BUFFER QUEUE\n");
@@ -245,12 +244,18 @@ void transportLayer() {
         O->segment.seqPayload = 0;
         O->segment.senderport = disconnectReq->sock->port;
         O->segment.receiverport = disconnectReq->sock->connections[disconnectReq->connectionid].remotePort; //This one should correspond to the open connection
-        O->segment.aux = 0;
+        O->segment.aux = 1;
         memset(&(O->segment.msg.data), 0, 8);
 
         EnqueueFQ( NewFQE( (void *) O ), sendingBuffQueue);
 
-
+        connReq->sock->connections[disconnectReq->connectionid].valid = 0;
+        connReq->sock->connections[disconnectReq->connectionid].remoteAddress = 0;
+        connReq->sock->connections[disconnectReq->connectionid].remotePort = 0;
+        connReq->sock->connections[disconnectReq->connectionid].outboundSeqMsg = 0;
+        connReq->sock->connections[disconnectReq->connectionid].inboundSeqMsg = 0;
+        connReq->sock->connections[disconnectReq->connectionid].msgListHead = NULL;
+        connReq->sock->connections[disconnectReq->connectionid].msgListTail = NULL;
 
         logLine(debug, "AL: DISCONNECTED CONNECTION ID \n");
         break;
@@ -278,7 +283,61 @@ void transportLayer() {
   //The port this segment is addressed to is actually valid.
   if(sockets[o.segment.receiverport] != NULL && sockets[o.segment.receiverport]->valid) {
     logLine(debug, "Socket %d is valid and is receiving a message.\n", o.segment.receiverport);
-
+    
+    //If the segment is a control segment, then this is where to deal with it.
+    if(o.segment.is_control) {
+        logLine(trace, "Handling control segment.\n");
+        
+        if(o.segment.aux == 0) { //Connect.
+          if(o.segment.is_first) {
+          
+          for(conid = 0; conid < MAX_CONNECTIONS; conid++) {
+            if(sockets[o.segment.receiverport]->connections[conid].valid == 0) {
+              break;
+            }
+          }
+          if(conid >= MAX_CONNECTIONS) {
+            break; //Failure.
+          }
+          
+          sockets[o.segment.receiverport]->connections[conid].valid = 1;
+          sockets[o.segment.receiverport]->connections[conid].pending = 0;
+          sockets[o.segment.receiverport]->connections[conid].remoteAddress = o.otherHostAddress;
+          sockets[o.segment.receiverport]->connections[conid].remotePort = o.segment.senderport;
+          sockets[o.segment.receiverport]->connections[conid].outboundSeqMsg = 0;
+          sockets[o.segment.receiverport]->connections[conid].inboundSeqMsg = 0;
+          sockets[o.segment.receiverport]->connections[conid].msgListHead = NULL;
+          sockets[o.segment.receiverport]->connections[conid].msgListTail = NULL;
+          
+          O = (TL_OfferElement*) malloc(sizeof(TL_OfferElement));
+          O->otherHostAddress = connReq->netAddress;
+          O->segment.is_first = 0;
+          O->segment.is_control = 1;
+          O->segment.seqMsg = 0;
+          O->segment.seqPayload = 0;
+          O->segment.senderport = connReq->sock->port;
+          O->segment.receiverport = connReq->port; //This one should correspond to the open connection
+          O->segment.aux = 0;
+          memset(&(O->segment.msg.data), 0, 8);
+          
+          EnqueueFQ( NewFQE( (void *) O ), sendingBuffQueue);
+          
+        } else { //Connection request response received
+          
+        }
+      } else { //Otherwise assume disconnect
+        
+      }
+      
+      continue; //Done with this segment. Go to the next one.
+    }
+    
+    
+    
+    
+    
+    
+    
     //[PJ] A search is needed for this one because the data order is indeterministic.
     for(int i = 0; i < MAX_CONNECTIONS; i++) {
       //If there is a hit, go for it. If not, then the message has to be a failure packet or a fraudulent packet.

@@ -40,6 +40,7 @@ typedef struct TLMBLL{
 //Connection management struct.
 typedef struct {
   unsigned int valid:1; //This is checked before actual access.
+  unsigned int pending:1;
   networkAddress remoteAddress; //Address of the other machine
   transPORT remotePort; //Port of the other application
   unsigned int outboundSeqMsg; //seqMsg of next message to send.
@@ -49,6 +50,8 @@ typedef struct {
 } TLConnection;
 
 #define MAX_CONNECTIONS 4
+#define CONNECTION_FAILURE MAX_CONNECTIONS
+#define CONNECTION_PENDING (CONNECTION_FAILURE+1)
 typedef struct {
   unsigned int valid:1; //This is checked before actual access. The TL sets this as an indicator for the AL.
   unsigned int listening:1; //This is used to keep track of listening status and when to break out of waiting in the listening function.
@@ -99,13 +102,13 @@ typedef struct {
 typedef struct {
   transPORT port; //Port that is receiving.
   networkAddress netAddress; //the address to the reciever.
-  TLSocket *sock; //The pointer to assign to the address of the returned socket.
-  unsigned int connectionid;
+  TLSocket *sock; //Socket to establish a connection with.
+  unsigned int connectionid; //The id of the connection established by TL.
 } ALConnReq;
 
 
 typedef struct {
-     TLSocket* sock; //The pointer to assign to the address of the returned socket.
+     TLSocket* sock; //Socket with the connection to disconnect.
      unsigned int connectionid;
 } ALDisconnectReq;
 
