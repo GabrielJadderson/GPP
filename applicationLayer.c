@@ -1,14 +1,18 @@
 
 
 //Block until the application has a connection on this port to another host.
-//Returns 0 on succes, other on error.
+//Returns 0 on succes, -1 on error.
 //int listen(TLSocket *socket) { //[PJ] This line contains some invisible character? Gives me a compile error.
 int listen(TLSocket *socket) {
-  socket->listening = 1;
-  while(socket->listening == 1) {
-      logLine(trace,"Application is listening\n");
+  if (socket->valid == 1) {
+      socket->listening = 1;
+      while(socket->listening == 1) {
+        logLine(trace,"Application is listening\n");
+      }
+      return 0;
+  } else {
+      return -1;
   }
-  return 0;
 }
 
 /*Connects to a remote host on address addr on port port.
@@ -30,7 +34,7 @@ int connect(TLSocket *socket, networkAddress addr, transPORT port) {
  //Tries to disconnect the connection specified by the socket and the connection id.
  // returns 0 if sucessfully disconnected otherwise, -1
 int disconnect(TLSocket *socket, unsigned int connectionid) {
-  
+
   if (!socket || connectionid < 0) {
       logLine(error, "ApplicationLayer: Failed to disconnect. socket null");
       return -1;
@@ -59,7 +63,7 @@ int send(TLSocket *socket, unsigned int connectionid, char *data, unsigned int l
   MS->length = length;
 
   Signal(AL_Send, MS);
-  
+
   return 0;
 }
 
