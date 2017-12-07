@@ -8,3 +8,76 @@
 %\item Word 2: 32bit source address
 %\item Word 3: 32bit destination address
 %\end{itemize}
+
+\subsection{Events}
+The events in use and their uses.\\
+
+New signals:
+\begin{itemize}
+\item network\_layer\_allowed\_to\_send: The LL is ready to receive from NL.
+\item data\_for\_network\_layer: LL pushes a datagram to NL.
+\item LL\_SendingQueueOffer: LL is being offered a queue with datagrams to send.
+\item NL\_SendingQueueOffer: NL is being offered a queue with segments to forward.
+\item TL\_ReceivingQueueOffer: TL is being offered a queue with segments to receive.
+\item TL\_SocketRequest: AL is requesting a socket from TL.
+%\item AL\_Listen: AL signals TL that it is listening on a socket. %Currently not used.
+\item AL\_Connect: AL attempts to connect to an application on another host.
+\item AL\_Disconnect: AL disconnects a connection.
+\item AL\_Send: AL sends data through a connection.
+\end{itemize}
+
+Deprecated signals:
+\begin{itemize}
+\item network\_layer\_ready: The way this signal was used resulted in a bug. Replaced with LL\_SendingQueueOffer.
+\end{itemize}
+
+\subsection{Project Part 1}
+The given implementation of rdt was designed for communication between only two hosts. Expanding this to communication with a fixed number of neighbours, the information associated with a neighbour was decided to be encapsulated in a struct, an array of which representing the state information in the communication with each neighbour.\\
+Distinguishing the neighbours from each other was done by using unique IDs, which could be passed to functions and the like. Each neighbour have a station ID associated with it, allowing to send to a station using the neighbour ID, and determining the neighbour from the station ID when receiving.
+
+\subsubsection{Stations and Neighbours}
+Neighbours are determined by indices in a neighbour array, called the neighbour IDs, and as such are transparently identified regardless of which actual station that neighbour represents. The ID of a station is stored in a neighbour, but is only meant to be utilized for sending to and receiving from the physical layer, and should be encapsulated as closely to these events as possible. When receiving, a neighbour ID for the given station should be returned.\\
+With this method, the actual station represented by a neighbour is unimportant for how the system works at large.\\
+It is not allowed for two neighbours to correspond to the same station.
+
+% *** Expansion to more neighbours ***
+% > neighbourids for functions used by selective repeat
+% > currentNeighbour
+%
+
+\subsubsection{Distinguishing Neighbours}
+When sending to a neighbour, only the neighbour ID is known. This neighbour ID is passed to the functions involved in sending and receiving, which then use the stored station ID to determine the actual station-neighbour correlation.\\
+When receiving outbound data from NL, the NL includes the neighbour ID of the neighbour to send to. The neighbour ID is not given when delivering to the NL, though, as it isn't important for receiving, as it cannot be used to determine the sender of the datagram.
+
+\subsection{Project Part 2}
+\subsubsection{Datagrams}
+\label{sec:DATAGRAM}
+The datagrams have a header with the following fields:
+\begin{itemize}
+\item Type
+\item Reserved
+\item Payload size
+\item Source address
+\item Destination address
+\end{itemize}
+
+After this header comes the payload, which is the segment from TL.\\
+\\
+The type field distinguishes between datagrams sent between hosts with application data and packets transferred to routers to perform various router tasks.\\
+The reserved field is currently unused, but exists to possibly implement more functionality in the future, such as a next header field.\\
+The payload size is currently not of any effect, but exists to possibly implement dynamic payload size.\\
+The address fields are the network addresses for the sender and the receiver.
+
+\subsection{Routing Table}
+The forwarding utilizes a routing table, consisting of addresses and neighbours in which directions to send packets addressed for those addresses. When a packet is being sent from NL, it uses the address to look up the neighbour ID and labels the packet to send with it for the LL to read.
+
+\subsection{Network Layer Implementations}
+The network layer has been implemented differently for the hosts and the routers, where the routers are more simple because they don't need to communicate with a layer above. When the router NL receive a packet from LL, it looks up which neighbour to send the packet to and returns it to LL. The host NL receives packets and delivers them to TL.
+h TL.\\
+\\~
+Furthermore, the exchange of data with the other layers is replaced with a queue system. This allows the layers themselves to manage the elements they receive rather than filling the event queue with signals that have to be handled in prioritized order. The only exception is when LL pushes packets to NL. No issues have been experienced with that part of the system, so it has been retained.
+
+
+
+
+
