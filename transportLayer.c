@@ -181,7 +181,7 @@ void transportLayer() {
   TL_OfferReceivingQueue(testQueue);
   */
 
-  int conid;
+  int conid = 0;
 
 
   TLSocket** socket;
@@ -204,7 +204,14 @@ void transportLayer() {
         boolean gotAssigned = false;
         for (int i = 0; i < MAX_CONNECTIONS && gotAssigned == false; i++) {
           if (connReq->sock->connections[i].valid == 0 && connReq->sock->connections[i].pending == 0) { //check for unused connection
-              connReq->sock->connections[i].pending = 1; //assign that unused connection to used.
+              connReq->sock->connections[i].pending = 1; //assign that this connection is pending for a response.
+              connReq->sock->connections[i].remoteAddress = connReq->netAddress;
+              //Reset these values.
+              connReq->sock->connections[conid].outboundSeqMsg = 0;
+              connReq->sock->connections[conid].inboundSeqMsg = 0;
+              connReq->sock->connections[conid].msgListHead = NULL;
+              connReq->sock->connections[conid].msgListTail = NULL;
+              
               connReq->connectionid = i; //update the connReq to return in AL
               gotAssigned = true; //indicate that the connection was assigned sucessfully.
           }
@@ -249,13 +256,14 @@ void transportLayer() {
 
         EnqueueFQ( NewFQE( (void *) O ), sendingBuffQueue);
 
-        connReq->sock->connections[disconnectReq->connectionid].valid = 0;
-        connReq->sock->connections[disconnectReq->connectionid].remoteAddress = 0;
-        connReq->sock->connections[disconnectReq->connectionid].remotePort = 0;
-        connReq->sock->connections[disconnectReq->connectionid].outboundSeqMsg = 0;
-        connReq->sock->connections[disconnectReq->connectionid].inboundSeqMsg = 0;
-        connReq->sock->connections[disconnectReq->connectionid].msgListHead = NULL;
-        connReq->sock->connections[disconnectReq->connectionid].msgListTail = NULL;
+        disconnectReq->sock->connections[disconnectReq->connectionid].valid = 0;
+        disconnectReq->sock->connections[disconnectReq->connectionid].pending = 0;
+        disconnectReq->sock->connections[disconnectReq->connectionid].remoteAddress = 0;
+        disconnectReq->sock->connections[disconnectReq->connectionid].remotePort = 0;
+        disconnectReq->sock->connections[disconnectReq->connectionid].outboundSeqMsg = 0;
+        disconnectReq->sock->connections[disconnectReq->connectionid].inboundSeqMsg = 0;
+        disconnectReq->sock->connections[disconnectReq->connectionid].msgListHead = NULL;
+        disconnectReq->sock->connections[disconnectReq->connectionid].msgListTail = NULL;
 
         logLine(debug, "AL: DISCONNECTED CONNECTION ID \n");
         break;
@@ -286,20 +294,33 @@ void transportLayer() {
     
     //If the segment is a control segment, then this is where to deal with it.
     if(o.segment.is_control) {
-        logLine(trace, "Handling control segment.\n");
-        
-        if(o.segment.aux == 0) { //Connect.
-          if(o.segment.is_first) {
+      logLine(trace, "Handling control segment.\n");
+      
+      if(o.segment.aux == 0) { //Connect.
+        if(o.segment.is_first) { //Connection request received.
           
+          //See if there is a slow available.
           for(conid = 0; conid < MAX_CONNECTIONS; conid++) {
             if(sockets[o.segment.receiverport]->connections[conid].valid == 0) {
               break;
             }
           }
+          //No room. Send aux=2, connection refused.
           if(conid >= MAX_CONNECTIONS) {
+            O = (TL_OfferElement*) malloc(sizeof(TL_OfferElement));
+            O->otherHostAddress = o.otherHostAddress;
+            O->segment.is_first = 0;
+            O->segment.is_control = 1;
+            O->segment.seqMsg = 0;
+            O->segment.seqPayload = 0;
+            O->segment.senderport = sockets[o.segment.receiverport]->port;
+            O->segment.receiverport = o.segment.senderport; //This one should correspond to the open connection
+            O->segment.aux = 2;
+            memset(&(O->segment.msg.data), 0, 8);
             break; //Failure.
           }
           
+          //Otherwise, configure the connection slot.
           sockets[o.segment.receiverport]->connections[conid].valid = 1;
           sockets[o.segment.receiverport]->connections[conid].pending = 0;
           sockets[o.segment.receiverport]->connections[conid].remoteAddress = o.otherHostAddress;
@@ -309,24 +330,57 @@ void transportLayer() {
           sockets[o.segment.receiverport]->connections[conid].msgListHead = NULL;
           sockets[o.segment.receiverport]->connections[conid].msgListTail = NULL;
           
+          //If the socket was set to listen, mark is as not listening, effectively hosting a connection.
+          sockets[o.segment.receiverport]->listening = 0;
+          sockets[o.segment.receiverport]->listenConnection = conid; //This is the id of the connection that has been estalished.
+          
+          //Send verification response, aux=0, is_first=0. "Connection query that isn't initiating"
           O = (TL_OfferElement*) malloc(sizeof(TL_OfferElement));
-          O->otherHostAddress = connReq->netAddress;
+          O->otherHostAddress = o.otherHostAddress;
           O->segment.is_first = 0;
           O->segment.is_control = 1;
           O->segment.seqMsg = 0;
           O->segment.seqPayload = 0;
-          O->segment.senderport = connReq->sock->port;
-          O->segment.receiverport = connReq->port; //This one should correspond to the open connection
+          O->segment.senderport = sockets[o.segment.receiverport]->port;
+          O->segment.receiverport = o.segment.senderport; //This one should correspond to the open connection
           O->segment.aux = 0;
           memset(&(O->segment.msg.data), 0, 8);
           
           EnqueueFQ( NewFQE( (void *) O ), sendingBuffQueue);
           
-        } else { //Connection request response received
-          
+         } else { //Connection request verification response received
+          //Search for the connection that gets the response.
+          for(conid = 0; conid < MAX_CONNECTIONS; conid++) {
+            if(sockets[o.segment.receiverport]->connections[conid].pending == 1 //The connection is actually pending such a reply.
+               //Actual search criteria.
+            && sockets[o.segment.receiverport]->connections[conid].remoteAddress == o.otherHostAddress
+            && sockets[o.segment.receiverport]->connections[conid].remotePort == o.segment.senderport
+              ) {
+              //A pending connection has been given green light. Time to make it valid.
+              sockets[o.segment.receiverport]->connections[conid].valid = 1;
+              sockets[o.segment.receiverport]->connections[conid].pending = 0; //Got reply. No longer pending.
+              //The other values have been set in the AL_Connect signal handling.
+              break;
+            }
+          }
         }
-      } else { //Otherwise assume disconnect
+      } else if(o.segment.aux == 1) { //Disconnect
         
+      } else if(o.segment.aux == 2) { //Connection refused.
+        //Search for the connection that gets the response.
+        for(conid = 0; conid < MAX_CONNECTIONS; conid++) {
+          if(sockets[o.segment.receiverport]->connections[conid].pending == 1 //The connection is actually pending such a reply.
+             //Actual search criteria.
+          && sockets[o.segment.receiverport]->connections[conid].remoteAddress == o.otherHostAddress
+          && sockets[o.segment.receiverport]->connections[conid].remotePort == o.segment.senderport
+            ) {
+            //A pending connection has been given green light. Time to make it valid.
+            sockets[o.segment.receiverport]->connections[conid].valid = 0;
+            sockets[o.segment.receiverport]->connections[conid].pending = 0; //Got reply. No longer pending.
+            //The other values have been set in the AL_Connect signal handling.
+            break;
+          }
+        }
       }
       
       continue; //Done with this segment. Go to the next one.

@@ -1,7 +1,7 @@
 
 
 //Block until the application has a connection on this port to another host.
-//Returns 0 on succes, -1 on error.
+//Returns the id of the connection on succes, -1 on error.
 //int listen(TLSocket *socket) { //[PJ] This line contains some invisible character? Gives me a compile error.
 int listen(TLSocket *socket) {
   if (socket->valid == 1) {
@@ -9,7 +9,7 @@ int listen(TLSocket *socket) {
       while(socket->listening == 1) {
         logLine(trace,"Application is listening\n");
       }
-      return 0;
+      return socket->listenConnection;
   } else {
       return -1;
   }
@@ -30,13 +30,18 @@ int connect(TLSocket *socket, networkAddress addr, transPORT port) {
   connReq->netAddress = addr;
   connReq->connectionid = CONNECTION_PENDING;
   
-  while(connReq->connectionid == CONNECTION_PENDING) {
+  Signal(AL_Connect, connReq);
+  
+  while(connReq->connectionid == CONNECTION_PENDING || socket->connections[connReq->connectionid].pending == 1) {
     logLine(trace,"Application is waiting for connection to be established.\n");
   }
-  
-  Signal(AL_Connect, connReq);
 
   int res = connReq->connectionid;
+  
+  if(res == CONNECTION_FAILURE || socket->connections[res].valid == 0) {
+    return -1; //Failure.
+  }
+  
   free(connReq);
   return res;
 }

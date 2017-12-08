@@ -23,12 +23,16 @@ void textChatStatic1(void) {
   
   
   //A HACK! SHOULD USE A LEGIT CONNECTION!
+  /*
   socket->connections[0].valid = 1;
   socket->connections[0].remoteAddress = 212;
   socket->connections[0].remotePort = 0;
   socket->connections[0].outboundSeqMsg = 0;
   socket->connections[0].msgListHead = NULL;
   socket->connections[0].msgListTail = NULL;
+  */
+  
+  int conid = connect(socket, 212, 0);
   
   sleep(1);
   
@@ -41,7 +45,7 @@ void textChatStatic1(void) {
   
   Signal(AL_Send, MS);*/
   //Signal(AL_Receive, NULL);
-  
+  /*
   send(socket, 0, "SPLIT ME PLEASE #01", 20);
   send(socket, 0, "SPLIT ME PLEASE #02", 20);
   send(socket, 0, "SPLIT ME PLEASE #03", 20);
@@ -52,7 +56,18 @@ void textChatStatic1(void) {
   send(socket, 0, "SPLIT ME PLEASE #08", 20);
   send(socket, 0, "SPLIT ME PLEASE #09", 20);
   send(socket, 0, "SPLIT ME PLEASE #10", 20);
+  */
   
+  send(socket, conid, "SPLIT ME PLEASE #01", 20);
+  send(socket, conid, "SPLIT ME PLEASE #02", 20);
+  send(socket, conid, "SPLIT ME PLEASE #03", 20);
+  send(socket, conid, "SPLIT ME PLEASE #04", 20);
+  send(socket, conid, "SPLIT ME PLEASE #05", 20);
+  send(socket, conid, "SPLIT ME PLEASE #06", 20);
+  send(socket, conid, "SPLIT ME PLEASE #07", 20);
+  send(socket, conid, "SPLIT ME PLEASE #08", 20);
+  send(socket, conid, "SPLIT ME PLEASE #09", 20);
+  send(socket, conid, "SPLIT ME PLEASE #10", 20);
   
   //sleep(5); //Give some time to finish.
   //Stop();
@@ -77,12 +92,14 @@ void textChatStatic2(void) {
   
   
   //A HACK! SHOULD USE A LEGIT CONNECTION!
-  socket->connections[0].valid = 1;
+  /*socket->connections[0].valid = 1;
   socket->connections[0].remoteAddress = 111;
   socket->connections[0].remotePort = 0;
   socket->connections[0].outboundSeqMsg = 0;
   socket->connections[0].msgListHead = NULL;
-  socket->connections[0].msgListTail = NULL;
+  socket->connections[0].msgListTail = NULL;*/
+  
+  int conid = listen(socket);
   
   sleep(1);
   
@@ -96,7 +113,8 @@ void textChatStatic2(void) {
   Signal(AL_Send, MS);*/
   //Signal(AL_Receive, NULL);
   
-  send(socket, 0, "SPLIT YOU PLEASE!!!", 20);
+  //send(socket, 0, "SPLIT YOU PLEASE!!!", 20);
+  send(socket, conid, "SPLIT YOU PLEASE!!!", 20);
   
   /*
   char* othermessage = receive(socket, 0);
