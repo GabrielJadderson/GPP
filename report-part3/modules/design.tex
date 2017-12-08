@@ -21,9 +21,10 @@ New signals:
 \item TL\_ReceivingQueueOffer: TL is being offered a queue with segments to receive.
 \item TL\_SocketRequest: AL is requesting a socket from TL.
 %\item AL\_Listen: AL signals TL that it is listening on a socket. %Currently not used.
-\item AL\_Connect: AL attempts to connect to an application on another host.
-\item AL\_Disconnect: AL disconnects a connection.
-\item AL\_Send: AL sends data through a connection.
+\item AL\_Connect: AL attempts to connect to an application on another host through TL.
+\item AL\_Disconnect: AL disconnects a connection in TL.
+\item AL\_Send: AL sends data through a connection in TL.
+\item AL\_Receive: AL tries to receive a message through a connection in TL.
 \end{itemize}
 
 Deprecated signals:
@@ -31,7 +32,7 @@ Deprecated signals:
 \item network\_layer\_ready: The way this signal was used resulted in a bug. Replaced with LL\_SendingQueueOffer.
 \end{itemize}
 
-\subsection{Project Part 1}
+\subsection{Part 1}
 The given implementation of rdt was designed for communication between only two hosts. Expanding this to communication with a fixed number of neighbours, the information associated with a neighbour was decided to be encapsulated in a struct, an array of which representing the state information in the communication with each neighbour.\\
 Distinguishing the neighbours from each other was done by using unique IDs, which could be passed to functions and the like. Each neighbour have a station ID associated with it, allowing to send to a station using the neighbour ID, and determining the neighbour from the station ID when receiving.
 
@@ -49,7 +50,7 @@ It is not allowed for two neighbours to correspond to the same station.
 When sending to a neighbour, only the neighbour ID is known. This neighbour ID is passed to the functions involved in sending and receiving, which then use the stored station ID to determine the actual station-neighbour correlation.\\
 When receiving outbound data from NL, the NL includes the neighbour ID of the neighbour to send to. The neighbour ID is not given when delivering to the NL, though, as it isn't important for receiving, as it cannot be used to determine the sender of the datagram.
 
-\subsection{Project Part 2}
+\subsection{Part 2}
 \subsubsection{Datagrams}
 \label{sec:DATAGRAM}
 The datagrams have a header with the following fields:
@@ -76,6 +77,42 @@ The network layer has been implemented differently for the hosts and the routers
 h TL.\\
 \\~
 Furthermore, the exchange of data with the other layers is replaced with a queue system. This allows the layers themselves to manage the elements they receive rather than filling the event queue with signals that have to be handled in prioritized order. The only exception is when LL pushes packets to NL. No issues have been experienced with that part of the system, so it has been retained.
+
+\subsection{Part 3}
+\subsubsection{Segments}
+The segment is somewhat simply structured, but its use is complicated because the fields are used differently depending on the flags.\\
+The segment type has the following fields:
+\begin{itemize}
+\item is\_first: Segment is the first in a message or control communication.
+\item is\_control: 1 is the segment is a control message, otherwise 0.
+\item seqMsg: Each message has a seqMsg one higher than the previous. Allows the TL on the receiving end to yield them to AL in order, and only if the next one has arrived.
+\item seqPayload: Same as seqMsg, but for fragments of the message if the message is longer than the maximum payload size.
+\item aux: Depends on is\_first and is\_control.
+\item senderPort: Port of the socket on the sender side.
+\item receiverPort: The port the segment is addressed for on the receiver side.
+\end{itemize}
+
+The aux field is used differently for application messages and control messages. For application messages, if the is\_first flag is set, then it contains the length of the total message, so that the appropriate number of bytes can be allocated, and if it is the last message, which is arithmetically determined, then it contains the number of bytes that last segment carries. Otherwise undefined.\\
+For control segments, 0 means a connection request. If the is\_first flag is set, then the connection is being initiated, and if it is 0 is it a positive acknowledgement to such a request. If a positive acknowledgement is not sent for any reason, then a control segment with aux field set to 2 should be sent instead, a negative acknowledgement for the connection, meaning connection refused. An aux field of 1 means that the sender has disconnected and no messages sent to it will be accepted.
+
+\subsubsection{Splitting and merging}
+The messages that an application can send can potentially be megabytes in size. To handle this, splitting this messages into pieces can putting those pieces back together is needed, as the maximum payload size cannot be that large. Furthermore, it is possible that an application will send multiple messages faster than the receiver will receive them. To handle this this situation, a system was devised, which is consisting of a splitter to split the messages and a merger to reassemble the messages and store them until the application receives them.\\
+\\
+The design at its current state is dependent on the first fragment of a message arriving first, but can handle an arbitrary order of incoming fragments for that message. To do this, the sender splits a message for sending into fragments and sends them as segments, where the first segment has the is\_first flag set. The rest are enumerated by using the seqPayload field to determine which parts of the messages they contain. Each new message sent has a seqMsg one higher than the previous message, but fragments belonging to the same message has the same seqMsg value.\\
+The receiving end uses a merging system, where it uses these sequence numbers to determine which fragments are parts of which messages. When all parts of the next message to receive have arrived and been merged together, then the application with the connection the message belongs to can receive the message.
+
+\subsubsection{Interface for the Application Layer}
+The application has to request a socket from TL, specifying a port, which can be a wildcard for any port as well. The transport will then give back a socket the application can use for the other interface functions or a useless error socket if it isn't possible to provide the requested socket for any reason.\\
+The application can then listen on the socket, waiting for an incoming connection, which will block the application until a connection has been established by an outside source. This would typically be done in order to provide a service.\\
+Another option is to connect to an open socket on another host. This will block the application momentarily while an attempt to make a connection is being made. If the connection fails, an error is given, based on which the application can make a decision.\\
+\\~
+When a connection has been established, the applications on both ends can send to each other and receive from each other. This sending and receiving can be done both ways simultaneously. No coordination of AL traffic is needed for any other purpose than application semantics.\\
+\\~
+The actual handling of these components are performed in TL, which takes care of sending the correct control messages, handling the connection state with the processes on the other hosts and proper message transfer.
+
+
+
+
 
 
 
