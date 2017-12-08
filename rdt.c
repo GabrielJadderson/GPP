@@ -672,7 +672,9 @@ int main(int argc, char *argv[])
         ACTIVATE(1, selective_repeat);
         ACTIVATE(1, networkLayerHost);
         ACTIVATE(1, transportLayer);
+        //ACTIVATE(1, socketTest);
         ACTIVATE(1, textChatStatic1);
+        ACTIVATE(1, textChatStatic2);
         //ACTIVATE(1, fake_transportLayer);
         
         //Host B
@@ -681,6 +683,7 @@ int main(int argc, char *argv[])
         ACTIVATE(2, networkLayerHost);
         ACTIVATE(2, transportLayer);
         ACTIVATE(2, textChatStatic2);
+        ACTIVATE(2, textChatStatic1);
         //ACTIVATE(2, fake_transportLayer);
         
         //Router 1

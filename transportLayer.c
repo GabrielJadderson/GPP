@@ -544,9 +544,8 @@ void transportLayer() {
 
         break;
       case TL_SocketRequest:
-        logLine(info, "TL: Socket Requested\n");
-
         req = (TLSockReq*) event.msg;
+        logLine(info, "TL: Socket Requested with port %d\n", req->port);
 
         //TODO: [PJ] Should first check if the port is available.
 

@@ -12,7 +12,7 @@ void textChatStatic1(void) {
   logLine(succes, "WEE.\n");
   //Signal(AL_Receive, NULL);
   
-  TLSocket* socket = TL_RequestSocket(0);
+  TLSocket* socket = TL_RequestSocket(1);
   
   logLine(succes, "Received socket properties:\n");
   logLine(succes, "Validity: %d\n", socket->valid);
@@ -32,7 +32,14 @@ void textChatStatic1(void) {
   socket->connections[0].msgListTail = NULL;
   */
   
-  int conid = connect(socket, 212, 0);
+  int conid;
+  if(ThisStation == 1) {
+    conid = connect(socket, 212, 0);
+  } else {
+    conid = connect(socket, 111, 0);
+  }
+  
+  logLine(succes, "<*_*<: established connection at id: %d\n", conid);
   
   sleep(1);
   
@@ -101,6 +108,8 @@ void textChatStatic2(void) {
   
   int conid = listen(socket);
   
+  logLine(succes, ">*_*>: established connection at id: %d\n", conid);
+  
   sleep(1);
   
   //Try sending a message to see the debugging messages.
@@ -149,13 +158,36 @@ void textChatStatic2(void) {
   logLine(succes, "APPLICATION: RECEIVED ALL MESSAGES FROM OTHER HOST.\n");
   
   //sleep(5); //Give some time to finish.
-  Stop();
+  //Stop();
   
 }
 
 
 
-
+void socketTest(void) {
+  
+  TLSocket* socket = TL_RequestSocket(0);
+  
+  logLine(succes, "Received socket properties:\n");
+  logLine(succes, "Validity: %d\n", socket->valid);
+  
+  if(socket->valid) {
+    logLine(succes, "port: %d\n", socket->port);
+  }
+  
+  
+  TLSocket* socket2 = TL_RequestSocket(1);
+  
+  logLine(succes, "Received socket properties:\n");
+  logLine(succes, "Validity: %d\n", socket2->valid);
+  
+  if(socket2->valid) {
+    logLine(succes, "port: %d\n", socket2->port);
+  }
+  
+  
+  
+}
 
 
 
