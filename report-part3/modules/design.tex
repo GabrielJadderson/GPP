@@ -32,7 +32,7 @@ Deprecated signals:
 \item network\_layer\_ready: The way this signal was used resulted in a bug. Replaced with LL\_SendingQueueOffer.
 \end{itemize}
 
-\subsection{Part 1}
+\subsection{Link Layer}
 The given implementation of rdt was designed for communication between only two hosts. Expanding this to communication with a fixed number of neighbours, the information associated with a neighbour was decided to be encapsulated in a struct, an array of which representing the state information in the communication with each neighbour.\\
 Distinguishing the neighbours from each other was done by using unique IDs, which could be passed to functions and the like. Each neighbour have a station ID associated with it, allowing to send to a station using the neighbour ID, and determining the neighbour from the station ID when receiving.
 
@@ -50,7 +50,7 @@ It is not allowed for two neighbours to correspond to the same station.
 When sending to a neighbour, only the neighbour ID is known. This neighbour ID is passed to the functions involved in sending and receiving, which then use the stored station ID to determine the actual station-neighbour correlation.\\
 When receiving outbound data from NL, the NL includes the neighbour ID of the neighbour to send to. The neighbour ID is not given when delivering to the NL, though, as it isn't important for receiving, as it cannot be used to determine the sender of the datagram.
 
-\subsection{Part 2}
+\subsection{Network Layer}
 \subsubsection{Datagrams}
 \label{sec:DATAGRAM}
 The datagrams have a header with the following fields:
@@ -69,16 +69,16 @@ The reserved field is currently unused, but exists to possibly implement more fu
 The payload size is currently not of any effect, but exists to possibly implement dynamic payload size.\\
 The address fields are the network addresses for the sender and the receiver.
 
-\subsection{Routing Table}
+\subsubsection{Routing Table}
 The forwarding utilizes a routing table, consisting of addresses and neighbours in which directions to send packets addressed for those addresses. When a packet is being sent from NL, it uses the address to look up the neighbour ID and labels the packet to send with it for the LL to read.
 
-\subsection{Network Layer Implementations}
+\subsubsection{Network Layer Implementations}
 The network layer has been implemented differently for the hosts and the routers, where the routers are more simple because they don't need to communicate with a layer above. When the router NL receive a packet from LL, it looks up which neighbour to send the packet to and returns it to LL. The host NL receives packets and delivers them to TL.
 h TL.\\
 \\~
 Furthermore, the exchange of data with the other layers is replaced with a queue system. This allows the layers themselves to manage the elements they receive rather than filling the event queue with signals that have to be handled in prioritized order. The only exception is when LL pushes packets to NL. No issues have been experienced with that part of the system, so it has been retained.
 
-\subsection{Part 3}
+\subsection{Transport Layer}
 \subsubsection{Segments}
 The segment is somewhat simply structured, but its use is complicated because the fields are used differently depending on the flags.\\
 The segment type has the following fields:
