@@ -2,13 +2,17 @@
 
 //Block until the application has a connection on this port to another host.
 //Returns the id of the connection on succes, -1 on error.
+//This function doesn't guarantee that only one connection has been made at the time this function returns.
 //int listen(TLSocket *socket) { //[PJ] This line contains some invisible character? Gives me a compile error.
 int listen(TLSocket *socket) {
   if (socket->valid == 1) {
-      socket->listening = 1;
-      while(socket->listening == 1) {
-        logLine(trace,"Application is listening\n");
+      socket->listening |= 1;
+      //while(socket->listening == 1) {
+      while(socket->listenConnection == CONNECTION_PENDING) {
+        logLine(succes,"Application is listening. listening: %d, connection: %d\n", socket->listening, socket->listenConnection);
+        sleep(1);
       }
+      socket->listening = 0;
       return socket->listenConnection;
   } else {
       return -1;
@@ -16,7 +20,7 @@ int listen(TLSocket *socket) {
 }
 
 /*Connects to a remote host on address addr on port port.
- * Gives back the id of the connection. In case of an error returns -1;
+ * Gives back the id of the connection. On error, gives a negative error code.
  */
 int connect(TLSocket *socket, networkAddress addr, transPORT port) {
   if(!socket->valid) {
@@ -32,13 +36,19 @@ int connect(TLSocket *socket, networkAddress addr, transPORT port) {
   
   Signal(AL_Connect, connReq);
   
-  while(connReq->connectionid == CONNECTION_PENDING || socket->connections[connReq->connectionid].pending == 1) {
-    logLine(trace,"Application is waiting for connection to be established.\n");
+  for(int i = 0; i < 3 && (connReq->connectionid == CONNECTION_PENDING || socket->connections[connReq->connectionid].pending) == 1; i++) {
+  //while(connReq->connectionid == CONNECTION_PENDING || socket->connections[connReq->connectionid].pending == 1) {
+    logLine(succes,"Application is waiting for connection to be established.\n");
+    sleep(1);
   }
 
   int res = connReq->connectionid;
+  logLine(succes, "res: %d\n", res);
   
-  if(res == CONNECTION_FAILURE || socket->connections[res].valid == 0) {
+  if(socket->connections[res].valid == 0) {
+    socket->connections[res].pending = 0; //Disable waiting for this connection.
+    return -2; //Timeout
+  } else if(res == CONNECTION_FAILURE) {
     return -1; //Failure.
   }
   
@@ -59,7 +69,7 @@ int disconnect(TLSocket *socket, unsigned int connectionid) {
       return -1;
     }
 
-  //register the connection disabled.
+  //register the connection disabled. //[PJ] This is also done in TL, but when done here, it is certain that thread scheduling isn't a problem.
   socket->connections[connectionid].valid = 0;
 
   //just make a struct and pass it to the TL

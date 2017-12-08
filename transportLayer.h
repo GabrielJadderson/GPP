@@ -41,6 +41,7 @@ typedef struct TLMBLL{
 typedef struct {
   unsigned int valid:1; //This is checked before actual access.
   unsigned int pending:1;
+  unsigned int disconnected:1; //This is because you might still want to read messages from the connection after it was disconnected. Also allows for the application to look directly at this.
   networkAddress remoteAddress; //Address of the other machine
   transPORT remotePort; //Port of the other application
   unsigned int outboundSeqMsg; //seqMsg of next message to send.
@@ -54,7 +55,7 @@ typedef struct {
 #define CONNECTION_PENDING (CONNECTION_FAILURE+1)
 typedef struct {
   unsigned int valid:1; //This is checked before actual access. The TL sets this as an indicator for the AL.
-  unsigned int listening:1; //This is used to keep track of listening status and when to break out of waiting in the listening function.
+  unsigned int listening:2; //This is used to keep track of listening status and when to break out of waiting in the listening function.
   unsigned int listenConnection; //When listening, this value will be set to the id of the connection listened to.
   transPORT port; //The port of the socket. The application can check this value to see which port is has been given if it chose any port.
   TLConnection connections[MAX_CONNECTIONS]; //Connections

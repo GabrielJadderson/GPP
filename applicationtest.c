@@ -32,16 +32,22 @@ void textChatStatic1(void) {
   socket->connections[0].msgListTail = NULL;
   */
   
-  int conid;
-  if(ThisStation == 1) {
-    conid = connect(socket, 212, 0);
-  } else {
-    conid = connect(socket, 111, 0);
+  //sleep(1); //Give the "server" a chance to start listening before we try to connect to it.
+  
+  int conid = -2;
+  
+  while(conid == -2) {
+    if(ThisStation == 1) {
+      conid = connect(socket, 212, 0);
+    } else {
+      conid = connect(socket, 111, 0);
+    }
   }
   
-  logLine(succes, "<*_*<: established connection at id: %d\n", conid);
   
-  sleep(1);
+  logLine(succes, "<*_*<: established connection at id: %d on port %d\n", conid, socket->port);
+  
+  //sleep(1);
   
   //Try sending a message to see the debugging messages.
   /*ALMessageSend *MS = (ALMessageSend*) malloc(sizeof(ALMessageSend));
@@ -76,7 +82,15 @@ void textChatStatic1(void) {
   send(socket, conid, "SPLIT ME PLEASE #09", 20);
   send(socket, conid, "SPLIT ME PLEASE #10", 20);
   
-  //sleep(5); //Give some time to finish.
+  
+  sleep(1);
+  logLine(succes, "This is before that disconnect!\n");
+  if(ThisStation == 1) {
+    disconnect(socket, 0);
+  }
+  logLine(succes, "This is after that disconnect!\n");
+  
+  sleep(50); //Give some time to finish.
   //Stop();
   
 }
@@ -88,6 +102,7 @@ void textChatStatic2(void) {
   logLine(succes, "WEE.\n");
   //Signal(AL_Receive, NULL);
   
+  sleep(5);
   TLSocket* socket = TL_RequestSocket(0);
   
   logLine(succes, "Received socket properties:\n");
@@ -108,7 +123,12 @@ void textChatStatic2(void) {
   
   int conid = listen(socket);
   
-  logLine(succes, ">*_*>: established connection at id: %d\n", conid);
+  /*if(ThisStation == 1) {
+    disconnect(socket, conid); //Just to see if it receives messages anyway.
+    //sleep(50); //Just stall this one.
+  }*/
+  
+  logLine(succes, ">*_*>: established connection at id: %d on port %d\n", conid, socket->port);
   
   sleep(1);
   
@@ -123,7 +143,7 @@ void textChatStatic2(void) {
   //Signal(AL_Receive, NULL);
   
   //send(socket, 0, "SPLIT YOU PLEASE!!!", 20);
-  send(socket, conid, "SPLIT YOU PLEASE!!!", 20);
+  //send(socket, conid, "SPLIT YOU PLEASE!!!", 20);
   
   /*
   char* othermessage = receive(socket, 0);
@@ -152,12 +172,17 @@ void textChatStatic2(void) {
     numreceived++;
     othermessage = NULL; //Just to be sure
     
+    /*if(ThisStation == 1 && numreceived == 1) {
+      disconnect(socket, conid);
+    }*/
+    
   }
   
+  if(ThisStation == 1) {sleep(60);}
   
   logLine(succes, "APPLICATION: RECEIVED ALL MESSAGES FROM OTHER HOST.\n");
   
-  //sleep(5); //Give some time to finish.
+  sleep(50); //Give some time to finish.
   //Stop();
   
 }
