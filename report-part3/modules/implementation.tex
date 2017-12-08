@@ -2,7 +2,140 @@
 \subsection{Part 1}
 TODO: implement
 \subsection{Part 2}
-TODO: implement
+We've added the following two signals to the $Events.h$
+$NL\_SendingQueueOffer$
+and
+\break
+$TL\_ReceivingQueueOffer$
+We've also implemented a concurrent FIFO queue, the idea is to have a shared queue between TL and the NL.
+
+\subsubsection{Datagram and Payload}
+Datagrams is used for handling messages from/to the transport layer.
+The implementation of the datagram and payload is as follows.
+\begin{lstlisting}
+typedef struct  {
+  //First 32bit word
+  unsigned char type;         //8-bit
+  unsigned short payloadsize; //16-bit
+  //Two next 32-bit words
+  networkAddress src;         //source address
+  networkAddress dest;        //destination address
+  payload payload;            //Payload
+} datagram;
+#define MAX_PAYLOAD 8
+typedef struct { char data[MAX_PAYLOAD]; } payload;
+\end{lstlisting}
+The networkAddress is defined as a 32-bit address similarly to IPv4.
+
+\subsection{Network Layer}
+
+The following is the implementation of \texttt{NL\_RoutingTable}, the routing table is used to look up hosts and routers in the network.
+Here we've defined a static variable, in the real world the \texttt{NL\_ROUTING\_TABLE\_SIZE} should be incremented and decremented dynamically.
+There can be more elements in Routing table than there are neighbours and multiple entries can point to the same neighbour.
+\begin{lstlisting}
+#define NL_ROUTING_TABLE_SIZE 4
+typedef struct {
+  networkAddress addresses[NL_ROUTING_TABLE_SIZE];
+  neighbourid    neighbourids[NL_ROUTING_TABLE_SIZE];
+} NL_RoutingTable;
+\end{lstlisting}
+
+
+Similarly \texttt{NL\_OfferElement} is used in the communication between LL and NL.
+\begin{lstlisting}
+typedef struct {
+  neighbourid otherHostNeighbourid;
+  datagram dat;
+} NL_OfferElement;
+\end{lstlisting}
+
+The following is the implementation of the signal handling in \texttt{networkLayerHost()} with all unimportant parts ommited.
+\begin{lstlisting}
+  switch(event.type) {
+    case data_for_network_layer:
+      d = *((datagram*) (event.msg));              //retrieve our datagram
+      switch(d.type) {
+        case DATAGRAM:
+          o = malloc(sizeof(TL_OfferElement));     //assign little o as TL_OfferElement
+          o->otherHostAddress = d.src;             //assign address
+          o->seg = d.payload;                      //assign payload
+      }
+    case NL_SendingQueueOffer:
+      while(EmptyFQ(offer->queue) == 0) {         //while not empty
+        e = DequeueFQ(offer->queue);              //pop an element
+        o = ((TL_OfferElement*) ValueOfFQE(e));   //assign it to TL_OfferElement
+
+        d.src = thisNetworkAddress;               //resolve source address
+        d.dest = o->otherHostAddress;             //resolve destination address
+
+        d.payload = o->seg;  //get the segment from TL_OfferElement as our payload.
+
+        O = malloc(sizeof(NL_OfferElement));      //assign big O as NL_OfferElement
+        O->otherHostNeighbourid = NL_TableLookup(d.dest); //get address from lookup table.
+        O->dat = d;                        //store out datagram in NL_OfferElement
+        EnqueueFQ(NewFQE((void *)O), sendingBuffQueue); //send NL_OfferElement
+      }
+  }
+\end{lstlisting}
+
+The following is the implementation of the signal handling in \texttt{networkLayerRouter()} with unimportant parts ommited.
+\begin{lstlisting}
+void networkLayerRouter() {
+  while(true) {
+    Wait(&event, events_we_handle); //block for a new event
+    switch(event.type) { //handle events
+      case network_layer_allowed_to_send:
+        allowedToSendToLL = true;
+        break;
+      case data_for_network_layer: //received from LL
+        d = *((datagram*) (event.msg));
+        if(d.dest != thisNetworkAddress) { //forward if not addressed to this router
+          O = malloc(sizeof(NL_OfferElement));
+          O->otherHostNeighbourid = NL_TableLookup(d.dest); //Lookup the destination
+          O->dat = d;
+          EnqueueFQ(NewFQE((void *)O), receivedQueue);
+          break; //done case.
+        }
+        break; //break while loop
+    }
+  }
+}
+\end{lstlisting}
+
+
+
+\subsection{Transport Layer}
+
+\texttt{TL\_OfferElement} is used by the TL to figure out where to process the segment
+\begin{lstlisting}
+typedef struct {
+  networkAddress receiver;  //This contains ``fake'' ip address of the reciever
+  payload seg;              //our payload is the msg
+} TL_OfferElement;
+\end{lstlisting}
+\break
+
+Our implementation of the TL with only the most important parts is as follows.
+this implementation focuses on the handling of signals, under the hood we use a fifo-queue and the $TL_OfferElement$
+\begin{lstlisting}
+void fake_transportLayer() {
+  while(true) {
+    Wait(&event, events_we_handle); //block until a valid signal is recieved.
+    switch(event.type) {
+      case TL_ReceivingQueueOffer: //Received the TL_ReceivingQueueOffer signal.
+        offer = (ConcurrentFifoQueue*) event.msg;
+        while(EmptyFQ(offer->queue) == 0) { //Handle incoming messages
+          e = DequeueFQ(offer->queue);
+          o = *((TL_OfferElement*) (e->val));
+        }
+        numReceivedPackets++;
+        break;
+    }
+    ... //more signals to be implemented.
+  }
+}
+\end{lstlisting}
+
 \subsection{Part 3}
 
 In part 3 we've extended $events.h$ and included events from $transportLayer.h$ and $appplicationLayer.h$
@@ -33,20 +166,16 @@ We create the $ALConnReq$ header and send it to the TL for processing,
 this also means that the TL is responsible for error handling for this function.
 We use $AL\_Connect$ for sending the signal and an implementation of the signal processing is given down below.
 \begin{lstlisting}
-/* Connects to a remote host on address addr on port port.
- * Gives back the id of the connection. In case of an error returns -1;
- */
 int connect(TLSocket *socket, networkAddress addr, transPORT port) {
+  if(!socket->valid) { return -1; }
   ALConnReq* connReq = malloc(sizeof(ALConnReq));
-
   connReq->port = port;
   connReq->sock = socket;
   connReq->netAddress = addr;
-
+  connReq->connectionid = CONNECTION_PENDING;
   Signal(AL_Connect, connReq);
-
-  return connReq->connectionid;
-}
+  //wait for the connection to be established.
+  for(int i = 0; i < 3 && (connReq->connectionid == CONNECTION_PENDING || socket->connections[connReq->connectionid].pending) == 1; i++) { sleep(1); }
 \end{lstlisting}
 
 The following is the connection request header.
@@ -64,25 +193,21 @@ First we retrieve the msg, cast to our ALConnReq, afterwards, we check and make 
 there is an available free slot for our connection.
 We then construct a $TL\_OfferElement$ with the required information and send it to the NL.
 \begin{lstlisting}
-...
 case AL_Connect:
-  logLine(debug, "AL: Received signal AL_Connect\n");
   ALConnReq *connReq = (ALConnReq*) event.msg;
 
   boolean gotAssigned = false;
   for (int i = 0; i < MAX_CONNECTIONS; i++) {
     if (connReq->sock->connections[i].valid == 0) { //check for unused connection.
         connReq->sock->connections[i].valid = 1; //assign that unused connection is used
-        connReq->connectionid = i; //update the connReq to return in AL.
-        gotAssigned = true; //indicate that the connection was assigned sucessfully.
+        connReq->connectionid = i;
+        gotAssigned = true;
     }
   }
   if (gotAssigned == false) {
-    logLine(error, "AL_Connect: Failed to assign connection NO SPACE/AVAILABLE CONNECTIONS\n");
     connReq->connectionid = -1; //update the connReq to return in AL
     break;
   }
-
   O = (TL_OfferElement*) malloc(sizeof(TL_OfferElement));
   O->otherHostAddress = connReq->netAddress;
   O->segment.is_first = 1;
@@ -93,11 +218,8 @@ case AL_Connect:
   O->segment.receiverport = connReq->port;
   O->segment.aux = 0;
   memset(&(O->segment.msg.data), 0, 8);
-
   EnqueueFQ( NewFQE( (void *) O ), sendingBuffQueue);
-  logLine(debug, "AL: SENDING TO THE BUFFER QUEUE\n");
 break;
-...
 \end{lstlisting}
 
 
@@ -166,6 +288,24 @@ TODO: implement
 \subsubsection{AL\_Receive}
 TODO: implement
 \begin{lstlisting}
+\end{lstlisting}
+
+\subsubsection{AL\_Listen}
+Below is the implementation of $listen$ in AL.
+Which blocks and listens for incomming packets on the socket.
+\begin{lstlisting}
+int listen(TLSocket *socket) {
+  if (socket->valid == 1) {
+      socket->listening |= 1;
+      while(socket->listenConnection == CONNECTION_PENDING) {
+        sleep(1);
+      }
+      socket->listening = 0;
+      return socket->listenConnection;
+  } else {
+      return -1;
+  }
+}
 \end{lstlisting}
 
 
