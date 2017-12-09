@@ -190,7 +190,7 @@ void transportLayer() {
   //int numReceivedPackets = 0;
 
   event_t event;
-  long int events_we_handle = TL_ReceivingQueueOffer | TL_SocketRequest | AL_Send | AL_Receive | AL_Disconnect | AL_Connect;
+  long int events_we_handle = TL_ReceivingQueueOffer | TL_SocketRequest | AL_Send | AL_Receive | AL_Disconnect | t;
   while(true) {
     logLine(trace, "TL: Waiting for signals.\n");
     //logLine(succes, "TL: Lockstatus=%d\n", q->used);
@@ -212,7 +212,7 @@ void transportLayer() {
               connReq->sock->connections[conid].inboundSeqMsg = 0;
               connReq->sock->connections[conid].msgListHead = NULL;
               connReq->sock->connections[conid].msgListTail = NULL;
-              
+
               connReq->connectionid = i; //update the connReq to return in AL
               gotAssigned = true; //indicate that the connection was assigned sucessfully.
               conid = i;
@@ -300,14 +300,14 @@ void transportLayer() {
   //The port this segment is addressed to is actually valid.
   if(sockets[o.segment.receiverport] != NULL && sockets[o.segment.receiverport]->valid) {
     logLine(debug, "Socket %d is valid and is receiving a message.\n", o.segment.receiverport);
-    
+
     //If the segment is a control segment, then this is where to deal with it.
     if(o.segment.is_control) {
       logLine(trace, "Handling control segment.\n");
-      
+
       if(o.segment.aux == 0) { //Connect.
         if(o.segment.is_first) { //Connection request received.
-          
+
           //See if there is a slot available.
           for(conid = 0; conid < MAX_CONNECTIONS; conid++) {
             if(sockets[o.segment.receiverport]->connections[conid].valid == 0
@@ -316,9 +316,9 @@ void transportLayer() {
               break;
             }
           }
-          
+
           logLine(succes, "INCOMING CONNECTION AT CONNECTION %d ON PORT %d\n", conid, o.segment.receiverport);
-          
+
           //No room. Send aux=2, connection refused.
           if(conid >= MAX_CONNECTIONS) {
             O = (TL_OfferElement*) malloc(sizeof(TL_OfferElement));
@@ -333,7 +333,7 @@ void transportLayer() {
             memset(&(O->segment.msg.data), 0, 8);
             break; //Failure.
           }
-          
+
           //Otherwise, configure the connection slot.
           sockets[o.segment.receiverport]->connections[conid].valid = 1;
           sockets[o.segment.receiverport]->connections[conid].disconnected = 0;
@@ -344,12 +344,12 @@ void transportLayer() {
           sockets[o.segment.receiverport]->connections[conid].inboundSeqMsg = 0;
           sockets[o.segment.receiverport]->connections[conid].msgListHead = NULL;
           sockets[o.segment.receiverport]->connections[conid].msgListTail = NULL;
-          
+
           //If the socket was set to listen, mark is as not listening, effectively hosting a connection.
           logLine(succes, "Listening status: %d, con being: %d\n", sockets[o.segment.receiverport]->listening, sockets[o.segment.receiverport]->listenConnection);
           sockets[o.segment.receiverport]->listening |= 2;
           sockets[o.segment.receiverport]->listenConnection = conid; //This is the id of the connection that has been estalished.
-          
+
           //Send verification response, aux=0, is_first=0. "Connection query that isn't initiating"
           O = (TL_OfferElement*) malloc(sizeof(TL_OfferElement));
           O->otherHostAddress = o.otherHostAddress;
@@ -361,9 +361,9 @@ void transportLayer() {
           O->segment.receiverport = o.segment.senderport; //This one should correspond to the open connection
           O->segment.aux = 0;
           memset(&(O->segment.msg.data), 0, 8);
-          
+
           EnqueueFQ( NewFQE( (void *) O ), sendingBuffQueue);
-          
+
          } else { //Connection request verification response received
           logLine(succes, "CONNECTION ACCEPTED!\n");
           //Search for the connection that gets the response.
@@ -399,7 +399,7 @@ void transportLayer() {
               break;
             }
           }
-        
+
       } else if(o.segment.aux == 2) { //Connection refused.
         //Search for the connection that gets the response.
         logLine(succes, "CONNECTION REFUSED!\n");
@@ -417,10 +417,10 @@ void transportLayer() {
           }
         }
       }
-      
+
       continue; //Done with this segment. Go to the next one.
     }
-    
+
     //[PJ] A search is needed for this one because the data order is indeterministic.
     for(int i = 0; i < MAX_CONNECTIONS; i++) {
       //If there is a hit, go for it. If not, then the message has to be a failure packet or a fraudulent packet.
