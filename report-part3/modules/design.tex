@@ -73,8 +73,7 @@ The address fields are the network addresses for the sender and the receiver.
 The forwarding utilizes a routing table, consisting of addresses and neighbours in which directions to send packets addressed for those addresses. When a packet is being sent from NL, it uses the address to look up the neighbour ID and labels the packet to send with it for the LL to read.
 
 \subsubsection{Network Layer Implementations}
-The network layer has been implemented differently for the hosts and the routers, where the routers are more simple because they don't need to communicate with a layer above. When the router NL receive a packet from LL, it looks up which neighbour to send the packet to and returns it to LL. The host NL receives packets and delivers them to TL.
-h TL.\\
+The network layer has been implemented differently for the hosts and the routers, where the routers are more simple because they don't need to communicate with a layer above. When the router NL receive a packet from LL, it looks up which neighbour to send the packet to and returns it to LL. The host NL receives packets and delivers them to TL.\\
 \\~
 Furthermore, the exchange of data with the other layers is replaced with a queue system. This allows the layers themselves to manage the elements they receive rather than filling the event queue with signals that have to be handled in prioritized order. The only exception is when LL pushes packets to NL. No issues have been experienced with that part of the system, so it has been retained.
 

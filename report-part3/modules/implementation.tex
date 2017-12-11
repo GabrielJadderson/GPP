@@ -1,5 +1,6 @@
 \section{Implementation}
 
+\subsection{Link Layer}
 \subsubsection{Neighbours}
 The neighbour switching is handled in the selective repeat using a variable called $currentNeighbour$. This variable is set at as early as possible when handling each of the three types of signals handled by selective repeat.\\
 The snippets here are trimmed extensively. To get a clear overview, please read the event handling cases in the source file rdt.c. Comments have also been removed.\\
@@ -26,22 +27,8 @@ The timer message contains the id of the neighbour it enables.
 \begin{lstlisting}
 currentNeighbour = ((packetTimerMessage*)event.msg)->neighbour;
 \end{lstlisting}
-\subsubsection{Signals}
-The following is a description of what the three events in our code do:
-\begin{description}[leftmargin=1em, style=nextline]
-\item [\texttt{network\_layer\_allowed\_to\_send}] Signals the network layer that it can send a piece of data.
-Here the network layer should make sure the \texttt{from\_network\_layer\_queue}
-contains at least one element, after which it can signal \texttt{network\_layer\_ready},
-which means that the network layer has prepared at least one element in the queue.
 
-\item [\texttt{network\_layer\_ready}] This signal signals to the link layer that the network layer has prepared an element to be sent in the
- \texttt{from\_network\_layer\_queue} queue and that it should be sent now.
-
-\item [\texttt{data\_for\_network\_layer}]
-This signal signals to the network layer that the
-\texttt{for\_network\_layer\_queue} contains a data element for it to take care of. (a data element has been received)
-\end{description}
-
+\subsection{Network Layer}
 \subsubsection{Datagram}
 Datagrams is used for handling messages from/to the transport layer.
 The implementation of the datagram and payload is as follows.
@@ -60,7 +47,7 @@ typedef struct  {
 \end{lstlisting}
 The networkAddress is defined as a 32-bit address similarly to IPv4.
 
-\subsubsection{Network Layer}
+\subsubsection{Network Layer Implementation}
 
 The following is the implementation of \texttt{NL\_RoutingTable}, the routing table is used to look up hosts and routers in the network.
 Here we've defined a static variable, in the real world the \texttt{NL\_ROUTING\_TABLE\_SIZE} should be incremented and decremented dynamically.
@@ -73,15 +60,7 @@ typedef struct {
 } NL_RoutingTable;
 \end{lstlisting}
 
-Similarly \texttt{NL\_OfferElement} is used in the communication between LL and NL.
-\begin{lstlisting}
-typedef struct {
-  neighbourid otherHostNeighbourid;
-  datagram dat;
-} NL_OfferElement;
-\end{lstlisting}
-
-The following is the implementation of the signal handling in \texttt{networkLayerRouter()} with unimportant parts ommited.
+The following is the implementation of the signal handling in \texttt{networkLayerRouter()} with unessential parts ommited. The implementation showcases the essential components of receiving from LL and the packet forwarding.
 \begin{lstlisting}
 void networkLayerRouter() {
   while(true) {
@@ -105,48 +84,7 @@ void networkLayerRouter() {
 }
 \end{lstlisting}
 
-
-
-\subsubsection{Transport Layer}
-Our implementation of the TL with only the most important parts is as follows.
-this implementation focuses on the handling of signals, under the hood we use a fifo-queue and the $TL_OfferElement$.
-Our TL is run in a seperate thread, therefore, we block until we get a signal at then we process the signal.
-\begin{lstlisting}
-void fake_transportLayer() {
-  while(true) {
-    Wait(&event, events_we_handle); //block until a valid signal is recieved.
-    switch(event.type) {
-      case TL_ReceivingQueueOffer: //Received the TL_ReceivingQueueOffer signal.
-        offer = (ConcurrentFifoQueue*) event.msg;
-        while(EmptyFQ(offer->queue) == 0) { //Handle incoming messages
-          e = DequeueFQ(offer->queue);
-          o = *((TL_OfferElement*) (e->val));
-        }
-        numReceivedPackets++;
-        break;
-    }
-    ... //more signals to be implemented.
-  }
-}
-\end{lstlisting}
-
-In part 3 we've extended $events.h$ and included events from $transportLayer.h$ and $appplicationLayer.h$
-below is a list of the newly added events.
-\begin{itemize}
-\item \texttt{TL\_SocketRequest}: Used to assign a new unique socket, TL handles this.
-
-\item \texttt{AL\_Connect}: Called from AL to TL.
-We check if the connections array isn't fully occupied and try to open a connection and assign a connection id.
-
-\item \texttt{AL\_Disconnect}: Called from AL to TL. First we make sure that the connection is active, then we de-register the connection in our $connections$ array.
-a signal is sent to the recieving host that the connection has been terminated.
-
-\item \texttt{AL\_Send}: Called from AL to TL.
-
-\item \texttt{AL\_Receive}: Called from AL to TL.
-
-\end{itemize}
-
+\subsection{Transport Layer}
 \subsubsection{TL\_SocketRequest}
 Below is the implementation of $TL\_SocketRequest$ this signal used for creating a sockets.
 it does this by evaluating the requested socket and it's availability if available returns the socket otherwise an invalid error socket.
