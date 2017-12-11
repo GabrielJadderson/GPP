@@ -40,12 +40,12 @@ typedef struct  {
   unsigned char reserved; //Currently unused. Exists for expandability and to pad to 32-bit word. Considering a next-header value with additional options as in IPv6.
   unsigned short payloadsize;
   //^
-  
+
   //Two next 32-bit words
   networkAddress src;
   networkAddress dest;
   //^
-  
+
   //Payload
   payload payload;
   TL_Segment segment;

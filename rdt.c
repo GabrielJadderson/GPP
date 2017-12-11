@@ -143,11 +143,11 @@ void selective_repeat()
 	long int events_we_handle;
 	unsigned int timer_id;
         datagram *transfer_pointer; //Passing to the network layer with this prevents overwriting the buffer contents before the network layer has handled it.
-        
+
         ConcurrentFifoQueue *offer;
         FifoQueue sendingQueue = InitializeFQ();
         FifoQueueEntry e;
-        
+
         /*datagram ERRORDATAGRAM;
         ERRORDATAGRAM.type = DATAGRAM;
         ERRORDATAGRAM.reserved = 0;
@@ -162,7 +162,7 @@ void selective_repeat()
         ERRORDATAGRAM.payload.data[5] = '!';
         ERRORDATAGRAM.payload.data[6] = '\n';
         ERRORDATAGRAM.payload.data[7] = '\0';
-        
+
         datagram INITIALDATAGRAM;
         INITIALDATAGRAM.type = DATAGRAM;
         INITIALDATAGRAM.reserved = 0;
@@ -242,7 +242,7 @@ void selective_repeat()
 
 		case frame_arrival: // a data or control frame has arrived
 			currentNeighbour = from_physical_layer(&r);  // fetch incoming frame from physical layer
-                        
+
                         //logLine(succes, "LL: Received a frame of kind: r.kind=%d\n", r.kind);
 			if (r.kind == DATA) {
                                 logLine(debug, "Received frame context: seq=%d, expected=%d, too_far=%d, no_nak=%d\n", r.seq, neighbourData[currentNeighbour].frame_expected, neighbourData[currentNeighbour].too_far, neighbours[currentNeighbour].no_nak);
@@ -258,7 +258,7 @@ void selective_repeat()
 					neighbourData[currentNeighbour].arrived[r.seq % NR_BUFS] = true; // mark buffer as full
 					neighbourData[currentNeighbour].in_buf[r.seq % NR_BUFS] = r.info; //insert data into buffer
                                         //logLine(succes, "LL: cN=%d; r: kind=%d, seq=%d, ack=%d; r.info: type=%d, reserved=%d, payloadsize=%d; r.info.payload.data=%s \n", currentNeighbour, r.kind, r.seq, r.ack, r.info.type, r.info.reserved, r.info.payloadsize, r.info.payload.data);
-                                        
+
 					while (neighbourData[currentNeighbour].arrived[neighbourData[currentNeighbour].frame_expected % NR_BUFS]) {
                                                 //logLine(succes, "LL: going through arrived frames. currently arrived frame: %d\n", neighbourData[currentNeighbour].arrived[neighbourData[currentNeighbour].frame_expected % NR_BUFS]);
 						// Pass frames and advance window.
@@ -268,9 +268,9 @@ void selective_repeat()
 						//to_network_layer(&neighbourData[currentNeighbour].in_buf[neighbourData[currentNeighbour].frame_expected % NR_BUFS]);
 						neighbours[currentNeighbour].no_nak = true;
 						neighbourData[currentNeighbour].arrived[neighbourData[currentNeighbour].frame_expected % NR_BUFS] = false;
-                                                
+
                                                 //neighbourData[currentNeighbour].in_buf[r.seq % NR_BUFS] = ERRORDATAGRAM;
-                                                
+
 						inc(neighbourData[currentNeighbour].frame_expected); // advance lower edge of receiver's window
 						inc(neighbourData[currentNeighbour].too_far); // advance upper edge of receiver's window
 						start_ack_timer(currentNeighbour); // to see if (a separate ack is needed
@@ -323,35 +323,35 @@ void selective_repeat()
                       case LL_SendingQueueOffer:
                         logLine(info, "LL: Offered a queue by NL\n");
                         offer = (ConcurrentFifoQueue*) event.msg;
-                        
+
                         offer->used = true;
-                        
+
                         logLine(trace, "LL: Is offered queue empty?: %d\n", EmptyFQ(offer->queue));
-                        
+
                         while(EmptyFQ(offer->queue) == 0) { //Transfer all elements to own queue.
                           logLine(trace, "LL: Handling queue element.\n");
                           e = DequeueFQ(offer->queue);
-                          
+
                           o = malloc(sizeof(NL_OfferElement));
                           //*o = *((NL_OfferElement*) ValueOfFQE(e));
                           //d = malloc(sizeof(datagram));
                           //*d = *(ValueOfFQE(e));
-                          
+
                           o->otherHostNeighbourid = ((NL_OfferElement*) ValueOfFQE(e))->otherHostNeighbourid;
                           o->dat = ((NL_OfferElement*) ValueOfFQE(e))->dat;
-                          
+
                           logLine(info, "LL: o contains: n=%d\n", o->otherHostNeighbourid);
-                          
+
                           EnqueueFQ(NewFQE((void*) o), sendingQueue);
                           logLine(trace, "LL: emptyness of sendingQueue: %d\n", EmptyFQ(sendingQueue));
                         }
-                        
+
                         offer->used = false;
                         //Unlock(offer->lock);
-                        
+
                         break;
 		}
-                
+
                 for(int i = 0; i < NUM_MAX_NEIGHBOURS; i++) {
                   logLine(debug, "LL: bufslots=%d, empty=%d, entrydest=%d\n",
                     NR_BUFS-neighbourData[i].nbuffered > 0, EmptyFQ(sendingQueue));
@@ -361,16 +361,16 @@ void selective_repeat()
                     ) {
                     logLine(info, "LL: Queueing a packet in the outgoing buffer for neighbour %d, with oHNid=%d.\n", i, ((NL_OfferElement*)ValueOfFQE(FirstEntryFQ(sendingQueue)))->otherHostNeighbourid);
                     e = DequeueFQ(sendingQueue);
-                    
+
                     currentNeighbour = i;
-                    
+
                     neighbourData[currentNeighbour].nbuffered = neighbourData[currentNeighbour].nbuffered + 1; // expand the window
                     neighbourData[currentNeighbour].out_buf[neighbourData[currentNeighbour].next_frame_to_send % NR_BUFS] = ((NL_OfferElement*)ValueOfFQE(e))->dat;
                     send_frame(DATA, neighbourData[currentNeighbour].next_frame_to_send, neighbourData[currentNeighbour].frame_expected, neighbourData[currentNeighbour].out_buf, currentNeighbour); // transmit the frame
                     inc(neighbourData[currentNeighbour].next_frame_to_send); // advance upper window edge
                   }
                 }
-                
+
                 if(EmptyFQ(sendingQueue)) {
                   ClearEvent(network_layer_allowed_to_send);
                   enable_network_layer();
@@ -422,7 +422,7 @@ void enable_network_layer()
 	//Lock(network_layer_lock);
 	logLine(trace, "enabling network layer\n");
 	//network_layer_enabled = true;
-        
+
         //NL_RequestFromLL *req = malloc(sizeof(NL_RequestFromLL));
         //neighbourid *N = malloc(sizeof(neighbourid));
         //*N = n;
@@ -456,13 +456,13 @@ void from_network_layer(datagram *p, neighbourid *n,  event_t* e)
 		free((void *)ValueOfFQE(e));
 		DeleteFQE(e);
 	}*/
-  
+
   //Extract values from message.
   NL_OfferElement o = *((NL_OfferElement*) (e->msg));
-  
+
   (*p) = o.dat;
   (*n) = o.otherHostNeighbourid;
-  
+
   free(e->msg);
 }
 
@@ -471,16 +471,16 @@ void to_network_layer(datagram *p)
 {
   /*char * buffer;
   //Lock(network_layer_lock);
-  
+
   buffer = (char *)malloc(sizeof(char) * (1 + MAX_PKT));
   packet_to_string(p, buffer);
-  
+
   EnqueueFQ(NewFQE((void *)buffer), for_network_layer_queue);
-  
+
   //Unlock(network_layer_lock);
-  
+
   Signal(data_for_network_layer, NULL);*/
-  
+
   // Just send the packet to the network layer directly. Semantically identical to what was done before with the "send one element at a time and use a QUEUE TO DO IT???" method.
   void *ptr = (void*) p;
   Signal(data_for_network_layer, ptr);
@@ -506,7 +506,7 @@ void print_frame(frame* s, char *direction)
 		for(int i = 0; i < MAX_PAYLOAD; i++) {
                   logLine(trace, ">*_*>: %c\n", (s->info.segment.msg.data)[i]);//s->info.payload.data[i]);//
                 }
-                
+
                 break;
 	}
 }
@@ -613,7 +613,7 @@ int main(int argc, char *argv[])
 	mylog = InitializeLB("mytest");
 
 	LogStyle = synchronized;
-        
+
         initialize_debug();
 
 	printf("Starting network simulation\n");
@@ -648,16 +648,16 @@ int main(int argc, char *argv[])
 
 	ACTIVATE(3, FakeNetworkLayer_Test1);
 	ACTIVATE(3, selective_repeat);*/
-        
+
         //Shared
         //printf("\nInitializing link layer?\n\n");
         initialize_linkLayer(ThisStation);
         //printf("\nInitializing network layer?\n\n");
         //initialize_networkLayer(ThisStation, 0);
-        
+
         int networkLayerInit = 0;
-        
-        
+
+
 	if (argc >= 4) {
 		printf("Station %d: arg3 = %s\n", ThisStation, argv[3]);
                 networkLayerInit = atoi(argv[3]);
@@ -666,7 +666,7 @@ int main(int argc, char *argv[])
 	//else {
 		initialize_networkLayer(ThisStation, networkLayerInit);
 	//}
-        
+
         //Host A
         //printf("\nActivating station 1?\n\n");
         ACTIVATE(1, selective_repeat);
@@ -676,7 +676,7 @@ int main(int argc, char *argv[])
         ACTIVATE(1, textChatStatic1);
         ACTIVATE(1, textChatStatic2);
         //ACTIVATE(1, fake_transportLayer);
-        
+
         //Host B
         //printf("\nActivating station 2?\n\n");
         ACTIVATE(2, selective_repeat);
@@ -685,29 +685,29 @@ int main(int argc, char *argv[])
         ACTIVATE(2, textChatStatic2);
         ACTIVATE(2, textChatStatic1);
         //ACTIVATE(2, fake_transportLayer);
-        
+
         //Router 1
         //printf("\nActivating station 3?\n\n");
         ACTIVATE(3, selective_repeat);
         ACTIVATE(3, networkLayerRouter);
-        
+
         //Router 2
         //printf("\nActivating station 4?\n\n");
         ACTIVATE(4, selective_repeat);
         ACTIVATE(4, networkLayerRouter);
-        
+
         /*ACTIVATE(1, selective_repeat);
         ACTIVATE(1, networkLayerHost);
         ACTIVATE(1, transportLayer);
         ACTIVATE(1, textChatStatic1);
         //ACTIVATE(1, socketCodeTest);
-        
+
         ACTIVATE(2, selective_repeat);
         ACTIVATE(2, networkLayerHost);
         ACTIVATE(2, transportLayer);
         ACTIVATE(2, textChatStatic2);
         */
-        
+
 	/* simuleringen starter */
         //printf("\nStarting simulation?\n\n");
 	Start();
@@ -745,5 +745,3 @@ void initialize_linkLayer(int stationID) {
       Stop();
   }
 }
-
-

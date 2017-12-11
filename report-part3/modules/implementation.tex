@@ -1,18 +1,5 @@
 \section{Implementation}
-\subsubsection{Timers}
-Our implementation of \texttt{start\_timer} is as follows.
-We use modulo to wrap it around the index range since the sequence numbers increase linearly.
-\texttt{SetTimer} returns the id of the started timer, which allows us to reference the timer.
-\begin{lstlisting}
-void start_timer(neighbourid neighbour, seq_nr k) {
-        packetTimerMessage *msg = malloc(sizeof(packetTimerMessage));
-        msg->k = k;
-        msg->neighbour = neighbour;
-	neighbours[neighbour].timer_ids[k % NR_BUFS] = SetTimer( frame_timer_timeout_millis, (void *)msg );
-}
-\end{lstlisting}
-To stop the timers we simply invoke the subnet function: \texttt{StopTimer} with the id of the timer
-and in return we get the associated **msg. (note: this is why we store the id of thet timer in the first place)
+
 \subsubsection{Neighbours}
 The neighbour switching is handled in the selective repeat using a variable called $currentNeighbour$. This variable is set at as early as possible when handling each of the three types of signals handled by selective repeat.\\
 The snippets here are trimmed extensively. To get a clear overview, please read the event handling cases in the source file rdt.c. Comments have also been removed.\\
@@ -55,29 +42,21 @@ This signal signals to the network layer that the
 \texttt{for\_network\_layer\_queue} contains a data element for it to take care of. (a data element has been received)
 \end{description}
 
-
-We've added the following two signals to the $Events.h$
-$NL\_SendingQueueOffer$
-and
-\break
-$TL\_ReceivingQueueOffer$
-We've also implemented a concurrent FIFO queue, the idea is to have a shared queue between TL and the NL.
-
-\subsubsection{Datagram and Payload}
+\subsubsection{Datagram}
 Datagrams is used for handling messages from/to the transport layer.
 The implementation of the datagram and payload is as follows.
 \begin{lstlisting}
 typedef struct  {
   //First 32bit word
-  unsigned char type;         //8-bit
-  unsigned short payloadsize; //16-bit
+  unsigned char type;
+  unsigned short payloadsize;
+
   //Two next 32-bit words
-  networkAddress src;         //source address
-  networkAddress dest;        //destination address
-  payload payload;            //Payload
+  networkAddress src;
+  networkAddress dest;
+
+  TL_Segment segment;
 } datagram;
-#define MAX_PAYLOAD 8
-typedef struct { char data[MAX_PAYLOAD]; } payload;
 \end{lstlisting}
 The networkAddress is defined as a 32-bit address similarly to IPv4.
 
@@ -93,7 +72,6 @@ typedef struct {
   neighbourid    neighbourids[NL_ROUTING_TABLE_SIZE];
 } NL_RoutingTable;
 \end{lstlisting}
-
 
 Similarly \texttt{NL\_OfferElement} is used in the communication between LL and NL.
 \begin{lstlisting}
@@ -180,12 +158,11 @@ a signal is sent to the recieving host that the connection has been terminated.
 \end{itemize}
 
 \subsubsection{TL\_SocketRequest}
-Below is the implementation of $TL\_SocketRequest$ this signal is 
+Below is the implementation of $TL\_SocketRequest$ this signal used for creating a sockets.
+it does this by evaluating the requested socket and it's availability if available returns the socket otherwise an invalid error socket.
 \begin{lstlisting}
 case TL_SocketRequest:
   req = (TLSockReq*) event.msg;
-  //TODO: [PJ] Should first check if the port is available.
-
   if(req->port == SOCKET_ANY) {
     logLine(info, "Request to any port.\n");
     for(int i = 0; i < NUM_MAX_SOCKETS; i++) {
@@ -195,8 +172,7 @@ case TL_SocketRequest:
         break;
       }
     }
-
-   if(req->port == SOCKET_ANY) { //Copy-paste, WEE!
+   if(req->port == SOCKET_ANY) { //Copy-paste
       logLine(info, "Unable to deliver requested socket.\n");
       socket = malloc(sizeof(TLSocket*));
       (*socket) = malloc(sizeof(TLSocket));
@@ -205,9 +181,8 @@ case TL_SocketRequest:
       socket = NULL; //For good measure.
       break;
     }
-
   } else {
-    if(sockets[req->port] != NULL || req->port >= NUM_MAX_SOCKETS) { // [PJ] Port taken/port invalid. Return an invalid port. Everything else than the valid field can be anything.
+    if(sockets[req->port] != NULL || req->port >= NUM_MAX_SOCKETS) {
       logLine(info, "Unable to deliver requested socket.\n");
       socket = malloc(sizeof(TLSocket*));
       (*socket) = malloc(sizeof(TLSocket));
@@ -217,16 +192,13 @@ case TL_SocketRequest:
       break;
     }
   }
-
   logLine(trace, "Allocating socket.\n");
-  sockets[req->port] = malloc(sizeof(TLSocket)); //[PJ] Fixed: This was mallocing the size of a pointer, causing an overwrite of a linked list header in the malloc implementation.
-
+  sockets[req->port] = malloc(sizeof(TLSocket));
   logLine(trace, "Setting socket port and validity.\n");
-  (sockets[req->port])->port = req->port; //Because the information being shared with the application.
+  (sockets[req->port])->port = req->port;
   (sockets[req->port])->valid = 1; //The port is valid.
   (sockets[req->port])->listening = 0; //The port is valid.
   (sockets[req->port])->listenConnection = CONNECTION_PENDING; //The port is valid.
-
   logLine(trace, "Setting conection default values.\n");
   for(int i = 0; i < MAX_CONNECTIONS; i++) {
     logLine(trace, "Setting for %d\n", i);
@@ -332,9 +304,7 @@ int disconnect(TLSocket *socket, unsigned int connectionid) {
   }
   if (socket->connections[connectionid].valid != 1) {
       return -1;
-    }
-
-  //register the connection disabled. //[PJ] This is also done in TL, but when done here, it is certain that thread scheduling isn't a problem.
+  }
   socket->connections[connectionid].valid = 0;
   ALDisconnectReq* disconnectReq = malloc(sizeof(ALDisconnectReq));
   disconnectReq->sock = socket;
@@ -403,19 +373,15 @@ case AL_Send:
   ALMessageSend *MS = (ALMessageSend*) event.msg;
   TLSocket *socketToUse = MS->socketToUse;
   unsigned int connectionToUse = MS->connectionid;
-
   char* msgToSplit = MS->message;
   unsigned int msglen = MS->length;
-
   networkAddress targetAddress = socketToUse->connections[connectionToUse].remoteAddress;
   transPORT targetPort = socketToUse->connections[connectionToUse].remotePort;
   unsigned int seqMsg = socketToUse->connections[connectionToUse].outboundSeqMsg;
 
   int cpa = MAX_PAYLOAD;
-
   int numFragments = msglen / MAX_PAYLOAD;
   if(numFragments*MAX_PAYLOAD < msglen) {numFragments++;};
-
   if(msglen < cpa) {cpa = msglen;}
 
   //First fragment. Set to be the fourth message (3).
@@ -513,11 +479,6 @@ int listen(TLSocket *socket) {
   }
 }
 \end{lstlisting}
-
-
-
-
-
 
 
 
