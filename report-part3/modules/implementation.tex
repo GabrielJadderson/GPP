@@ -108,16 +108,6 @@ void networkLayerRouter() {
 
 
 \subsubsection{Transport Layer}
-
-\texttt{TL\_OfferElement} is used by the TL to figure out where to process the segment
-\begin{lstlisting}
-typedef struct {
-  networkAddress receiver;  //This contains ``fake'' ip address of the reciever
-  payload seg;              //our payload is the msg
-} TL_OfferElement;
-\end{lstlisting}
-\break
-
 Our implementation of the TL with only the most important parts is as follows.
 this implementation focuses on the handling of signals, under the hood we use a fifo-queue and the $TL_OfferElement$.
 Our TL is run in a seperate thread, therefore, we block until we get a signal at then we process the signal.
