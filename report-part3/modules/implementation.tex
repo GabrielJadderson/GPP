@@ -1,4 +1,4 @@
-\section{Implementation}
+½\section{Implementation}
 
 \subsection{Link Layer}
 \subsubsection{Neighbours}
@@ -85,6 +85,31 @@ void networkLayerRouter() {
 \end{lstlisting}
 
 \subsection{Transport Layer}
+
+\begin{lstlisting}
+typedef struct {
+  unsigned int valid:1; //Checked on init.
+  unsigned int pending:1;
+  unsigned int disconnected:1; //This is because you might still want to read messages from the connection after it was disconnected. Also allows for the application to look directly at this.
+  networkAddress remoteAddress; //Address of the other machine
+  transPORT remotePort; //Port of the other application
+  unsigned int outboundSeqMsg; //seqMsg of next message to send.
+  unsigned int inboundSeqMsg;  //seqMsg of next message to receive.
+  TLMessageBufferLL *msgListHead; //Head of the linked list of messages. If this one has fragmentsRemaining == 0, then its msg can be received by the application.
+  TLMessageBufferLL *msgListTail; //Tail of the linked list of messages
+} TLConnection;
+\end{lstlisting}
+
+\begin{lstlisting}
+typedef struct {
+  unsigned int valid:1; //Checked upon init. The TL sets this as an indicator for the AL.
+  unsigned int listening:2; //This is used to keep track of listening status and when to break out of waiting in the listening function.
+  unsigned int listenConnection; //When listening, this value will be set to the id of the connection listened to.
+  transPORT port; //The port of the socket. The application can check this value to see which port is has been given if it chose any port.
+  TLConnection connections[MAX_CONNECTIONS]; //Connections
+} TLSocket;
+\end{lstlisting}
+
 \subsubsection{TL\_SocketRequest}
 Below is the implementation of $TL\_SocketRequest$ this signal used for creating a sockets.
 it does this by evaluating the requested socket and it's availability if available returns the socket otherwise an invalid error socket.
@@ -152,134 +177,20 @@ As function arguments, we require a socket and reciever address along with port.
 We create the $ALConnReq$ header and send it to the TL for processing,
 this also means that the TL is responsible for error handling for this function.
 We use $AL\_Connect$ for sending the signal and an implementation of the signal processing is given down below.
-\begin{lstlisting}
-int connect(TLSocket *socket, networkAddress addr, transPORT port) {
-  if(!socket->valid) { return -1; }
-  ALConnReq* connReq = malloc(sizeof(ALConnReq));
-  connReq->port = port;
-  connReq->sock = socket;
-  connReq->netAddress = addr;
-  connReq->connectionid = CONNECTION_PENDING;
-  Signal(AL_Connect, connReq);
-  //wait for the connection to be established.
-  for(int i = 0; i < 3 && (connReq->connectionid == CONNECTION_PENDING || socket->connections[connReq->connectionid].pending) == 1; i++) { sleep(1); }
-\end{lstlisting}
-
-The following is the connection request header.
-\begin{lstlisting}
-typedef struct {
-  transPORT port; //Port that is receiving.
-  networkAddress netAddress; //the address to the reciever.
-  TLSocket *sock; //Socket to establish a connection with.
-  unsigned int connectionid; //The id of the connection established by TL.
-} ALConnReq;
-\end{lstlisting}
-
-Below is the implementation of the signal $AL\_Connect$.
-First we retrieve the header from AL: ALConnReq, afterwards, we check and make sure that
-there is an available free slot for our connection and update the connection variables.
-We then construct a $TL\_OfferElement$ with the required information and send it to the NL.
-\begin{lstlisting}
-case AL_Connect:
-  ALConnReq *connReq = (ALConnReq*) event.msg;
-  boolean gotAssigned = false;
-  for (int i = 0; i < MAX_CONNECTIONS && gotAssigned == false; i++) {
-    if (connReq->sock->connections[i].valid == 0 && connReq->sock->connections[i].pending == 0 && connReq->sock->connections[i].disconnected == 0) {
-        connReq->sock->connections[i].pending = 1; //assign that this connection is pending for a response.
-        connReq->sock->connections[i].disconnected = 0; //assign that this connection is pending for a response.
-        connReq->sock->connections[i].remoteAddress = connReq->netAddress;
-        //Reset these values.
-        connReq->sock->connections[conid].outboundSeqMsg = 0;
-        connReq->sock->connections[conid].inboundSeqMsg = 0;
-        connReq->sock->connections[conid].msgListHead = NULL;
-        connReq->sock->connections[conid].msgListTail = NULL;
-
-        connReq->connectionid = i; //update the connReq to return in AL
-        gotAssigned = true; //indicate that the connection was assigned sucessfully.
-        conid = i;
-        break;
-    }
-  }
-  if (gotAssigned == false) {
-    connReq->connectionid = CONNECTION_FAILURE;
-    break;
-  }
-  O = (TL_OfferElement*) malloc(sizeof(TL_OfferElement));
-  O->otherHostAddress = connReq->netAddress;
-  O->segment.is_first = 1;
-  O->segment.is_control = 1;
-  O->segment.seqMsg = 0;
-  O->segment.seqPayload = 0;
-  O->segment.senderport = connReq->sock->port;
-  O->segment.receiverport = connReq->port; //This one should correspond to the open connection
-  O->segment.aux = 0;
-  memset(&(O->segment.msg.data), 0, 8);
-  EnqueueFQ( NewFQE( (void *) O ), sendingBuffQueue);
-break;
-\end{lstlisting}
-
 
 \subsubsection{AL\_Disconnect}
 
-Below is the implementation of the $disconnect$ function, recieved parameters are the socket and the connection id that needs to be terminated.
+The $disconnect$ function in AL is implemented the following way, the recieved parameters are the socket and the connection id that needs to be terminated.
 first we make sure that the connection hasn't already terminated and that the socket is still a valid socket.
 We then set the connection to not valid and create a struct $disconnectReq$ which holds our socket and connection id, this is then sent to the TL.
 the TL layer then processes the request.
-\begin{lstlisting}
-int disconnect(TLSocket *socket, unsigned int connectionid) {
-  if (!socket || connectionid < 0) {
-      return -1;
-  }
-  if (socket->connections[connectionid].valid != 1) {
-      return -1;
-  }
-  socket->connections[connectionid].valid = 0;
-  ALDisconnectReq* disconnectReq = malloc(sizeof(ALDisconnectReq));
-  disconnectReq->sock = socket;
-  disconnectReq->connectionid = connectionid;
-  Signal(AL_Disconnect, disconnectReq); //Send to TL
-  return 0;
-}
-\end{lstlisting}
-
-
-Below is the implementation of the signal $AL\_Disconnect$.
-First our ALDisconnectReq is created and derived from the AL via $event.msg$
+In TL our ALDisconnectReq is and derived from the AL via $event.msg$
 To disconnect the connection we send to the connected reciever that the connection is no longer valid, to archieve this
 we utilize again our $TL\_OfferElement$ to send a control segment to the NL, which passes it on.
-\begin{lstlisting}
-case AL_Disconnect:
-  ALDisconnectReq* disconnectReq = (ALDisconnectReq*) event.msg;
-  //If the other end has disconnected, just clean up our own side.
-  if(disconnectReq->sock->connections[disconnectReq->connectionid].disconnected == 0) {
-    O = (TL_OfferElement*) malloc(sizeof(TL_OfferElement));
-    O->otherHostAddress = disconnectReq->sock->connections[disconnectReq->connectionid].remoteAddress;
-    O->segment.is_first = 1;
-    O->segment.is_control = 1;
-    O->segment.seqMsg = 0;
-    O->segment.seqPayload = 0;
-    O->segment.senderport = disconnectReq->sock->port;
-    O->segment.receiverport = disconnectReq->sock->connections[disconnectReq->connectionid].remotePort; //This one should correspond to the open connection
-    O->segment.aux = 1;
-    memset(&(O->segment.msg.data), 0, 8);
-    EnqueueFQ( NewFQE( (void *) O ), sendingBuffQueue);
-  }
-  //The disconnecting side assumes that all the important messages have been read.
-  disconnectReq->sock->connections[disconnectReq->connectionid].valid = 0;
-  disconnectReq->sock->connections[disconnectReq->connectionid].disconnected = 0;
-  disconnectReq->sock->connections[disconnectReq->connectionid].pending = 0;
-  disconnectReq->sock->connections[disconnectReq->connectionid].remoteAddress = 0;
-  disconnectReq->sock->connections[disconnectReq->connectionid].remotePort = 0;
-  disconnectReq->sock->connections[disconnectReq->connectionid].outboundSeqMsg = 0;
-  disconnectReq->sock->connections[disconnectReq->connectionid].inboundSeqMsg = 0;
-  disconnectReq->sock->connections[disconnectReq->connectionid].msgListHead = NULL;
-  disconnectReq->sock->connections[disconnectReq->connectionid].msgListTail = NULL;
-break;
-\end{lstlisting}
 
 \subsubsection{AL\_Send}
-The $send$ function takes the message and encapsulates it into a message header then sends it down the chain to TL.
-Below is the implementation of the $send$ function in AL.
+The $send$ function in AL takes the message and encapsulates it into a message header then sends it down the chain to TL.
+Below is the implementation of the $send$ function.
 \begin{lstlisting}
 int send(TLSocket *socket, unsigned int connectionid, char *data, unsigned int length) {
   ALMessageSend *MS = (ALMessageSend*) malloc(sizeof(ALMessageSend));
@@ -293,68 +204,10 @@ int send(TLSocket *socket, unsigned int connectionid, char *data, unsigned int l
 }
 \end{lstlisting}
 
-Below is the implementation of $AL\_Send$ with the most critical parts.
-Frist we retrieve the signal from AL and then we split the message as fragments,
-each fragment is then send as a segment, down to the NL.
-\begin{lstlisting}
-case AL_Send:
-  ALMessageSend *MS = (ALMessageSend*) event.msg;
-  TLSocket *socketToUse = MS->socketToUse;
-  unsigned int connectionToUse = MS->connectionid;
-  char* msgToSplit = MS->message;
-  unsigned int msglen = MS->length;
-  networkAddress targetAddress = socketToUse->connections[connectionToUse].remoteAddress;
-  transPORT targetPort = socketToUse->connections[connectionToUse].remotePort;
-  unsigned int seqMsg = socketToUse->connections[connectionToUse].outboundSeqMsg;
+$AL\_Send$ event in TL is implemented in the following way, first we retrieve the signal from AL and then we split the message as fragments, this is done because a payload is defined as 8 bytes and thus we have to split the msg 8 bytes at a time. Each fragment is then send as a segment, down to the NL.
 
-  int cpa = MAX_PAYLOAD;
-  int numFragments = msglen / MAX_PAYLOAD;
-  if(numFragments*MAX_PAYLOAD < msglen) {numFragments++;};
-  if(msglen < cpa) {cpa = msglen;}
 
-  //First fragment. Set to be the fourth message (3).
-  O = (TL_OfferElement*) malloc(sizeof(TL_OfferElement));
-  O->otherHostAddress = targetAddress;
-  O->segment.is_first = 1;
-  O->segment.is_control = 0;
-  O->segment.seqMsg = seqMsg;
-  O->segment.seqPayload = numFragments-1;
-  O->segment.senderport = socketToUse->port;
-  O->segment.receiverport = targetPort;
-  O->segment.aux = msglen;
-  memcpy(&(O->segment.msg.data), msgToSplit, cpa);
-  memcpy(&(O->seg.data), msgToSplit, cpa);
 
-  int i = 0;
-  while(true) { //split the rest
-      EnqueueFQ( NewFQE( (void *) O ), sendingBuffQueue);
-      i++; //Important that this comes first.
-      if(i >= numFragments) {
-        break;
-      }
-
-      O = (TL_OfferElement*) malloc(sizeof(TL_OfferElement));
-      O->otherHostAddress = targetAddress;
-      O->segment.is_first = 0;
-      O->segment.is_control = 0;
-      O->segment.seqMsg = seqMsg;
-      O->segment.seqPayload = i;
-      O->segment.senderport = socketToUse->port;
-      O->segment.receiverport = targetPort;
-      O->segment.aux = 0;
-
-      cpa = MAX_PAYLOAD;
-
-      if((i+1)*MAX_PAYLOAD > msglen) { //check if last fragment
-        O->segment.aux = msglen % MAX_PAYLOAD;
-        cpa = msglen % MAX_PAYLOAD;
-      }
-      memcpy(&(O->segment.msg.data), msgToSplit+(i*MAX_PAYLOAD), MAX_PAYLOAD);
-      memcpy(&(O->seg.data), msgToSplit+(i*MAX_PAYLOAD), MAX_PAYLOAD);
-    }
-    socketToUse->connections[connectionToUse].outboundSeqMsg += 1;
-break;
-\end{lstlisting}
 
 \subsubsection{AL\_Receive}
 Below is the implementation of $AL\_Receive$ with the most critical parts.
@@ -389,6 +242,7 @@ case AL_Receive:
   MR->aux = 0;
 break;
 \end{lstlisting}
+
 
 \subsubsection{AL\_Listen}
 Below is the implementation of $listen$ in AL.
