@@ -85,6 +85,39 @@ void networkLayerRouter() {
 \end{lstlisting}
 
 \subsection{Transport Layer}
+\subsubsection{types}
+The central types of the transport layer are the segments, sockets and connections.\\
+\\~
+There are two types of segments, message segments and control segments, differentiated by the is\_control flag. The control segments are used to manage establishment and disconnection of connections. The aux field is used to determine the control segment type.\\
+The message segments contain message fragments. The first message fragment contains the number of additional fragments in the seqPayload field and the total message byte size in the aux field. The final fragment contains the number of bytes it carries in the aux field.
+
+\begin{lstlisting}
+typedef struct {
+  unsigned int is_first:1; //True iff the segment is the first of the message.
+  unsigned int is_control:1; //true if the segment is a control segment.
+  unsigned int seqMsg; //Sequencing number for the messages. No assumptions are made regarding the lower layers and would thereby support random segment arrival order together with seqPayload. (Superficially tested in a closed environment)
+  unsigned int seqPayload; //Special case: if is_first is 1, then this value indicates the number of segments the messages is split into, excluding this one.
+  unsigned int aux; //is_first: number of bytes of the total message. Used to allocate buffer size. Security? Nope.  For the last message: this is the number of bytes it carries with it.  Otherwise: reserved.
+  transPORT senderport; //Port of the application sending the segment.
+  transPORT receiverport; //Port of the application receiving the segment.
+
+  payload msg; //Actual bytes carried by the segment.
+} TL_Segment;
+\end{lstlisting}
+
+Applications in AL obtain sockets from TL. These sockets have a validity flag the applications can check to determine the validity of the requested socket, being 0 if the socket is invalid and cannot be used. The listenConnection value is used when waiting for another host to establish a connection. The port variable is a unique identifier that the client can read if it requested any socket to determine its own port. In addition to these control values, a fixed number of connections is available in each socket.\\
+A deprecated value has been ommitted. It is still accessed in the code, but not with semantic significance.
+\begin{lstlisting}
+typedef struct {
+  unsigned int valid:1; //Checked upon init. The TL sets this as an indicator for the AL.
+  unsigned int listening:2; //This is used to keep track of listening status and when to break out of waiting in the listening function.
+  unsigned int listenConnection; //When listening, this value will be set to the id of the connection listened to.
+  transPORT port; //The port of the socket. The application can check this value to see which port is has been given if it chose any port.
+  TLConnection connections[MAX_CONNECTIONS]; //Connections
+} TLSocket;
+\end{lstlisting}
+
+The connections have three flags. The valid flag for validity of the connection and the pending and disconnected flags for connection state. Furthermore, is has address information for the remote host and sequence numbers, one for incrementally enumerating outbound messages and one to determine the sequence number of the next message the application can receive.
 
 \begin{lstlisting}
 typedef struct {
@@ -100,167 +133,38 @@ typedef struct {
 } TLConnection;
 \end{lstlisting}
 
+\subsubsection{Message Splitting and Merging}
+The message splitting and merging is relatively simple. It consists of linear searching through the connection list to find the destination connection and memory copies such as in the following snippet from the splitter, where a part of the message is being copied into the payload part of each segment in a series of segments.
 \begin{lstlisting}
-typedef struct {
-  unsigned int valid:1; //Checked upon init. The TL sets this as an indicator for the AL.
-  unsigned int listening:2; //This is used to keep track of listening status and when to break out of waiting in the listening function.
-  unsigned int listenConnection; //When listening, this value will be set to the id of the connection listened to.
-  transPORT port; //The port of the socket. The application can check this value to see which port is has been given if it chose any port.
-  TLConnection connections[MAX_CONNECTIONS]; //Connections
-} TLSocket;
+memcpy(&(O->segment.msg.data), msgToSplit+(i*MAX_PAYLOAD), MAX_PAYLOAD);
 \end{lstlisting}
 
-\subsubsection{TL\_SocketRequest}
-Below is the implementation of $TL\_SocketRequest$ this signal used for creating a sockets.
-it does this by evaluating the requested socket and it's availability if available returns the socket otherwise an invalid error socket.
+On the receiving end, this behavior is mirrored. The copying amount is initially assumed to be the maximum size of a payload, but if it turns out that the fragment is the last one, then the aux field of the segment is used as the copying amount, after which the payload is copied into the message. The sequence number is used to offet into the message in terms of blocks of the maximum payload size.
 \begin{lstlisting}
-case TL_SocketRequest:
-  req = (TLSockReq*) event.msg;
-  if(req->port == SOCKET_ANY) {
-    logLine(info, "Request to any port.\n");
-    for(int i = 0; i < NUM_MAX_SOCKETS; i++) {
-      if(sockets[i] == NULL) {
-        req->port = i;
-        logLine(info, "Decided on port number %d\n", req->port);
-        break;
-      }
-    }
-   if(req->port == SOCKET_ANY) { //Copy-paste
-      logLine(info, "Unable to deliver requested socket.\n");
-      socket = malloc(sizeof(TLSocket*));
-      (*socket) = malloc(sizeof(TLSocket));
-      (*socket)->valid = 0;
-      req->sock = (*socket);
-      socket = NULL; //For good measure.
-      break;
-    }
-  } else {
-    if(sockets[req->port] != NULL || req->port >= NUM_MAX_SOCKETS) {
-      logLine(info, "Unable to deliver requested socket.\n");
-      socket = malloc(sizeof(TLSocket*));
-      (*socket) = malloc(sizeof(TLSocket));
-      (*socket)->valid = 0;
-      req->sock = (*socket);
-      socket = NULL; //For good measure.
-      break;
-    }
-  }
-  logLine(trace, "Allocating socket.\n");
-  sockets[req->port] = malloc(sizeof(TLSocket));
-  logLine(trace, "Setting socket port and validity.\n");
-  (sockets[req->port])->port = req->port;
-  (sockets[req->port])->valid = 1; //The port is valid.
-  (sockets[req->port])->listening = 0; //The port is valid.
-  (sockets[req->port])->listenConnection = CONNECTION_PENDING; //The port is valid.
-  logLine(trace, "Setting conection default values.\n");
-  for(int i = 0; i < MAX_CONNECTIONS; i++) {
-    logLine(trace, "Setting for %d\n", i);
-    sockets[req->port]->connections[i].valid = 0;
-    sockets[req->port]->connections[i].pending = 0;
-    sockets[req->port]->connections[i].disconnected = 0;
-    sockets[req->port]->connections[i].remoteAddress = 0;
-    sockets[req->port]->connections[i].remotePort = 0;
-    sockets[req->port]->connections[i].outboundSeqMsg = 0;
-    sockets[req->port]->connections[i].inboundSeqMsg = 0;
-    sockets[req->port]->connections[i].msgListHead = NULL;
-    sockets[req->port]->connections[i].msgListTail = NULL;
-    logLine(trace, "Done setting for %d\n", i);
-  }
-  logLine(trace, "Setting request socket pointer to resulting socket.");
-  req->sock = sockets[req->port];
-break;
-\end{lstlisting}
-
-\subsubsection{AL\_Connect}
-The following is the implementation of $connect$ in AL.
-As function arguments, we require a socket and reciever address along with port.
-We create the $ALConnReq$ header and send it to the TL for processing,
-this also means that the TL is responsible for error handling for this function.
-We use $AL\_Connect$ for sending the signal and an implementation of the signal processing is given down below.
-
-\subsubsection{AL\_Disconnect}
-
-The $disconnect$ function in AL is implemented the following way, the recieved parameters are the socket and the connection id that needs to be terminated.
-first we make sure that the connection hasn't already terminated and that the socket is still a valid socket.
-We then set the connection to not valid and create a struct $disconnectReq$ which holds our socket and connection id, this is then sent to the TL.
-the TL layer then processes the request.
-In TL our ALDisconnectReq is and derived from the AL via $event.msg$
-To disconnect the connection we send to the connected reciever that the connection is no longer valid, to archieve this
-we utilize again our $TL\_OfferElement$ to send a control segment to the NL, which passes it on.
-
-\subsubsection{AL\_Send}
-The $send$ function in AL takes the message and encapsulates it into a message header then sends it down the chain to TL.
-Below is the implementation of the $send$ function.
-\begin{lstlisting}
-int send(TLSocket *socket, unsigned int connectionid, char *data, unsigned int length) {
-  ALMessageSend *MS = (ALMessageSend*) malloc(sizeof(ALMessageSend));
-  MS->socketToUse = socket;
-  MS->connectionid = connectionid;
-  MS->message = data;
-  MS->length = length;
-
-  Signal(AL_Send, MS);
-  return 0;
+if((o.segment.seqPayload+1)*MAX_PAYLOAD >= i->msgLen) {
+  copyamount = o.segment.aux;
 }
+
+memcpy((i->msg)+(o.segment.seqPayload*MAX_PAYLOAD), &(o.segment.msg), copyamount);
 \end{lstlisting}
 
-$AL\_Send$ event in TL is implemented in the following way, first we retrieve the signal from AL and then we split the message as fragments, this is done because a payload is defined as 8 bytes and thus we have to split the msg 8 bytes at a time. Each fragment is then send as a segment, down to the NL.
-
-
-
-
-\subsubsection{AL\_Receive}
-Below is the implementation of $AL\_Receive$ with the most critical parts.
-First the signal is retrieved from the AL and then checked for validity and that we've received the whole message.
-Afterwards, we send it to the AL.
+\subsubsection{Connections}
+When sending the control segments, certain fields are set. This snippet is of the variable assignment when attempting to establish a connection to an application on a remote host.
 \begin{lstlisting}
-case AL_Receive:
-  ALMessageSend *MR = (ALMessageSend*) event.msg;
-
-  TLSocket *socket = MR->socketToUse;
-
-  logLine(debug, "%d %p \n", socket->connections[MR->connectionid].valid, socket->connections[MR->connectionid].msgListHead);
-  if(socket->connections[MR->connectionid].msgListHead != NULL){
-    logLine(debug, "sequence ids: %d, %d, %d\n", socket->connections[MR->connectionid].inboundSeqMsg, (socket->connections[MR->connectionid].msgListHead)->seqMsg, (socket->connections[MR->connectionid].msgListHead)->fragmentsRemaining);
-  }
-
-  if(socket->valid //Socket is valid
-    && socket->connections[MR->connectionid].valid //Connection is valid
-    && socket->connections[MR->connectionid].msgListHead != NULL //There is a message
-    && socket->connections[MR->connectionid].inboundSeqMsg == (socket->connections[MR->connectionid].msgListHead)->seqMsg //The message is the one we want
-    && (socket->connections[MR->connectionid].msgListHead)->fragmentsRemaining == 0 //The whole message has arrived.
-    ) {
-    TLMessageBufferLL *tmp = socket->connections[MR->connectionid].msgListHead;
-    MR->length = tmp->msgLen;
-    MR->message = tmp->msg; //update the message pointer to AL.
-
-    socket->connections[MR->connectionid].msgListHead = tmp->next;
-    free(tmp);
-    socket->connections[MR->connectionid].inboundSeqMsg++;
-  }
-
-  MR->aux = 0;
-break;
+O->otherHostAddress = connReq->netAddress;
+O->segment.is_first = 1;
+O->segment.is_control = 1;
+O->segment.seqMsg = 0;
+O->segment.seqPayload = 0;
+O->segment.senderport = connReq->sock->port;
+O->segment.receiverport = connReq->port; //This one should correspond to the open connection
+O->segment.aux = 0;
+memset(&(O->segment.msg.data), 0, 8);
 \end{lstlisting}
 
+The receiving end then reads the aux field to determine the control segment type, does sanity checks and responds to the control message if necessary.
 
-\subsubsection{AL\_Listen}
-Below is the implementation of $listen$ in AL.
-Which blocks and listens for incomming packets on the socket.
-\begin{lstlisting}
-int listen(TLSocket *socket) {
-  if (socket->valid == 1) {
-      socket->listening |= 1;
-      while(socket->listenConnection == CONNECTION_PENDING) {
-        sleep(1);
-      }
-      socket->listening = 0;
-      return socket->listenConnection;
-  } else {
-      return -1;
-  }
-}
-\end{lstlisting}
+
 
 
 
