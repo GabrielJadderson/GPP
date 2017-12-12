@@ -34,7 +34,7 @@ Deprecated signals:
 
 \subsection{Link Layer}
 The given implementation of rdt was designed for communication between only two hosts. Expanding this to communication with a fixed number of neighbours, the information associated with a neighbour was decided to be encapsulated in a struct, an array of which representing the state information in the communication with each neighbour.\\
-Distinguishing the neighbours from each other was done by using unique IDs, which could be passed to functions and the like. Each neighbour have a station ID associated with it, allowing to send to a station using the neighbour ID, and determining the neighbour from the station ID when receiving.
+Distinguishing the neighbours from each other was done by using unique IDs, which could be passed to functions and the like. Each neighbour has a station ID associated with it, allowing to send to a station using the neighbour ID, and determining the neighbour from the station ID when receiving.
 
 \subsubsection{Stations and Neighbours}
 Neighbours are determined by indices in a neighbour array, called the neighbour IDs, and as such are transparently identified regardless of which actual station that neighbour represents. The ID of a station is stored in a neighbour, but is only meant to be utilized for sending to and receiving from the physical layer, and should be encapsulated as closely to these events as possible. When receiving, a neighbour ID for the given station should be returned.\\
@@ -91,7 +91,7 @@ The segment type has the following fields:
 \item receiverPort: The port the segment is addressed for on the receiver side.
 \end{itemize}
 
-The aux field is used differently for application messages and control messages. For application messages, if the is\_first flag is set, then it contains the length of the total message, so that the appropriate number of bytes can be allocated, and if it is the last message, which is arithmetically determined, then it contains the number of bytes that last segment carries. Otherwise undefined.\\
+The aux field is used differently for application messages and control messages. For application messages, if the is\_first flag is set, then it contains the length of the total message, so that the appropriate number of bytes can be allocated, and if it is the last message, which is arithmetically determined, then it contains the number of bytes that the last segment carries. Otherwise undefined.\\
 For control segments, 0 means a connection request. If the is\_first flag is set, then the connection is being initiated, and if it is 0 is it a positive acknowledgement to such a request. If a positive acknowledgement is not sent for any reason, then a control segment with aux field set to 2 should be sent instead, a negative acknowledgement for the connection, meaning connection refused. An aux field of 1 means that the sender has disconnected and no messages sent to it will be accepted.
 
 \subsubsection{Splitting and merging}
@@ -107,13 +107,4 @@ Another option is to connect to an open socket on another host. This will block 
 \\~
 When a connection has been established, the applications on both ends can send to each other and receive from each other. This sending and receiving can be done both ways simultaneously. No coordination of AL traffic is needed for any other purpose than application semantics.\\
 \\~
-The actual handling of these components are performed in TL, which takes care of sending the correct control messages, handling the connection state with the processes on the other hosts and proper message transfer.
-
-
-
-
-
-
-
-
-
+The actual handling of these components is performed in TL, which takes care of sending the correct control messages, handling the connection state with the processes on the other hosts and proper message transfer.

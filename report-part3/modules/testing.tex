@@ -3,7 +3,7 @@
 
 \subsubsection{Linked Layer}
 The scenario used for testing is the described in the design section.
-We have 3 stations A, B, and C. A and B are connected and B and C are connected, thus A and C are connected through B. Our testing focuses on sending packets between all the stations, we do not send any message back to the sender acknowledging that the packet has been recieved, but the reciever will print out to stdout that the message has been received from the two other stations.\\
+We have 3 stations A, B, and C. A and B are connected and B and C are connected, thus A and C are connected through B. Our testing focuses on sending packets between all the stations, we do not send any message back to the sender acknowledging that the packet has been received, but the receiver will print out to stdout that the message has been received from the two other stations.\\
 
 Each station sends a message that looks like this:
 \begin{align*}
@@ -15,12 +15,12 @@ R &= neighbours[receiver].stationID
 Where Packet is the packet that is sent to the receiver, S is the station ID of the sending station and R is the station ID of the receiving station.\\
 For example, for station 1 sending to station 3: $1\ to\ 3$\\
 \\~
-%Screenshot of testing this for three stations, where all stations sends one message to each of the other two:
+%Screenshot of testing this for three stations, where all stations send one message to each of the other two:
 The test was made with the three stations and an error frequency of 90\% (command: ./network -pmynetwork -e900 -n3). This test was run multiple times to reduce the possibility of lucky streaks.
 
 Below is the test of three stations, each sending a message to the other two.
 
-As seen in appendix \ref{apx:ll}, the three stations each received two messages, one from each of the other two stations.
+As seen in appendix \ref{apx:ll}, the three stations each received two messages, one from each of the other two stations, concluding a successful test.
 
 
 
@@ -37,8 +37,14 @@ The actual tests have been made with all four sets of routing tables and with 10
 The testing was done with the command './network -pmynetwork -e250 -n4 -a 5 \#', where \# is the set of routing tables to run with. The testing was done for all valid routing tables with 100 messages.\\
 \\
 
-
+The full logs can be found at appendix section \ref{apx:nl} and they show that the packets could be forwarded with any of the four routing tables successfully.
 
 \subsubsection{Transport Layer}
+The testing scenario for the transport layer is as follows:\\
+The transport layer has been tested by running a server and a client process on both hosts A and host B. The server waits 5 seconds before requesting its socket, and as such cannot be connected to within this timespan. This is used to test client behaviour, as the clients try to connect to the server immediately, which fails. The clients have a 3 three second timeout before they assume that the connection cannot be established, whereafter it stops trying with an error-code. The clients then try again, succeeding in their attempts because the servers start listening before the timeout of the second connection attempt.\\
+The clients then send each 10 messages to the server, each being of a length requiring the messages being split up into three fragments. The client on station 1 sends a disconnection segment afterwards, which has an impact on the server receiving messages.\\
+The servers listen on their sockets, continuing their operation when a connection gets established, and receive the messages sent by the clients, logging them.\\
+\\~
+The test was successfully executed multiple times. The messages got split into fragments, sent through the network and merged back together, then received by the server processes, with one of the communications being adequately interrupted by the disconnection notice.
 
-The testing is implemented
+The full log can be found at appendix section \ref{apx:tl}.
