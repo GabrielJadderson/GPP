@@ -1,4 +1,4 @@
-½/*
+/*
 * transportLayer.h
 *
 *  Created on: Nov 01, 2017

@@ -61,7 +61,7 @@ GO received! - error freq 0.900
 <<Received stop-signal>>
 <<Sending stop-signal>>
 >> Press enter to terminate!
----------------------------------------------
+-------------------------------------------------------------------
 Station 3:
 
 Starting network simulation
@@ -74,19 +74,18 @@ GO received! - error freq 0.900
 <<Received stop-signal>>
 <<Sending stop-signal>>
 >> Press enter to terminate!
----------------------------------------------
+>> Press enter to terminate!
+-------------------------------------------------------------------
 \end{lstlisting}
 
-
-As seen in figure \ref{fig:threestationtest}, the three stations each received two messages, one from each of the other two stations.
+As seen in appendix \ref{apx:ll}, the three stations each received two messages, one from each of the other two stations.
 
 
 
 \subsubsection{Network Layer}
 
-
-
-All testing described in this section is done in the topology described in the project description, which is also included in the introduction as figure \ref{fig:GivenTopology}.\\
+All testing described in this section is done in the topology described in the project description, which is also included in the introduction as figure \ref{fig:GivenTopology}.
+\\
 \\
 The hosts A and B send each other a number of messages in the format "HEH:\#\#\#\textbackslash0". The routers these messages are sent to can be determined by choosing the routing table with argument 2.\\
 The numbering starts at 1 and goes up incrementally, so it can be verified that they all arrive in the correct order and without duplicates.\\
