@@ -1,1 +1,777 @@
 \section{appendix}
+
+
+\subsection{Link Layer Test logs}
+\label{apx:ll}
+\begin{lstlisting}[breaklines=true]
+Main:
+
+>> Station 1, (pid: 8401) - Active
+>> Station 2, (pid: 8393) - Active
+>> Station 3, (pid: 8409) - Active
+>> Press enter when read!
+
+>> Sending GO! to station 1
+>> Sending GO! to station 2
+>> Sending GO! to station 3
+>> Stop signal received.
+>> Collecting rest of SyncLog data.
+>> Stop signal received.
+>> Stop signal received.
+>> Done!
+---------------------------------------------
+Station 1:
+
+Starting network simulation
+[Station 1 ready]
+GO received! - error freq 0.900
+
+1. SUCCESS:  FakeNetworkLayer_Test SUCESS: Received message 3 to 1
+1. SUCCESS:  FakeNEtworkLayer_Test SUCESS: Received message 2 to 1
+
+<<Received stop-signal>>
+<<Sending stop-signal>>
+>> Press enter to terminate!
+---------------------------------------------
+Station 2:
+
+Starting network simulation
+[Station 2 ready]
+GO received! - error freq 0.900
+
+1. SUCCESS:  FakeNetworkLayer_Test SUCESS: Received message 3 to 2
+1. SUCCESS:  FakeNEtworkLayer_Test SUCESS: Received message 1 to 2
+
+<<Received stop-signal>>
+<<Sending stop-signal>>
+>> Press enter to terminate!
+-------------------------------------------------------------------
+Station 3:
+
+Starting network simulation
+[Station 3 ready]
+GO received! - error freq 0.900
+
+1. SUCCESS:  FakeNetworkLayer_Test SUCESS: Received message 2 to 3
+1. SUCCESS:  FakeNEtworkLayer_Test SUCESS: Received message 1 to 3
+
+<<Received stop-signal>>
+<<Sending stop-signal>>
+>> Press enter to terminate!
+>> Press enter to terminate!
+-------------------------------------------------------------------
+\end{lstlisting}
+
+
+\subsection{Network Layer Test Log}
+\label{apx:nl}
+\subsubsection{Logs for Routing Table Set 0}
+Log for station 1: (Host A)
+\begin{lstlisting}[breaklines=true]
+Station 1: arg2 = 5
+Starting network simulation
+Station 1: arg3 = 0
+[Station 1 ready]
+GO received! - error freq 0.250
+Starting process (selective_repeat)
+Starting process (networkLayerHost)
+Starting process (fake_transportLayer)
+1 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 212: 'HEH:  1'
+1 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 212: 'HEH:  2'
+1 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 212: 'HEH:  3'
+1 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 212: 'HEH:  4'
+1 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 212: 'HEH:  5'
+1 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 212: 'HEH:  6'
+1 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 212: 'HEH:  7'
+1 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 212: 'HEH:  8'
+1 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 212: 'HEH:  9'
+1 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 212: 'HEH: 10'
+<<stop-signal received.>>
+<<Sending stop-signal>>
+>> Press enter to terminate!
+\end{lstlisting}
+
+Log for station 2: (Host B)
+\begin{lstlisting}[breaklines=true]
+Station 2: arg2 = 5
+Starting network simulation
+Station 2: arg3 = 0
+[Station 2 ready]
+GO received! - error freq 0.250
+Starting process (networkLayerHost)
+Starting process (fake_transportLayer)
+Starting process (selective_repeat)
+2 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 111: 'HEH:  1'
+2 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 111: 'HEH:  2'
+2 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 111: 'HEH:  3'
+2 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 111: 'HEH:  4'
+2 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 111: 'HEH:  5'
+2 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 111: 'HEH:  6'
+2 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 111: 'HEH:  7'
+2 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 111: 'HEH:  8'
+2 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 111: 'HEH:  9'
+2 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 111: 'HEH: 10'
+<<Sending stop-signal>>
+<<stop-signal received.>>
+>> Press enter to terminate!
+\end{lstlisting}
+
+Log for station 3: (Router 1)
+\begin{lstlisting}[breaklines=true]
+Station 3: arg2 = 5
+Starting network simulation
+Station 3: arg3 = 0
+[Station 3 ready]
+GO received! - error freq 0.250
+Starting process (networkLayerRouter)
+Starting process (selective_repeat)
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+<<stop-signal received.>>
+>> Press enter to terminate!
+\end{lstlisting}
+
+Log for station 4: (Router 2)
+\begin{lstlisting}[breaklines=true]
+Station 4: arg2 = 5
+Starting network simulation
+Station 4: arg3 = 0
+[Station 4 ready]
+GO received! - error freq 0.250
+Starting process (networkLayerRouter)
+Starting process (selective_repeat)
+<<stop-signal received.>>
+>> Press enter to terminate!
+\end{lstlisting}
+
+\subsubsection{Logs for Routing Table Set 1}
+Log for station 1: (Host A)
+\begin{lstlisting}[breaklines=true]
+Station 1: arg2 = 5
+Starting network simulation
+Station 1: arg3 = 1
+[Station 1 ready]
+GO received! - error freq 0.250
+Starting process (fake_transportLayer)
+Starting process (selective_repeat)
+Starting process (networkLayerHost)
+1 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 212: 'HEH:  1'
+1 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 212: 'HEH:  2'
+1 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 212: 'HEH:  3'
+1 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 212: 'HEH:  4'
+1 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 212: 'HEH:  5'
+1 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 212: 'HEH:  6'
+1 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 212: 'HEH:  7'
+1 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 212: 'HEH:  8'
+1 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 212: 'HEH:  9'
+1 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 212: 'HEH: 10'
+<<Sending stop-signal>>
+<<stop-signal received.>>
+>> Press enter to terminate!
+\end{lstlisting}
+
+Log for station 2: (Host B)
+\begin{lstlisting}[breaklines=true]
+Station 2: arg2 = 5
+Starting network simulation
+Station 2: arg3 = 1
+[Station 2 ready]
+GO received! - error freq 0.250
+Starting process (selective_repeat)
+Starting process (networkLayerHost)
+Starting process (fake_transportLayer)
+2 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 111: 'HEH:  1'
+2 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 111: 'HEH:  2'
+2 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 111: 'HEH:  3'
+2 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 111: 'HEH:  4'
+2 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 111: 'HEH:  5'
+2 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 111: 'HEH:  6'
+2 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 111: 'HEH:  7'
+2 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 111: 'HEH:  8'
+2 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 111: 'HEH:  9'
+2 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 111: 'HEH: 10'
+<<stop-signal received.>>
+<<Sending stop-signal>>
+>> Press enter to terminate
+\end{lstlisting}
+
+Log for station 3: (Router 1)
+\begin{lstlisting}[breaklines=true]
+Station 3: arg2 = 5
+Starting network simulation
+Station 3: arg3 = 1
+[Station 3 ready]
+GO received! - error freq 0.250
+Starting process (selective_repeat)
+Starting process (networkLayerRouter)
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+<<stop-signal received.>>
+>> Press enter to terminate!
+\end{lstlisting}
+
+Log for station 4: (Router 2)
+\begin{lstlisting}[breaklines=true]
+Station 4: arg2 = 5
+Starting network simulation
+Station 4: arg3 = 1
+[Station 4 ready]
+GO received! - error freq 0.250
+Starting process (networkLayerRouter)
+Starting process (selective_repeat)
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+<<stop-signal received.>>
+>> Press enter to terminate!
+\end{lstlisting}
+
+\subsubsection{Logs for Routing Table Set 2}
+Log for station 1: (Host A)
+\begin{lstlisting}[breaklines=true]
+Station 1: arg2 = 5
+Starting network simulation
+Station 1: arg3 = 2
+[Station 1 ready]
+GO received! - error freq 0.250
+Starting process (selective_repeat)
+Starting process (networkLayerHost)
+Starting process (fake_transportLayer)
+1 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 212: 'HEH:  1'
+1 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 212: 'HEH:  2'
+1 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 212: 'HEH:  3'
+1 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 212: 'HEH:  4'
+1 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 212: 'HEH:  5'
+1 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 212: 'HEH:  6'
+1 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 212: 'HEH:  7'
+1 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 212: 'HEH:  8'
+1 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 212: 'HEH:  9'
+1 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 212: 'HEH: 10'
+<<Sending stop-signal>>
+<<stop-signal received.>>
+>> Press enter to terminate!
+\end{lstlisting}
+
+Log for station 2: (Host B)
+\begin{lstlisting}[breaklines=true]
+Station 2: arg2 = 5
+Starting network simulation
+Station 2: arg3 = 2
+[Station 2 ready]
+GO received! - error freq 0.250
+Starting process (selective_repeat)
+Starting process (fake_transportLayer)
+Starting process (networkLayerHost)
+2 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 111: 'HEH:  1'
+2 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 111: 'HEH:  2'
+2 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 111: 'HEH:  3'
+2 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 111: 'HEH:  4'
+2 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 111: 'HEH:  5'
+2 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 111: 'HEH:  6'
+2 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 111: 'HEH:  7'
+2 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 111: 'HEH:  8'
+2 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 111: 'HEH:  9'
+2 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 111: 'HEH: 10'
+<<stop-signal received.>>
+<<Sending stop-signal>>
+>> Press enter to terminate!
+\end{lstlisting}
+
+Log for station 3: (Router 1)
+\begin{lstlisting}[breaklines=true]
+Station 3: arg2 = 5
+Starting network simulation
+Station 3: arg3 = 2
+[Station 3 ready]
+GO received! - error freq 0.250
+Starting process (networkLayerRouter)
+Starting process (selective_repeat)
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+<<stop-signal received.>>
+>> Press enter to terminate!
+\end{lstlisting}
+
+Log for station 4: (Router 2)
+\begin{lstlisting}[breaklines=true]
+Station 4: arg2 = 5
+Starting network simulation
+Station 4: arg3 = 2
+[Station 4 ready]
+GO received! - error freq 0.250
+Starting process (selective_repeat)
+Starting process (networkLayerRouter)
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+<<stop-signal received.>>
+>> Press enter to terminate!
+\end{lstlisting}
+
+\subsubsection{Logs for Routing Table Set 3}
+Log for station 1: (Host A)
+\begin{lstlisting}[breaklines=true]
+Station 1: arg2 = 5
+Starting network simulation
+Station 1: arg3 = 3
+[Station 1 ready]
+GO received! - error freq 0.250
+Starting process (networkLayerHost)
+Starting process (selective_repeat)
+Starting process (fake_transportLayer)
+1 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 212: 'HEH:  1'
+1 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 212: 'HEH:  2'
+1 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 212: 'HEH:  3'
+1 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 212: 'HEH:  4'
+1 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 212: 'HEH:  5'
+1 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 212: 'HEH:  6'
+1 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 212: 'HEH:  7'
+1 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 212: 'HEH:  8'
+1 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 212: 'HEH:  9'
+1 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 212: 'HEH: 10'
+<<Sending stop-signal>>
+<<stop-signal received.>>
+>> Press enter to terminate!
+\end{lstlisting}
+
+Log for station 2: (Host B)
+\begin{lstlisting}[breaklines=true]
+Station 2: arg2 = 5
+Starting network simulation
+Station 2: arg3 = 3
+[Station 2 ready]
+GO received! - error freq 0.250
+Starting process (selective_repeat)
+Starting process (networkLayerHost)
+Starting process (fake_transportLayer)
+2 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 111: 'HEH:  1'
+2 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 111: 'HEH:  2'
+2 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 111: 'HEH:  3'
+2 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 111: 'HEH:  4'
+2 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 111: 'HEH:  5'
+2 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 111: 'HEH:  6'
+2 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 111: 'HEH:  7'
+2 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 111: 'HEH:  8'
+2 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 111: 'HEH:  9'
+2 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 111: 'HEH: 10'
+<<stop-signal received.>>
+<<Sending stop-signal>>
+>> Press enter to terminate!
+\end{lstlisting}
+
+Log for station 3: (Router 1)
+\begin{lstlisting}[breaklines=true]
+Station 3: arg2 = 5
+Starting network simulation
+Station 3: arg3 = 3
+[Station 3 ready]
+GO received! - error freq 0.250
+Starting process (networkLayerRouter)
+Starting process (selective_repeat)
+<<stop-signal received.>>
+>> Press enter to terminate!
+\end{lstlisting}
+
+Log for station 4: (Router 2)
+\begin{lstlisting}[breaklines=true]
+Station 4: arg2 = 5
+Starting network simulation
+Station 4: arg3 = 3
+[Station 4 ready]
+GO received! - error freq 0.250
+Starting process (selective_repeat)
+Starting process (networkLayerRouter)
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+4 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+<<stop-signal received.>>
+>> Press enter to terminate!
+\end{lstlisting}
+
+\subsection{Transport Layer Test Log}
+\label{apx:tl}
+
+\begin{lstlisting}[breaklines=true]
+>> Argumentlist for all networkstations: "5"
+>> Wait......Station 2: arg2 = 5
+Starting network simulation
+Station 1: arg2 = 5
+Starting network simulation
+Station 4: arg2 = 5
+Starting network simulation
+Station 3: arg2 = 5
+Starting network simulation
+[Station 2 ready][Station 3 ready].[Station 4 ready]..[Station 1 ready]..
+>> Station 1, (pid: 2247) - Active
+>> Station 2, (pid: 2248) - Active
+>> Station 3, (pid: 2249) - Active
+>> Station 4, (pid: 2250) - Active
+>> Sending GO! to station 1
+>> Sending GO! to station 2
+>> Sending GO! to station 3
+>> Sending GO! to station 4
+1 SUCCES:  textChatStatic1 SUCCES:  WEE.
+2 SUCCES:  textChatStatic2 SUCCES:  WEE.
+2 SUCCES:  textChatStatic1 SUCCES:  WEE.
+2 SUCCES:  textChatStatic1 SUCCES:  Received socket properties:
+2 SUCCES:  textChatStatic1 SUCCES:  Validity: 1
+2 SUCCES:  textChatStatic1 SUCCES:  port: 1
+1 SUCCES:  textChatStatic2 SUCCES:  WEE.
+2 SUCCES:  textChatStatic1 SUCCES:  Application is waiting for connection to be established.
+2 SUCCES:  transportLayer SUCCES:  ESTABLISHING CONNECTION AT CONNECTION 0 ON PORT 1
+1 SUCCES:  textChatStatic1 SUCCES:  Received socket properties:
+1 SUCCES:  textChatStatic1 SUCCES:  Validity: 1
+1 SUCCES:  textChatStatic1 SUCCES:  port: 1
+1 SUCCES:  textChatStatic1 SUCCES:  Application is waiting for connection to be established.
+1 SUCCES:  transportLayer SUCCES:  ESTABLISHING CONNECTION AT CONNECTION 0 ON PORT 1
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+2 SUCCES:  textChatStatic1 SUCCES:  Application is waiting for connection to be established.
+1 SUCCES:  textChatStatic1 SUCCES:  Application is waiting for connection to be established.
+2 SUCCES:  textChatStatic1 SUCCES:  Application is waiting for connection to be established.
+1 SUCCES:  textChatStatic1 SUCCES:  Application is waiting for connection to be established.
+2 SUCCES:  textChatStatic1 SUCCES:  res: 0
+2 SUCCES:  textChatStatic1 SUCCES:  Application is waiting for connection to be established.
+2 SUCCES:  transportLayer SUCCES:  ESTABLISHING CONNECTION AT CONNECTION 0 ON PORT 1
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+1 SUCCES:  textChatStatic1 SUCCES:  res: 0
+1 SUCCES:  textChatStatic1 SUCCES:  Application is waiting for connection to be established.
+1 SUCCES:  transportLayer SUCCES:  ESTABLISHING CONNECTION AT CONNECTION 0 ON PORT 1
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+2 SUCCES:  textChatStatic1 SUCCES:  Application is waiting for connection to be established.
+1 SUCCES:  textChatStatic1 SUCCES:  Application is waiting for connection to be established.
+2 SUCCES:  textChatStatic2 SUCCES:  Received socket properties:
+2 SUCCES:  textChatStatic2 SUCCES:  Validity: 1
+2 SUCCES:  textChatStatic2 SUCCES:  port: 0
+2 SUCCES:  textChatStatic2 SUCCES:  Application is listening. listening: 1, connection: 5
+1 SUCCES:  textChatStatic2 SUCCES:  Received socket properties:
+1 SUCCES:  textChatStatic2 SUCCES:  Validity: 1
+1 SUCCES:  textChatStatic2 SUCCES:  port: 0
+1 SUCCES:  textChatStatic2 SUCCES:  Application is listening. listening: 1, connection: 5
+2 SUCCES:  textChatStatic1 SUCCES:  Application is waiting for connection to be established.
+1 SUCCES:  textChatStatic1 SUCCES:  Application is waiting for connection to be established.
+2 SUCCES:  textChatStatic2 SUCCES:  Application is listening. listening: 1, connection: 5
+1 SUCCES:  textChatStatic2 SUCCES:  Application is listening. listening: 1, connection: 5
+2 SUCCES:  textChatStatic1 SUCCES:  res: 0
+2 SUCCES:  textChatStatic1 SUCCES:  Application is waiting for connection to be established.
+2 SUCCES:  transportLayer SUCCES:  ESTABLISHING CONNECTION AT CONNECTION 0 ON PORT 1
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+1 SUCCES:  transportLayer SUCCES:  INCOMING CONNECTION AT CONNECTION 0 ON PORT 0
+1 SUCCES:  transportLayer SUCCES:  Listening status: 1, con being: 5
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+1 SUCCES:  textChatStatic1 SUCCES:  res: 0
+1 SUCCES:  textChatStatic1 SUCCES:  Application is waiting for connection to be established.
+1 SUCCES:  transportLayer SUCCES:  ESTABLISHING CONNECTION AT CONNECTION 0 ON PORT 1
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+2 SUCCES:  transportLayer SUCCES:  CONNECTION ACCEPTED!
+2 SUCCES:  transportLayer SUCCES:  INCOMING CONNECTION AT CONNECTION 0 ON PORT 0
+2 SUCCES:  transportLayer SUCCES:  Listening status: 1, con being: 5
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+1 SUCCES:  transportLayer SUCCES:  CONNECTION ACCEPTED!
+2 SUCCES:  textChatStatic2 SUCCES:  >*_*>: established connection at id: 0 on port 0
+1 SUCCES:  textChatStatic2 SUCCES:  >*_*>: established connection at id: 0 on port 0
+2 SUCCES:  textChatStatic1 SUCCES:  res: 0
+2 SUCCES:  textChatStatic1 SUCCES:  <*_*<: established connection at id: 0 on port 1
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+1 SUCCES:  textChatStatic1 SUCCES:  res: 0
+1 SUCCES:  textChatStatic1 SUCCES:  <*_*<: established connection at id: 0 on port 1
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+2 SUCCES:  textChatStatic2 SUCCES:  Received from other host SPLIT ME PLEASE #01
+2 SUCCES:  textChatStatic1 SUCCES:  This is before that disconnect!
+2 SUCCES:  textChatStatic1 SUCCES:  This is after that disconnect!
+1 SUCCES:  textChatStatic2 SUCCES:  Received from other host SPLIT ME PLEASE #01
+1 SUCCES:  textChatStatic2 SUCCES:  Received from other host SPLIT ME PLEASE #02
+1 SUCCES:  textChatStatic2 SUCCES:  Received from other host SPLIT ME PLEASE #03
+1 SUCCES:  textChatStatic2 SUCCES:  Received from other host SPLIT ME PLEASE #04
+1 SUCCES:  textChatStatic2 SUCCES:  Received from other host SPLIT ME PLEASE #05
+1 SUCCES:  textChatStatic2 SUCCES:  Received from other host SPLIT ME PLEASE #06
+1 SUCCES:  textChatStatic2 SUCCES:  Received from other host SPLIT ME PLEASE #07
+1 SUCCES:  textChatStatic2 SUCCES:  Received from other host SPLIT ME PLEASE #08
+1 SUCCES:  textChatStatic2 SUCCES:  Received from other host SPLIT ME PLEASE #09
+1 SUCCES:  textChatStatic2 SUCCES:  Received from other host SPLIT ME PLEASE #10
+2 SUCCES:  textChatStatic2 SUCCES:  Received from other host SPLIT ME PLEASE #02
+2 SUCCES:  textChatStatic2 SUCCES:  Received from other host SPLIT ME PLEASE #03
+2 SUCCES:  textChatStatic2 SUCCES:  Received from other host SPLIT ME PLEASE #04
+2 SUCCES:  textChatStatic2 SUCCES:  Received from other host SPLIT ME PLEASE #05
+2 SUCCES:  textChatStatic2 SUCCES:  Received from other host SPLIT ME PLEASE #06
+2 SUCCES:  textChatStatic2 SUCCES:  Received from other host SPLIT ME PLEASE #07
+2 SUCCES:  textChatStatic2 SUCCES:  Received from other host SPLIT ME PLEASE #08
+2 SUCCES:  textChatStatic2 SUCCES:  Received from other host SPLIT ME PLEASE #09
+2 SUCCES:  textChatStatic2 SUCCES:  Received from other host SPLIT ME PLEASE #10
+2 SUCCES:  textChatStatic2 SUCCES:  APPLICATION: RECEIVED ALL MESSAGES FROM OTHER HOST.
+1 SUCCES:  textChatStatic1 SUCCES:  This is before that disconnect!
+1 SUCCES:  textChatStatic1 SUCCES:  This is after that disconnect!
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Received datagram from LL.
+3 SUCCES:  networkLayerRouter SUCCES:  NL: Packet was not addressed for this Router. Forwarding.
+\end{lstlisting}
