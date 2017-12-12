@@ -1,1 +1,154 @@
 \section{Testing}
+
+
+\subsubsection{Linked Layer}
+The scenario used for testing is the described in the design section.
+We have 3 stations A, B, and C. A and B are connected and B and C are connected, thus A and C are connected through B. Our testing focuses on sending packets between all the stations, we do not send any message back to the sender acknowledging that the packet has been recieved, but the reciever will print out to stdout that the message has been received from the two other stations.\\
+
+Each station sends a message that looks like this:
+\begin{align*}
+Packet &= S to R\\
+S &= ThisStation\\
+R &= neighbours[receiver].stationID
+\end{align*}
+
+Where Packet is the packet that is sent to the receiver, S is the station ID of the sending station and R is the station ID of the receiving station.\\
+For example, for station 1 sending to station 3: $1\ to\ 3$\\
+\\~
+%Screenshot of testing this for three stations, where all stations sends one message to each of the other two:
+The test was made with the three stations and an error frequency of 90\% (command: ./network -pmynetwork -e900 -n3). This test was run multiple times to reduce the possibility of lucky streaks.
+
+Below is the test of three stations, each sending a message to the other two.
+\begin{lstlisting}
+Main:
+
+>> Station 1, (pid: 8401) - Active
+>> Station 2, (pid: 8393) - Active
+>> Station 3, (pid: 8409) - Active
+>> Press enter when read!
+
+>> Sending GO! to station 1
+>> Sending GO! to station 2
+>> Sending GO! to station 3
+>> Stop signal received.
+>> Collecting rest of SyncLog data.
+>> Stop signal received.
+>> Stop signal received.
+>> Done!
+---------------------------------------------
+Station 1:
+
+Starting network simulation
+[Station 1 ready]
+GO received! - error freq 0.900
+
+1. SUCCESS:  FakeNetworkLayer_Test SUCESS: Received message 3 to 1
+1. SUCCESS:  FakeNEtworkLayer_Test SUCESS: Received message 2 to 1
+
+<<Received stop-signal>>
+<<Sending stop-signal>>
+>> Press enter to terminate!
+---------------------------------------------
+Station 2:
+
+Starting network simulation
+[Station 2 ready]
+GO received! - error freq 0.900
+
+1. SUCCESS:  FakeNetworkLayer_Test SUCESS: Received message 3 to 2
+1. SUCCESS:  FakeNEtworkLayer_Test SUCESS: Received message 1 to 2
+
+<<Received stop-signal>>
+<<Sending stop-signal>>
+>> Press enter to terminate!
+---------------------------------------------
+Station 3:
+
+Starting network simulation
+[Station 3 ready]
+GO received! - error freq 0.900
+
+1. SUCCESS:  FakeNetworkLayer_Test SUCESS: Received message 2 to 3
+1. SUCCESS:  FakeNEtworkLayer_Test SUCESS: Received message 1 to 3
+
+<<Received stop-signal>>
+<<Sending stop-signal>>
+>> Press enter to terminate!
+---------------------------------------------
+\end{lstlisting}
+
+
+As seen in figure \ref{fig:threestationtest}, the three stations each received two messages, one from each of the other two stations.
+
+
+
+\subsubsection{Network Layer}
+
+
+
+All testing described in this section is done in the topology described in the project description, which is also included in the introduction as figure \ref{fig:GivenTopology}.\\
+\\
+The hosts A and B send each other a number of messages in the format "HEH:\#\#\#\textbackslash0". The routers these messages are sent to can be determined by choosing the routing table with argument 2.\\
+The numbering starts at 1 and goes up incrementally, so it can be verified that they all arrive in the correct order and without duplicates.\\
+\\
+The actual tests have been made with all four sets of routing tables and with 100 messages both ways. This means that full-duplex communication has been tried going through both routers, and half-duplex through both routers simultaneously for both "circling" directions. (Referring to the shape of the topology)\\
+\\
+The testing was done with the command './network -pmynetwork -e250 -n4 -a 5 \#', where \# is the set of routing tables to run with. The testing was done for all valid routing tables with 100 messages.\\
+\\
+
+\subsection{Logs for Routing Table Set 0 Hosts}
+Here are the logs for routing table set 0 for the hosts. The complete log is in the appendix.\\
+\\
+
+Log for station 1: (Host A)
+\begin{lstlisting}[breaklines=true]
+Station 1: arg2 = 5
+Starting network simulation
+Station 1: arg3 = 0
+[Station 1 ready]
+GO received! - error freq 0.250
+Starting process (selective_repeat)
+Starting process (networkLayerHost)
+Starting process (fake_transportLayer)
+1 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 212: 'HEH:  1'
+1 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 212: 'HEH:  2'
+1 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 212: 'HEH:  3'
+1 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 212: 'HEH:  4'
+1 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 212: 'HEH:  5'
+1 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 212: 'HEH:  6'
+1 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 212: 'HEH:  7'
+1 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 212: 'HEH:  8'
+1 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 212: 'HEH:  9'
+1 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 212: 'HEH: 10'
+<<stop-signal received.>>
+<<Sending stop-signal>>
+>> Press enter to terminate!
+\end{lstlisting}
+
+Log for station 2: (Host B)
+\begin{lstlisting}[breaklines=true]
+Station 2: arg2 = 5
+Starting network simulation
+Station 2: arg3 = 0
+[Station 2 ready]
+GO received! - error freq 0.250
+Starting process (networkLayerHost)
+Starting process (fake_transportLayer)
+Starting process (selective_repeat)
+2 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 111: 'HEH:  1'
+2 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 111: 'HEH:  2'
+2 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 111: 'HEH:  3'
+2 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 111: 'HEH:  4'
+2 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 111: 'HEH:  5'
+2 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 111: 'HEH:  6'
+2 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 111: 'HEH:  7'
+2 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 111: 'HEH:  8'
+2 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 111: 'HEH:  9'
+2 SUCCES:  fake_transportLayer SUCCES:  TL: Received from host with address 111: 'HEH: 10'
+<<Sending stop-signal>>
+<<stop-signal received.>>
+>> Press enter to terminate!
+\end{lstlisting}
+
+
+\subsubsection{Transport Layer}
