@@ -65,8 +65,6 @@ typedef struct {
 //Last message is infered from the number of bytes in total from the aux field of the first packet, T.
 //  (seqPayload+1)*MAX_PAYLOAD >= msgLen => last packet
 typedef struct {
-  payload msg; //Actual bytes carried by the segment.
-
   unsigned int is_first:1; //True iff the segment is the first of the message.
   unsigned int is_control:1; //true if the segment is a control segment.
   unsigned int seqMsg; //Sequencing number for the messages. No assumptions are made regarding the lower layers and would thereby support random segment arrival order together with seqPayload. (Superficially tested in a closed environment)
@@ -75,7 +73,7 @@ typedef struct {
   transPORT senderport; //Port of the application sending the segment.
   transPORT receiverport; //Port of the application receiving the segment.
 
-  //payload msg; //Actual bytes carried by the segment.
+  payload msg; //Actual bytes carried by the segment.
 } TL_Segment;
 
 //TL -> NL. TL: Hey NL, send this segment to this address plox!, NL: Okay, buddy!
